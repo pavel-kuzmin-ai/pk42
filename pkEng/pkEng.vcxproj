@@ -84,7 +84,7 @@
     <IncludePath>E:\git\pk42\Core\;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)bin\</OutDir>
     <LibraryPath>E:\git\pk42\bin;$(LibraryPath)</LibraryPath>
-    <SourcePath>E:\git\pk42\Core;$(SourcePath)</SourcePath>
+    <SourcePath>D:\Personal\Study\pk42\Core;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -97,10 +97,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
-    <IncludePath>E:\git\pk42\Core\;$(IncludePath)</IncludePath>
+    <IncludePath>D:\Personal\Study\pk42\Core;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)bin\</OutDir>
-    <LibraryPath>E:\git\pk42\bin;$(LibraryPath)</LibraryPath>
-    <SourcePath>E:\git\pk42\Core;$(SourcePath)</SourcePath>
+    <LibraryPath>D:\Personal\Study\pk42\bin;$(LibraryPath)</LibraryPath>
+    <SourcePath>D:\Personal\Study\pk42\Core;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

@@ -2,12 +2,72 @@
 #define CONSOLEDISPLAY_H
 
 #include "windows.h"
+#include <iostream>
+#include <sstream>
 #include "engineConfig.h"
+#include "Vec3.h"
 #include <cwchar>
-#include <tuple>
+#include <unordered_map>
+#include <iterator>
 
-#define ESC "\x1b"
-#define CSI "\x1b["
+
+
+colorRGB cRgbCols[16] = { colorRGB(12,  12,  12),
+						  colorRGB(0,   55,  218),
+						  colorRGB(19,  161, 14), 
+						  colorRGB(58,  150, 221),
+						  colorRGB(197, 15,  31), 
+						  colorRGB(136, 23,  152), 
+						  colorRGB(193, 156, 0), 
+						  colorRGB(204, 204, 204), 
+						  colorRGB(118, 118, 118),
+						  colorRGB(59,  120, 255), 
+						  colorRGB(22,  198, 12), 
+						  colorRGB(97,  214, 214), 
+						  colorRGB(231, 72, 86), 
+						  colorRGB(180, 0,  158), 
+						  colorRGB(249, 241, 165), 
+						  colorRGB(242, 242, 242)};
+short iFrontCodes[16] = { 0x0000,
+					    0x0001,
+					    0x0002,
+					    0x0003,
+					    0x0004,
+					    0x0005,
+					    0x0006,
+					    0x0007,
+					    0x0008,
+					    0x0009,
+					    0x000A,
+					    0x000B,
+					    0x000C,
+					    0x000D,
+					    0x000E,
+					    0x000F};
+short iBackCodes[16] = { 0x0000,
+					   0x0010,
+					   0x0020,
+					   0x0030,
+					   0x0040,
+					   0x0050,
+					   0x0060,
+					   0x0070,
+					   0x0080,
+					   0x0090,
+					   0x00A0,
+					   0x00B0,
+					   0x00C0,
+					   0x00D0,
+					   0x00E0,
+					   0x00F0};
+float fPixSize[4] = { 1., 0.75, 0.5, 0.25 };
+short sPixCodes[4] = { 0x2588, 0x2593, 0x2592, 0x2591 };
+
+int color2RGBcode(colorRGB c) 
+{
+	return ((int)c.x() << 16) + ((int)c.y() << 8) + (int)c.z();
+}
+
 
 enum COLOUR
 {
@@ -54,28 +114,7 @@ enum PIXEL_TYPE
 };
 
 
-bool EnableVTMode()
-{
-	// Set output mode to handle virtual terminal sequences
-	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-	if (hOut == INVALID_HANDLE_VALUE)
-	{
-		return false;
-	}
 
-	DWORD dwMode = 0;
-	if (!GetConsoleMode(hOut, &dwMode))
-	{
-		return false;
-	}
-
-	dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-	if (!SetConsoleMode(hOut, dwMode))
-	{
-		return false;
-	}
-	return true;
-}
 
 class ConsoleScreen
 {
@@ -139,6 +178,29 @@ public:
 	{
 		WriteConsoleOutput(hConsole, m_bufScreen, { (short)m_nScreenWidth, (short)m_nScreenHeight }, { 0,0 }, &m_rectWindow);
 	}
+
+
+	void build_map()
+	{
+		for (auto i = 0; i< std::size(cRgbCols); i++)
+		{
+			colorRGB front = cRgbCols[i];
+			for (auto j = 0; j < std::size(cRgbCols); j++)
+			{
+				colorRGB back = cRgbCols[j];
+				for (auto k = 0; k < std::size(fPixSize); j++)
+				{
+					float fCharSize = fPixSize[k];
+					short sPixCode = sPixCodes[k];
+
+					colorRGB mixedColor = fCharSize * front + (1 - fCharSize) * back;
+					int colorCode = color2RGBcode(mixedColor);
+					uRgb2ConsoleCode[colorCode] = std::pair<short, short >()
+				}
+
+			}
+		}
+	}
 	
 
 private:
@@ -147,8 +209,11 @@ private:
 	CHAR_INFO* m_bufScreen;
 	SMALL_RECT m_rectWindow;
 
+
 	int m_nScreenWidth = 120;
 	int m_nScreenHeight = 90;
+
+	std::unordered_map< int, std::pair<short, short>> uRgb2ConsoleCode;
 
 };
 

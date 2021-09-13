@@ -1,27 +1,2 @@
 ﻿  pkEng.cpp
-e:\git\pk42\core\msgbus.h(276): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-e:\git\pk42\core\ipc.h(20): warning C4129: 'F': unrecognized character escape sequence
-e:\git\pk42\core\ipc.h(21): warning C4129: 'F': unrecognized character escape sequence
-e:\git\pk42\core\core.h(32): warning C4251: 'coreSystem::vSystems': class 'std::vector<Node *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'coreSystem'
-          with
-          [
-              _Ty=Node *
-          ]
-  e:\git\pk42\core\msgbus.h(282): note: see declaration of 'std::vector<Node *,std::allocator<_Ty>>'
-          with
-          [
-              _Ty=Node *
-          ]
-e:\git\pk42\core\core.h(33): warning C4251: 'coreSystem::bus': class 'sysBus' needs to have dll-interface to be used by clients of class 'coreSystem'
-  e:\git\pk42\core\msgbus.h(289): note: see declaration of 'sysBus'
-e:\git\pk42\core\core.h(45): warning C4251: 'pk42Core::vGameSystems': class 'std::vector<Node *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'pk42Core'
-          with
-          [
-              _Ty=Node *
-          ]
-  e:\git\pk42\core\msgbus.h(282): note: see declaration of 'std::vector<Node *,std::allocator<_Ty>>'
-          with
-          [
-              _Ty=Node *
-          ]
-  pkEng.vcxproj -> E:\git\pk42\bin\pkEng.exe
+d:\personal\study\pk42\pkeng\pkeng.cpp(5): fatal error C1083: Cannot open include file: 'Core.h': No such file or directory

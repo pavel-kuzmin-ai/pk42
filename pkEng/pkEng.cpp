@@ -5,7 +5,6 @@
 #include "Core.h"
 #include "windows.h"
 #include "string.h"
-#include "Vec3.h"
 #pragma comment(lib,"Core.lib") 
 
 void CreateChildProcess(int window_flag = 0x00000010)
@@ -41,7 +40,7 @@ void CreateChildProcess(int window_flag = 0x00000010)
 
 
 int main(int argc, char* argv[])
-{/*
+{
 	bool show_console = true;
 	int type = 0;
 
@@ -88,14 +87,8 @@ int main(int argc, char* argv[])
 		sys->continuousRun();
 		sys->shutDown();
 	}	
-	*/
-	vec3 a(1, 0, 0), b(0, 1, 0);
-
-
-	vec3 c;
-	cross(a, b, &c);
 	
-	std::cout << c.x() << " " << c.y() << " " << c.z() << " " << "\n";
+	
 
 	return 1;
 }

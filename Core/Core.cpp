@@ -1,7 +1,7 @@
 #include "Core.h"
 #include "engineState.h"
 #include "engineConfig.h"
-#include "Display.h"
+#include "ConsoleDisplay.h"
 
 engineState sEngineState;
 engineConfig cEngineConfig;

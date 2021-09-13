@@ -15,6 +15,7 @@
 #include <string>
 #include "CoreLogic.h"
 
+
 //extern "C" {
 //	void DLLDIR runEngine();
 //	void  DLLDIR runConsole();
@@ -47,6 +48,7 @@ private:
 	sysMmapSaverFromMain* sysC;
 	sysMmapLoaderFromChild* sysD;
 	sysCoreLogic* sysLogic;
+	//sysConsoleDisplay* sysLogic;
 };
 
 
