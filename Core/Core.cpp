@@ -1,7 +1,6 @@
 #include "Core.h"
 #include "engineState.h"
 #include "engineConfig.h"
-#include "ConsoleDisplay.h"
 
 engineState sEngineState;
 engineConfig cEngineConfig;
@@ -22,6 +21,8 @@ void pk42Core::startUp()
 	sysC = new sysMmapSaverFromMain("system mmap save from main");
 	sysD = new sysMmapLoaderFromChild("system mmap load from child");
 	sysLogic = new sysCoreLogic("core logic");
+	display = new ConsoleScreen(&cEngineConfig);
+
 	bus.subscribeClient(*sysB);
 	bus.subscribeClient(*sysC);
 	bus.subscribeClient(*sysD);
@@ -31,7 +32,8 @@ void pk42Core::startUp()
 	sysC->startUp();
 	sysD->startUp();
 	sysLogic->startUp();
-
+	display->startUp();
+	
 	vGameSystems.push_back(sysB);
 
 	bus.connectEngineState(&sEngineState);
@@ -42,13 +44,30 @@ void pk42Core::startUp()
 	sysC->runDetached();
 	sysD->runDetached();
 	sysLogic->runDetached();
+
+	display->buildScreen();
+	//display->build_map();
+	//display->display_colors();
 }
 
 void pk42Core::runGameLoop()
 {
+	int i = 0;
+
+	int gran = 1;
 	while (sEngineState.bEngineInitialized)
 	{
+		if (i % gran == 0)
+		{
+			position += 1;
+			if (position > display->bufSize())
+			{
+				position = 0;
+			}
+		}
 		step();
+
+		i++;
 	}
 }
 void pk42Core::step()
@@ -56,6 +75,27 @@ void pk42Core::step()
 	for (auto sys: vGameSystems)
 		sys->callSystemThreadsave();
 	bus.callSystemThreadsave();
+
+	colorRGB* colorBuf = display->bufRGB();
+
+	//for (int i = position; i < 10; i++)
+	//{
+		colorBuf[position] = colorRGB(0, 0, 0);
+		colorBuf[position + 1] = colorRGB(255, 0, 0);
+		colorBuf[position + 2] = colorRGB(0, 255, 0);
+		colorBuf[position + 3] = colorRGB(0, 0, 255);
+		colorBuf[position + 4] = colorRGB(255, 255, 0);
+		colorBuf[position + 5] = colorRGB(0, 255, 255);
+		colorBuf[position + 6] = colorRGB(255, 0, 255);
+		colorBuf[position + 7] = colorRGB(255, 255, 255);
+		colorBuf[position + 8] = colorRGB(128, 32, 64);
+		colorBuf[position + 9] = colorRGB(65, 92, 12);
+	//}
+
+		//std::cout << position << '\n';
+	display->updateConsoleBuffer();
+	display->show();
+
 	
 }
 

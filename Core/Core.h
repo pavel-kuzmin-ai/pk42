@@ -14,6 +14,7 @@
 #include <queue>
 #include <string>
 #include "CoreLogic.h"
+#include "ConsoleDisplay.h"
 
 
 //extern "C" {
@@ -49,6 +50,8 @@ private:
 	sysMmapLoaderFromChild* sysD;
 	sysCoreLogic* sysLogic;
 	//sysConsoleDisplay* sysLogic;
+	ConsoleScreen* display;
+	int position = 0;
 };
 
 

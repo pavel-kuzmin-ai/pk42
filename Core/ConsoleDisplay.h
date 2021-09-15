@@ -114,6 +114,18 @@ enum PIXEL_TYPE
 };
 
 
+class consolePixel
+{
+public:
+	consolePixel() {};
+	consolePixel(short _sCharacter, short _sColorCode): sCharacter(_sCharacter), sColorCode(_sColorCode) {};
+	~consolePixel() {};
+
+	colorRGB cColorRGB;
+	short sCharacter;
+	short sColorCode;
+};
+
 
 
 class ConsoleScreen
@@ -124,11 +136,18 @@ public:
 	{
 		m_nScreenWidth = config->screenWidth;
 		m_nScreenHeight = config->screenHeight;
+
 	};
 
 	~ConsoleScreen() {};
 
 		
+	void startUp()
+	{
+		buildScreen();
+		buildColorMap();
+		buildRGBbuffer();
+	}
 	void buildScreen()
 	{
 		hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -164,42 +183,119 @@ public:
 		m_bufScreen = new CHAR_INFO[m_nScreenWidth*m_nScreenHeight];
 		memset(m_bufScreen, 0, sizeof(CHAR_INFO) * m_nScreenWidth * m_nScreenHeight);
 	}
+
+	void  buildRGBbuffer()
+	{
+		_bufRGB = new colorRGB[m_nScreenWidth * m_nScreenHeight];
+
+	}
+
+	int bufSize()
+	{
+		return m_nScreenWidth * m_nScreenHeight;
+	}
+
+	colorRGB* bufRGB()
+	{
+		return _bufRGB;
+	}
 	
 	virtual void Draw(int x, int y, short c = 0x2588, short col = 0x000F)
 	{
 		if (x >= 0 && x < m_nScreenWidth && y >= 0 && y < m_nScreenHeight)
 		{
-			m_bufScreen[y * m_nScreenWidth + x].Char.UnicodeChar = c;
-			m_bufScreen[y * m_nScreenWidth + x].Attributes = col;
+			updateBuffer(y * m_nScreenWidth + x, c, col);
 		}
 	}
+
+	void updateBuffer(int pos, short c = 0x2588, short col = 0x000F)
+	{
+		m_bufScreen[pos].Char.UnicodeChar = c;
+		m_bufScreen[pos].Attributes = col;
+	}
 	
-	void display()
+	void show()
 	{
 		WriteConsoleOutput(hConsole, m_bufScreen, { (short)m_nScreenWidth, (short)m_nScreenHeight }, { 0,0 }, &m_rectWindow);
 	}
 
-
-	void build_map()
+	void updateConsoleBuffer()
 	{
-		for (auto i = 0; i< std::size(cRgbCols); i++)
+		for (int i = 0; i < m_nScreenWidth*m_nScreenHeight; i++) 
+		{
+			consolePixel closestPix;
+			int minDist = 255 * 255 * 3;
+			for (auto pallet : uRgb2ConsoleCode)
+			{
+				int curDist = (_bufRGB[i] - pallet.second.cColorRGB).length_squared();
+
+				if (curDist == 0)
+				{
+					closestPix = pallet.second;
+					break;
+				}
+
+				if (curDist < minDist)
+				{
+					closestPix = pallet.second;
+					minDist = curDist;					
+				}
+			}
+
+			updateBuffer(i, closestPix.sCharacter, closestPix.sColorCode);
+			
+		}
+	}
+
+
+
+
+	void buildColorMap()
+	{
+		char x;
+		for (int i = 0; i< std::size(cRgbCols); i++)
+		//for (int i = 0; i < 16; i++)
 		{
 			colorRGB front = cRgbCols[i];
-			for (auto j = 0; j < std::size(cRgbCols); j++)
+			short sFrontCode = iFrontCodes[i];
+
+			for (int j = 0; j < std::size(cRgbCols); j++)
+			//for (int j = 0; j < 16; j++)
 			{
 				colorRGB back = cRgbCols[j];
-				for (auto k = 0; k < std::size(fPixSize); j++)
+				short sBackCode = iBackCodes[j];
+
+				for (int k = 0; k < std::size(fPixSize); k++)
+				//for (int k = 0; k < 4; k++)
 				{
 					float fCharSize = fPixSize[k];
 					short sPixCode = sPixCodes[k];
 
 					colorRGB mixedColor = fCharSize * front + (1 - fCharSize) * back;
-					int colorCode = color2RGBcode(mixedColor);
-					uRgb2ConsoleCode[colorCode] = std::pair<short, short >()
+					int iColorCode = color2RGBcode(mixedColor);
+					consolePixel pix(sPixCode, sFrontCode + sBackCode);
+					pix.cColorRGB = mixedColor;
+					uRgb2ConsoleCode[iColorCode] = pix;
 				}
 
 			}
 		}
+	}
+
+	void display_colors()
+	{
+		int i = 0;
+		for (std::pair<int, consolePixel> k : uRgb2ConsoleCode)
+		{
+			
+			int col_code = k.first;
+			consolePixel pix = k.second;
+			Draw(i%m_nScreenWidth, i / m_nScreenWidth, pix.sCharacter, pix.sColorCode);
+
+			//std::cout << std::hex << col_code << "  :  " << pix.sCharacter << pix.sColorCode << '\n';
+			i++;
+		}		
+		show();
 	}
 	
 
@@ -209,11 +305,14 @@ private:
 	CHAR_INFO* m_bufScreen;
 	SMALL_RECT m_rectWindow;
 
+	colorRGB* _bufRGB;
+
+
 
 	int m_nScreenWidth = 120;
 	int m_nScreenHeight = 90;
 
-	std::unordered_map< int, std::pair<short, short>> uRgb2ConsoleCode;
+	std::unordered_map< int, consolePixel> uRgb2ConsoleCode;
 
 };
 

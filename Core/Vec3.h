@@ -7,7 +7,7 @@ template <typename T>
 class vec3
 {
 public:
-	vec3(){};
+	vec3() : e{ 0,0,0 } {};
 	vec3(T x, T y, T z) : e{ x,y,z } {};
 	~vec3() {};
 
@@ -60,7 +60,7 @@ public:
 using fvec3 = vec3<float>;
 using point3 = fvec3;   // 3D point
 using color = fvec3;
-using colorRGB = vec3<unsigned short>;    // RGB color
+using colorRGB = vec3<int>;    // RGB color
 
 
 

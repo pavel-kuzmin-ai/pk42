@@ -80,11 +80,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
-    <IncludePath>E:\git\pk42\Core\;$(IncludePath)</IncludePath>
+    <ExecutablePath>D:\Personal\Study\pk42\bin;$(ExecutablePath)</ExecutablePath>
     <OutDir>$(SolutionDir)bin\</OutDir>
-    <LibraryPath>E:\git\pk42\bin;$(LibraryPath)</LibraryPath>
+    <LibraryPath>D:\Personal\Study\pk42\bin;$(LibraryPath)</LibraryPath>
     <SourcePath>D:\Personal\Study\pk42\Core;$(SourcePath)</SourcePath>
+    <IncludePath>D:\Personal\Study\pk42\Core;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -96,11 +96,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
-    <IncludePath>D:\Personal\Study\pk42\Core;$(IncludePath)</IncludePath>
+    <ExecutablePath>D:\Personal\Study\pk42\bin;$(ExecutablePath)</ExecutablePath>
     <OutDir>$(SolutionDir)bin\</OutDir>
     <LibraryPath>D:\Personal\Study\pk42\bin;$(LibraryPath)</LibraryPath>
     <SourcePath>D:\Personal\Study\pk42\Core;$(SourcePath)</SourcePath>
+    <IncludePath>D:\Personal\Study\pk42\Core;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
