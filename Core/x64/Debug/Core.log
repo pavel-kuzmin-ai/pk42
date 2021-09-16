@@ -1,59 +1,59 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(377,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
-  Core.cpp
-d:\personal\study\pk42\core\msgbus.h(276): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+  core.cpp
+d:\personal\study\pk42\core\sysmsgbus.h(276): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
 d:\personal\study\pk42\core\ipc.h(20): warning C4129: 'F': unrecognized character escape sequence
 d:\personal\study\pk42\core\ipc.h(21): warning C4129: 'F': unrecognized character escape sequence
-d:\personal\study\pk42\core\consoledisplay.h(255): warning C4101: 'x': unreferenced local variable
+d:\personal\study\pk42\core\consoledisplay.h(279): warning C4101: 'x': unreferenced local variable
 d:\personal\study\pk42\core\core.h(34): warning C4251: 'coreSystem::vSystems': class 'std::vector<Node *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'coreSystem'
           with
           [
               _Ty=Node *
           ]
-  d:\personal\study\pk42\core\msgbus.h(282): note: see declaration of 'std::vector<Node *,std::allocator<_Ty>>'
+  d:\personal\study\pk42\core\sysmsgbus.h(282): note: see declaration of 'std::vector<Node *,std::allocator<_Ty>>'
           with
           [
               _Ty=Node *
           ]
 d:\personal\study\pk42\core\core.h(35): warning C4251: 'coreSystem::bus': class 'sysBus' needs to have dll-interface to be used by clients of class 'coreSystem'
-  d:\personal\study\pk42\core\msgbus.h(289): note: see declaration of 'sysBus'
+  d:\personal\study\pk42\core\sysmsgbus.h(289): note: see declaration of 'sysBus'
 d:\personal\study\pk42\core\core.h(47): warning C4251: 'pk42Core::vGameSystems': class 'std::vector<Node *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'pk42Core'
           with
           [
               _Ty=Node *
           ]
-  d:\personal\study\pk42\core\msgbus.h(282): note: see declaration of 'std::vector<Node *,std::allocator<_Ty>>'
+  d:\personal\study\pk42\core\sysmsgbus.h(282): note: see declaration of 'std::vector<Node *,std::allocator<_Ty>>'
           with
           [
               _Ty=Node *
           ]
-d:\personal\study\pk42\core\core.cpp(8): warning C4273: 'coreSystem::coreSystem': inconsistent dll linkage
+d:\personal\study\pk42\core\core.cpp(9): warning C4273: 'coreSystem::coreSystem': inconsistent dll linkage
   d:\personal\study\pk42\core\core.h(28): note: see previous definition of '{ctor}'
-d:\personal\study\pk42\core\core.cpp(9): warning C4273: 'coreSystem::~coreSystem': inconsistent dll linkage
+d:\personal\study\pk42\core\core.cpp(10): warning C4273: 'coreSystem::~coreSystem': inconsistent dll linkage
   d:\personal\study\pk42\core\core.h(29): note: see previous definition of '{dtor}'
-d:\personal\study\pk42\core\core.cpp(10): warning C4273: 'coreSystem::shutDown': inconsistent dll linkage
+d:\personal\study\pk42\core\core.cpp(11): warning C4273: 'coreSystem::shutDown': inconsistent dll linkage
   d:\personal\study\pk42\core\core.h(30): note: see previous definition of 'shutDown'
-d:\personal\study\pk42\core\core.cpp(11): warning C4273: 'coreSystem::continuousRun': inconsistent dll linkage
+d:\personal\study\pk42\core\core.cpp(12): warning C4273: 'coreSystem::continuousRun': inconsistent dll linkage
   d:\personal\study\pk42\core\core.h(31): note: see previous definition of 'continuousRun'
-d:\personal\study\pk42\core\core.cpp(15): warning C4273: 'pk42Core::pk42Core': inconsistent dll linkage
+d:\personal\study\pk42\core\core.cpp(16): warning C4273: 'pk42Core::pk42Core': inconsistent dll linkage
   d:\personal\study\pk42\core\core.h(41): note: see previous definition of '{ctor}'
-d:\personal\study\pk42\core\core.cpp(16): warning C4273: 'pk42Core::~pk42Core': inconsistent dll linkage
+d:\personal\study\pk42\core\core.cpp(17): warning C4273: 'pk42Core::~pk42Core': inconsistent dll linkage
   d:\personal\study\pk42\core\core.h(42): note: see previous definition of '{dtor}'
-d:\personal\study\pk42\core\core.cpp(18): warning C4273: 'pk42Core::startUp': inconsistent dll linkage
+d:\personal\study\pk42\core\core.cpp(19): warning C4273: 'pk42Core::startUp': inconsistent dll linkage
   d:\personal\study\pk42\core\core.h(45): note: see previous definition of 'startUp'
-d:\personal\study\pk42\core\core.cpp(54): warning C4273: 'pk42Core::runGameLoop': inconsistent dll linkage
+d:\personal\study\pk42\core\core.cpp(57): warning C4273: 'pk42Core::runGameLoop': inconsistent dll linkage
   d:\personal\study\pk42\core\core.h(44): note: see previous definition of 'runGameLoop'
-d:\personal\study\pk42\core\core.cpp(74): warning C4273: 'pk42Core::step': inconsistent dll linkage
+d:\personal\study\pk42\core\core.cpp(64): warning C4273: 'pk42Core::step': inconsistent dll linkage
   d:\personal\study\pk42\core\core.h(43): note: see previous definition of 'step'
-d:\personal\study\pk42\core\core.cpp(102): warning C4273: 'pk42Console::pk42Console': inconsistent dll linkage
-  d:\personal\study\pk42\core\core.h(61): note: see previous definition of '{ctor}'
-d:\personal\study\pk42\core\core.cpp(103): warning C4273: 'pk42Console::~pk42Console': inconsistent dll linkage
-  d:\personal\study\pk42\core\core.h(62): note: see previous definition of '{dtor}'
-d:\personal\study\pk42\core\core.cpp(105): warning C4273: 'pk42Console::startUp': inconsistent dll linkage
-  d:\personal\study\pk42\core\core.h(63): note: see previous definition of 'startUp'
+d:\personal\study\pk42\core\core.cpp(70): warning C4273: 'pk42Console::pk42Console': inconsistent dll linkage
+  d:\personal\study\pk42\core\core.h(60): note: see previous definition of '{ctor}'
+d:\personal\study\pk42\core\core.cpp(71): warning C4273: 'pk42Console::~pk42Console': inconsistent dll linkage
+  d:\personal\study\pk42\core\core.h(61): note: see previous definition of '{dtor}'
+d:\personal\study\pk42\core\core.cpp(73): warning C4273: 'pk42Console::startUp': inconsistent dll linkage
+  d:\personal\study\pk42\core\core.h(62): note: see previous definition of 'startUp'
 d:\personal\study\pk42\core\vec3.h(96): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
           with
           [
               T=int
           ]
-  d:\personal\study\pk42\core\consoledisplay.h(274): note: see reference to function template instantiation 'vec3<int> operator *<int>(float,const vec3<int> &)' being compiled
+  d:\personal\study\pk42\core\consoledisplay.h(299): note: see reference to function template instantiation 'vec3<int> operator *<int>(float,const vec3<int> &)' being compiled
   Core.vcxproj -> D:\Personal\Study\pk42\bin\Core.dll

@@ -1,6 +1,7 @@
-#include "Core.h"
+#include "core.h"
 #include "engineState.h"
 #include "engineConfig.h"
+#include "syssoftwarerenderer.h"
 
 engineState sEngineState;
 engineConfig cEngineConfig;
@@ -17,24 +18,25 @@ pk42Core::~pk42Core(void) {}
 void pk42Core::startUp()
 {
 	
-	sysB = new sysCout("system out");
+	//sysB = new sysCout("system out");
 	sysC = new sysMmapSaverFromMain("system mmap save from main");
 	sysD = new sysMmapLoaderFromChild("system mmap load from child");
 	sysLogic = new sysCoreLogic("core logic");
-	display = new ConsoleScreen(&cEngineConfig);
+	sysDisplay = new sysSoftwareRenderer("renderer", &cEngineConfig);
 
-	bus.subscribeClient(*sysB);
+	//bus.subscribeClient(*sysB);
 	bus.subscribeClient(*sysC);
 	bus.subscribeClient(*sysD);
 	bus.subscribeClient(*sysLogic);
+	bus.subscribeClient(*sysDisplay);
 
-	sysB->startUp();
+	//sysB->startUp();
 	sysC->startUp();
 	sysD->startUp();
 	sysLogic->startUp();
-	display->startUp();
+	sysDisplay->startUp();
 	
-	vGameSystems.push_back(sysB);
+	vGameSystems.push_back(sysDisplay);
 
 	bus.connectEngineState(&sEngineState);
 	sEngineState.bEngineInitialized = true;
@@ -44,30 +46,18 @@ void pk42Core::startUp()
 	sysC->runDetached();
 	sysD->runDetached();
 	sysLogic->runDetached();
+	//sysDisplay->runDetached();
 
-	display->buildScreen();
+	//display->buildScreen();
 	//display->build_map();
 	//display->display_colors();
 }
 
 void pk42Core::runGameLoop()
 {
-	int i = 0;
-
-	int gran = 1;
 	while (sEngineState.bEngineInitialized)
 	{
-		if (i % gran == 0)
-		{
-			position += 1;
-			if (position > display->bufSize())
-			{
-				position = 0;
-			}
-		}
 		step();
-
-		i++;
 	}
 }
 void pk42Core::step()
@@ -75,28 +65,6 @@ void pk42Core::step()
 	for (auto sys: vGameSystems)
 		sys->callSystemThreadsave();
 	bus.callSystemThreadsave();
-
-	colorRGB* colorBuf = display->bufRGB();
-
-	//for (int i = position; i < 10; i++)
-	//{
-		colorBuf[position] = colorRGB(0, 0, 0);
-		colorBuf[position + 1] = colorRGB(255, 0, 0);
-		colorBuf[position + 2] = colorRGB(0, 255, 0);
-		colorBuf[position + 3] = colorRGB(0, 0, 255);
-		colorBuf[position + 4] = colorRGB(255, 255, 0);
-		colorBuf[position + 5] = colorRGB(0, 255, 255);
-		colorBuf[position + 6] = colorRGB(255, 0, 255);
-		colorBuf[position + 7] = colorRGB(255, 255, 255);
-		colorBuf[position + 8] = colorRGB(128, 32, 64);
-		colorBuf[position + 9] = colorRGB(65, 92, 12);
-	//}
-
-		//std::cout << position << '\n';
-	display->updateConsoleBuffer();
-	display->show();
-
-	
 }
 
 pk42Console::pk42Console(){};

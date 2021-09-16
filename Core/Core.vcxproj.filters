@@ -15,13 +15,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Core.h">
+    <ClInclude Include="consoledisplay.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="console.h">
+    <ClInclude Include="core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="engineState.h">
+    <ClInclude Include="engineconfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="enginestate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ipc.h">
@@ -30,24 +33,24 @@
     <ClInclude Include="logging.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="msgBus.h">
+    <ClInclude Include="sysconsole.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CoreLogic.h">
+    <ClInclude Include="syscorelogic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="engineConfig.h">
+    <ClInclude Include="sysmsgbus.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Vec3.h">
+    <ClInclude Include="syssoftwarerenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ConsoleDisplay.h">
+    <ClInclude Include="vec3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Core.cpp">
+    <ClCompile Include="core.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

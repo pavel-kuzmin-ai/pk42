@@ -7,14 +7,14 @@
 #endif 
 
 #include <iostream>
-#include "msgBus.h"
-#include "console.h"
+#include "sysmsgbus.h"
+#include "sysconsole.h"
 #include "logging.h"
 #include "ipc.h"
 #include <queue>
 #include <string>
-#include "CoreLogic.h"
-#include "ConsoleDisplay.h"
+#include "syscorelogic.h"
+#include "syssoftwarerenderer.h"
 
 
 //extern "C" {
@@ -49,8 +49,7 @@ private:
 	sysMmapSaverFromMain* sysC;
 	sysMmapLoaderFromChild* sysD;
 	sysCoreLogic* sysLogic;
-	//sysConsoleDisplay* sysLogic;
-	ConsoleScreen* display;
+	sysSoftwareRenderer* sysDisplay;
 	int position = 0;
 };
 

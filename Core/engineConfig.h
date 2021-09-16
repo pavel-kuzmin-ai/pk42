@@ -4,9 +4,9 @@
 
 struct engineConfig
 {
-	int screenWidth = 20;
-	int screenHeight = 20;
-	int pxlSize = 16;
+	int screenWidth = 120;
+	int screenHeight = 90;
+	int pxlSize = 8;
 };
 
 #endif

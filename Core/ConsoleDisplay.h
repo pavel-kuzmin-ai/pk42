@@ -4,8 +4,8 @@
 #include "windows.h"
 #include <iostream>
 #include <sstream>
-#include "engineConfig.h"
-#include "Vec3.h"
+#include "engineconfig.h"
+#include "vec3.h"
 #include <cwchar>
 #include <unordered_map>
 #include <iterator>
@@ -44,7 +44,7 @@ short iFrontCodes[16] = { 0x0000,
 					    0x000D,
 					    0x000E,
 					    0x000F};
-short iBackCodes[16] = { 0x0000,
+short iBackCodes2[16] = { 0x0000,
 					   0x0010,
 					   0x0020,
 					   0x0030,
@@ -60,6 +60,10 @@ short iBackCodes[16] = { 0x0000,
 					   0x00D0,
 					   0x00E0,
 					   0x00F0};
+
+short iBackCodes[2] = { 0x0000,
+					   0x00F0 };
+
 float fPixSize[4] = { 1., 0.75, 0.5, 0.25 };
 short sPixCodes[4] = { 0x2588, 0x2593, 0x2592, 0x2591 };
 
@@ -148,6 +152,8 @@ public:
 		buildColorMap();
 		buildRGBbuffer();
 	}
+
+
 	void buildScreen()
 	{
 		hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -182,12 +188,30 @@ public:
 
 		m_bufScreen = new CHAR_INFO[m_nScreenWidth*m_nScreenHeight];
 		memset(m_bufScreen, 0, sizeof(CHAR_INFO) * m_nScreenWidth * m_nScreenHeight);
+
+
+		CONSOLE_CURSOR_INFO     cursorInfo;
+		GetConsoleCursorInfo(hConsole, &cursorInfo);
+		cursorInfo.bVisible = false; // set the cursor visibility
+		SetConsoleCursorInfo(hConsole, &cursorInfo);
 	}
 
 	void  buildRGBbuffer()
 	{
 		_bufRGB = new colorRGB[m_nScreenWidth * m_nScreenHeight];
 
+	}
+
+	void clearRGBbuf() 
+	{
+		int s = bufSize();
+		for (int i = 0; i < s; i++)
+		{
+			_bufRGB[i].e[0] = 0;
+			_bufRGB[i].e[1] = 0;
+			_bufRGB[i].e[2] = 0;
+		}
+		
 	}
 
 	int bufSize()
@@ -253,13 +277,14 @@ public:
 	void buildColorMap()
 	{
 		char x;
+		colorRGB back_cols[2] = { cRgbCols[0], cRgbCols[15] };
 		for (int i = 0; i< std::size(cRgbCols); i++)
 		//for (int i = 0; i < 16; i++)
 		{
 			colorRGB front = cRgbCols[i];
 			short sFrontCode = iFrontCodes[i];
 
-			for (int j = 0; j < std::size(cRgbCols); j++)
+			for (int j = 0; j < std::size(back_cols); j++)
 			//for (int j = 0; j < 16; j++)
 			{
 				colorRGB back = cRgbCols[j];

@@ -163,19 +163,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="console.h" />
-    <ClInclude Include="Core.h" />
-    <ClInclude Include="CoreLogic.h" />
-    <ClInclude Include="ConsoleDisplay.h" />
-    <ClInclude Include="engineConfig.h" />
-    <ClInclude Include="engineState.h" />
+    <ClInclude Include="consoledisplay.h" />
+    <ClInclude Include="core.h" />
+    <ClInclude Include="engineconfig.h" />
+    <ClInclude Include="enginestate.h" />
+    <ClInclude Include="sysconsole.h" />
+    <ClInclude Include="syscorelogic.h" />
     <ClInclude Include="ipc.h" />
     <ClInclude Include="logging.h" />
-    <ClInclude Include="Vec3.h" />
-    <ClInclude Include="msgBus.h" />
+    <ClInclude Include="syssoftwarerenderer.h" />
+    <ClInclude Include="sysmsgbus.h" />
+    <ClInclude Include="vec3.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Core.cpp" />
+    <ClCompile Include="core.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
