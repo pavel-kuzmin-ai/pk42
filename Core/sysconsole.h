@@ -75,4 +75,23 @@ public:
 	}
 };
 
+
+class sysWriter : public Node
+{
+public:
+	sysWriter() {};
+	sysWriter(string s) :Node(s) {};
+	virtual ~sysWriter() {};
+
+	int executeCommands(messageQueue* qIn, messageQueue* qOut)
+	{
+		while (!qIn->empty())
+		{
+			message msg = qIn->getMsgAndPop();
+			std::cout << ">> " << msg.str() << "\n";
+		}
+		return 0;
+	}
+};
+
 #endif

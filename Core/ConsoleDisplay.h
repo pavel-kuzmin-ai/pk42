@@ -194,6 +194,8 @@ public:
 		GetConsoleCursorInfo(hConsole, &cursorInfo);
 		cursorInfo.bVisible = false; // set the cursor visibility
 		SetConsoleCursorInfo(hConsole, &cursorInfo);
+
+
 	}
 
 	void  buildRGBbuffer()
@@ -323,7 +325,8 @@ public:
 		show();
 	}
 	
-
+	int screenWidth() { return m_nScreenWidth; }
+	int screenHeight() { return m_nScreenHeight; }
 private:
 	engineConfig* config;
 	HANDLE hConsole;

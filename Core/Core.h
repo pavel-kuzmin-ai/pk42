@@ -27,12 +27,13 @@ class DLLDIR coreSystem
 public:
 	coreSystem();
 	~coreSystem();
+	void startUp();
 	void shutDown();
 	void continuousRun();
 
 protected:
 	vector<Node*> vSystems;
-	sysBus bus;
+	sysBus* bus;
 };
 
 class DLLDIR pk42Core : public coreSystem
@@ -40,7 +41,7 @@ class DLLDIR pk42Core : public coreSystem
 public:
 	pk42Core();
 	~pk42Core();
-	void step();
+	void step(float dt);
 	void runGameLoop();
 	void startUp();
 private:
