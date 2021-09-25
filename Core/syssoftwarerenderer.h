@@ -26,6 +26,7 @@ public:
 
 		rasterizer = new tRasterizer(screenWidth, screenHeight);
 		rasterizer->initBuffers();
+		rasterizer->setOutBuffer(displayBuffer);
 		sGLColor = rasterizer->bufColor();
 	}
 
@@ -47,12 +48,12 @@ public:
 
 		render();
 
-		for (int i = 0; i < screenWidth*screenHeight; i++)
-		{
-			int idx = i * 3;
-			displayBuffer[i] = colorRGB(sGLColor[idx], sGLColor[idx + 1], sGLColor[idx + 2]);
-
-		}
+		//for (int i = 0; i < screenWidth*screenHeight; i++)
+		//{
+		//	int idx = i * 3;
+		//	displayBuffer[i] = colorRGB(sGLColor[idx], sGLColor[idx + 1], sGLColor[idx + 2]);
+		//
+		//}
 
 		display->updateConsoleBuffer();
 		display->show();
@@ -75,7 +76,8 @@ private:
 	engineConfig* conf;
 	ConsoleScreen* display;
 	tRasterizer* rasterizer;
-	colorRGB* displayBuffer;
+	//colorRGB* displayBuffer;
+	int* displayBuffer;
 	int screenWidth;
 	int screenHeight;
 	int* sGLColor;

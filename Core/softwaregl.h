@@ -27,6 +27,10 @@ public:
 		VertexBuffer = new tVertexData[maxVerts];
 		outColor = new int[width*height * 3];
 	}
+	void setOutBuffer(int * _buf)
+	{
+		outColor = _buf;
+	}
 
 	void sGLBufferData(int size, tVertexData* vertexData)
 	{

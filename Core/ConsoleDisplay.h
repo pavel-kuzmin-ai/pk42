@@ -200,7 +200,8 @@ public:
 
 	void  buildRGBbuffer()
 	{
-		_bufRGB = new colorRGB[m_nScreenWidth * m_nScreenHeight];
+		//_bufRGB = new colorRGB[m_nScreenWidth * m_nScreenHeight];
+		_bufRGB = new int[m_nScreenWidth * m_nScreenHeight*3];
 
 	}
 
@@ -209,9 +210,12 @@ public:
 		int s = bufSize();
 		for (int i = 0; i < s; i++)
 		{
-			_bufRGB[i].e[0] = 0;
-			_bufRGB[i].e[1] = 0;
-			_bufRGB[i].e[2] = 0;
+			//_bufRGB[i].e[0] = 0;
+			//_bufRGB[i].e[1] = 0;
+			//_bufRGB[i].e[2] = 0;
+			_bufRGB[i * 3] = 0;
+			_bufRGB[i * 3+1] = 0;
+			_bufRGB[i * 3+2] = 0;
 		}
 		
 	}
@@ -221,7 +225,8 @@ public:
 		return m_nScreenWidth * m_nScreenHeight;
 	}
 
-	colorRGB* bufRGB()
+	//colorRGB* bufRGB()
+	int* bufRGB()
 	{
 		return _bufRGB;
 	}
@@ -251,21 +256,30 @@ public:
 		{
 			consolePixel closestPix;
 			int minDist = 255 * 255 * 3;
+			int j = 0;
 			for (auto pallet : uRgb2ConsoleCode)
 			{
-				int curDist = (_bufRGB[i] - pallet.second.cColorRGB).length_squared();
+				//int curDist = (_bufRGB[i] - pallet.second.cColorRGB).length_squared();
+				int idx = i * 3;
+				int dx = (_bufRGB[idx] - pallet.second.cColorRGB.x());
+				int dy = (_bufRGB[idx + 1] - pallet.second.cColorRGB.y());
+				int dz = (_bufRGB[idx + 2] - pallet.second.cColorRGB.z());
+				int curDist = dx * dx + dy * dy + dz * dz;
 
+				/*
 				if (curDist == 0)
 				{
 					closestPix = pallet.second;
 					break;
 				}
-
+				*/
 				if (curDist < minDist)
 				{
 					closestPix = pallet.second;
 					minDist = curDist;					
 				}
+				//j++;
+				//if (j == 7) break;
 			}
 
 			updateBuffer(i, closestPix.sCharacter, closestPix.sColorCode);
@@ -333,7 +347,8 @@ private:
 	CHAR_INFO* m_bufScreen;
 	SMALL_RECT m_rectWindow;
 
-	colorRGB* _bufRGB;
+	//colorRGB* _bufRGB;
+	int* _bufRGB;
 
 
 

@@ -1,54 +1,54 @@
 ﻿  pkEng.cpp
-d:\personal\study\pk42\core\sysmsgbus.h(276): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-d:\personal\study\pk42\core\ipc.h(20): warning C4129: 'F': unrecognized character escape sequence
-d:\personal\study\pk42\core\ipc.h(21): warning C4129: 'F': unrecognized character escape sequence
-d:\personal\study\pk42\core\consoledisplay.h(281): warning C4101: 'x': unreferenced local variable
-d:\personal\study\pk42\core\softwaregl.h(57): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-d:\personal\study\pk42\core\softwaregl.h(58): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-d:\personal\study\pk42\core\syssoftwarerenderer.h(43): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+e:\git\pk42\core\sysmsgbus.h(276): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+e:\git\pk42\core\ipc.h(20): warning C4129: 'F': unrecognized character escape sequence
+e:\git\pk42\core\ipc.h(21): warning C4129: 'F': unrecognized character escape sequence
+e:\git\pk42\core\consoledisplay.h(281): warning C4101: 'x': unreferenced local variable
+e:\git\pk42\core\softwaregl.h(57): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+e:\git\pk42\core\softwaregl.h(58): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+e:\git\pk42\core\syssoftwarerenderer.h(43): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
           with
           [
               T=float
           ]
-d:\personal\study\pk42\core\syssoftwarerenderer.h(44): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+e:\git\pk42\core\syssoftwarerenderer.h(44): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
           with
           [
               T=float
           ]
-d:\personal\study\pk42\core\syssoftwarerenderer.h(45): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+e:\git\pk42\core\syssoftwarerenderer.h(45): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
           with
           [
               T=float
           ]
-d:\personal\study\pk42\core\syssoftwarerenderer.h(46): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+e:\git\pk42\core\syssoftwarerenderer.h(46): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
           with
           [
               T=float
           ]
-d:\personal\study\pk42\core\core.h(35): warning C4251: 'coreSystem::vSystems': class 'std::vector<Node *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'coreSystem'
+e:\git\pk42\core\core.h(35): warning C4251: 'coreSystem::vSystems': class 'std::vector<Node *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'coreSystem'
           with
           [
               _Ty=Node *
           ]
-  d:\personal\study\pk42\core\sysmsgbus.h(282): note: see declaration of 'std::vector<Node *,std::allocator<_Ty>>'
+  e:\git\pk42\core\sysmsgbus.h(282): note: see declaration of 'std::vector<Node *,std::allocator<_Ty>>'
           with
           [
               _Ty=Node *
           ]
-d:\personal\study\pk42\core\core.h(48): warning C4251: 'pk42Core::vGameSystems': class 'std::vector<Node *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'pk42Core'
+e:\git\pk42\core\core.h(48): warning C4251: 'pk42Core::vGameSystems': class 'std::vector<Node *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'pk42Core'
           with
           [
               _Ty=Node *
           ]
-  d:\personal\study\pk42\core\sysmsgbus.h(282): note: see declaration of 'std::vector<Node *,std::allocator<_Ty>>'
+  e:\git\pk42\core\sysmsgbus.h(282): note: see declaration of 'std::vector<Node *,std::allocator<_Ty>>'
           with
           [
               _Ty=Node *
           ]
-d:\personal\study\pk42\core\vec3.h(96): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
+e:\git\pk42\core\vec3.h(96): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
           with
           [
               T=int
           ]
-  d:\personal\study\pk42\core\consoledisplay.h(301): note: see reference to function template instantiation 'vec3<int> operator *<int>(float,const vec3<int> &)' being compiled
-  pkEng.vcxproj -> D:\Personal\Study\pk42\bin\pkEng.exe
+  e:\git\pk42\core\consoledisplay.h(301): note: see reference to function template instantiation 'vec3<int> operator *<int>(float,const vec3<int> &)' being compiled
+  pkEng.vcxproj -> E:\git\pk42\bin\pkEng.exe
