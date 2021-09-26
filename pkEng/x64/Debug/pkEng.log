@@ -2,14 +2,9 @@
 e:\git\pk42\core\sysmsgbus.h(276): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
 e:\git\pk42\core\ipc.h(20): warning C4129: 'F': unrecognized character escape sequence
 e:\git\pk42\core\ipc.h(21): warning C4129: 'F': unrecognized character escape sequence
-e:\git\pk42\core\consoledisplay.h(281): warning C4101: 'x': unreferenced local variable
-e:\git\pk42\core\softwaregl.h(57): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-e:\git\pk42\core\softwaregl.h(58): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-e:\git\pk42\core\syssoftwarerenderer.h(43): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
+e:\git\pk42\core\consoledisplay.h(295): warning C4101: 'x': unreferenced local variable
+e:\git\pk42\core\softwaregl.h(61): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+e:\git\pk42\core\softwaregl.h(62): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
 e:\git\pk42\core\syssoftwarerenderer.h(44): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
           with
           [
@@ -21,6 +16,11 @@ e:\git\pk42\core\syssoftwarerenderer.h(45): warning C4244: '=': conversion from 
               T=float
           ]
 e:\git\pk42\core\syssoftwarerenderer.h(46): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+e:\git\pk42\core\syssoftwarerenderer.h(47): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
           with
           [
               T=float
@@ -50,5 +50,5 @@ e:\git\pk42\core\vec3.h(96): warning C4244: 'argument': conversion from 'float' 
           [
               T=int
           ]
-  e:\git\pk42\core\consoledisplay.h(301): note: see reference to function template instantiation 'vec3<int> operator *<int>(float,const vec3<int> &)' being compiled
+  e:\git\pk42\core\consoledisplay.h(315): note: see reference to function template instantiation 'vec3<int> operator *<int>(float,const vec3<int> &)' being compiled
   pkEng.vcxproj -> E:\git\pk42\bin\pkEng.exe
