@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GtaTestDurations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Executable>D:\Personal\Study\pk42\x64\Debug\TestCore.exe</Executable>
+  <TestDurations>
+    <TestDuration Test="buildQuadTreeTest.CeckClosest" Duration="1" />
+    <TestDuration Test="color2RGBcodeTest.CheckInOut" Duration="1" />
+    <TestDuration Test="QueryQuadTree.CeckClosest" Duration="1" />
+    <TestDuration Test="QueryQuadTree.SpeedTest" Duration="10" />
+    <TestDuration Test="QueryQuadTree.CeckClosestSmall" Duration="1" />
+    <TestDuration Test="QueryQuadTree.CeckClosestMed" Duration="1" />
+  </TestDurations>
+</GtaTestDurations>

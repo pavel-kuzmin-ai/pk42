@@ -123,6 +123,7 @@ class consolePixel
 public:
 	consolePixel() {};
 	consolePixel(short _sCharacter, short _sColorCode): sCharacter(_sCharacter), sColorCode(_sColorCode) {};
+	consolePixel(colorRGB _cColorRGB, short _sCharacter, short _sColorCode) : cColorRGB(_cColorRGB), sCharacter(_sCharacter), sColorCode(_sColorCode) {};
 	~consolePixel() {};
 
 	colorRGB cColorRGB;
@@ -213,9 +214,9 @@ public:
 			//_bufRGB[i].e[0] = 0;
 			//_bufRGB[i].e[1] = 0;
 			//_bufRGB[i].e[2] = 0;
-			_bufRGB[i * 3] = 0;
-			_bufRGB[i * 3+1] = 0;
-			_bufRGB[i * 3+2] = 0;
+			_bufRGB[i * 3]    = 0;
+			_bufRGB[i * 3 + 1] = 0;
+			_bufRGB[i * 3 + 2] = 0;
 		}
 		
 	}
@@ -256,32 +257,29 @@ public:
 		{
 			consolePixel closestPix;
 			int minDist = 255 * 255 * 3;
-			int j = 0;
-			for (auto pallet : uRgb2ConsoleCode)
+			
+			//for (auto pallet : uRgb2ConsoleCode)
+			/*for (int j=0; j < uRgb2ConsoleCode.size(); j++)
 			{
-				//int curDist = (_bufRGB[i] - pallet.second.cColorRGB).length_squared();
+				//consolePixel Pix = pallet.second;
+				consolePixel Pix = mappedPixels[j];
+
 				int idx = i * 3;
-				int dx = (_bufRGB[idx] - pallet.second.cColorRGB.x());
-				int dy = (_bufRGB[idx + 1] - pallet.second.cColorRGB.y());
-				int dz = (_bufRGB[idx + 2] - pallet.second.cColorRGB.z());
+				int dx = (_bufRGB[idx]     - Pix.cColorRGB.x());
+				int dy = (_bufRGB[idx + 1] - Pix.cColorRGB.y());
+				int dz = (_bufRGB[idx + 2] - Pix.cColorRGB.z());
 				int curDist = dx * dx + dy * dy + dz * dz;
 
-				/*
-				if (curDist == 0)
-				{
-					closestPix = pallet.second;
-					break;
-				}
-				*/
 				if (curDist < minDist)
 				{
-					closestPix = pallet.second;
+					closestPix = Pix;
 					minDist = curDist;					
 				}
-				//j++;
-				//if (j == 7) break;
-			}
-
+			}*/
+			int iColorCode = color2RGBcode(colorRGB(_bufRGB[i * 3] / coarseStep * coarseStep,
+													_bufRGB[i * 3 + 1] / coarseStep * coarseStep,
+													_bufRGB[i * 3 + 2] / coarseStep * coarseStep));
+			closestPix = uCoarsedRgb2ConsoleCode[iColorCode];
 			updateBuffer(i, closestPix.sCharacter, closestPix.sColorCode);
 			
 		}
@@ -314,13 +312,59 @@ public:
 
 					colorRGB mixedColor = fCharSize * front + (1 - fCharSize) * back;
 					int iColorCode = color2RGBcode(mixedColor);
-					consolePixel pix(sPixCode, sFrontCode + sBackCode);
+					consolePixel pix(mixedColor, sPixCode, sFrontCode + sBackCode);
 					pix.cColorRGB = mixedColor;
 					uRgb2ConsoleCode[iColorCode] = pix;
 				}
 
 			}
 		}
+
+		mappedPixels = new consolePixel[uRgb2ConsoleCode.size()];
+		int j = 0;
+		for (auto pallet : uRgb2ConsoleCode)
+		{
+			mappedPixels[j] = pallet.second;
+			j++;
+		}
+
+		
+		for (int r = 0; r < 256; r += coarseStep)
+		{
+			for (int g = 0; g < 256; g += coarseStep)
+			{
+				for (int b = 0; b < 256; b += coarseStep)
+				{
+					uCoarsedRgb2ConsoleCode;
+				    colorRGB coarsedColor(r, g, b);
+					int iColorCode = color2RGBcode(coarsedColor);
+					int minDist = 255 * 255 * 255;
+					consolePixel closestPix;
+					for (int j = 0; j < uRgb2ConsoleCode.size(); j++)
+					{
+						//consolePixel Pix = pallet.second;
+						consolePixel Pix = mappedPixels[j];
+
+						int dx = (r - Pix.cColorRGB.x());
+						int dy = (g - Pix.cColorRGB.y());
+						int dz = (b - Pix.cColorRGB.z());
+						int curDist = dx * dx + dy * dy + dz * dz;
+
+						if (curDist < minDist)
+						{
+							closestPix = Pix;
+							minDist = curDist;
+						}
+					}
+
+
+					uCoarsedRgb2ConsoleCode[iColorCode] = closestPix;
+				}
+			}
+		}
+
+
+
 	}
 
 	void display_colors()
@@ -347,15 +391,18 @@ private:
 	CHAR_INFO* m_bufScreen;
 	SMALL_RECT m_rectWindow;
 
+	consolePixel* mappedPixels;
+
 	//colorRGB* _bufRGB;
 	int* _bufRGB;
-
+	int coarseStep = 10;
 
 
 	int m_nScreenWidth = 120;
 	int m_nScreenHeight = 90;
 
 	std::unordered_map< int, consolePixel> uRgb2ConsoleCode;
+	std::unordered_map< int, consolePixel> uCoarsedRgb2ConsoleCode;
 
 };
 
