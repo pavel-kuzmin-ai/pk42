@@ -15,42 +15,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="consoledisplay.h">
+    <ClInclude Include="sysconsole.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="core.h">
+    <ClInclude Include="syscorelogic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="engineconfig.h">
+    <ClInclude Include="sysmsgbus.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="enginestate.h">
+    <ClInclude Include="syssoftwarerenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="logging.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="vec3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="softwaregl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="highrestimer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="clock.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="quadtree.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sysipc.h">
+    <ClInclude Include="Systems.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="core.cpp">
+    <ClCompile Include="Systems.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
