@@ -4,7 +4,6 @@
 #include "sysmsgbus.h"
 #include <iostream>
 #include "consoledisplay.h"
-#include "vec3.h"
 #include "softwaregl.h"
 #include <sstream>
 #include "engineConfig.h"
@@ -43,10 +42,10 @@ public:
 
 	int executeCommands(messageQueue* qIn, messageQueue* qOut)
 	{
-		world[0].coords.e[0] = world[0].coords.e[0] + 0.001;
-		world[1].coords.e[1] = world[1].coords.e[1] + 0.001;
-		world[2].coords.e[0] = world[2].coords.e[0] + 0.001;
-		world[2].coords.e[1] = world[2].coords.e[1] + 0.001;
+		world[0].coords().e[0] = world[0].coords().e[0] + 0.001;
+		world[1].coords().e[1] = world[1].coords().e[1] + 0.001;
+		world[2].coords().e[0] = world[2].coords().e[0] + 0.001;
+		world[2].coords().e[1] = world[2].coords().e[1] + 0.001;
 
 		render();
 
@@ -86,8 +85,8 @@ private:
 
 	float curDt;
 
-	tVertexData world[3] = { tVertexData(vec3<float>(0,0,0)),
-							 tVertexData(vec3<float>(0,-1,0)) ,
-	                         tVertexData(vec3<float>(-2,-2,0)) };
+	vertexData world[3] = { vertexData(0,0,0),
+							vertexData(0,-1,0) ,
+							vertexData(-2,-2,0) };
 };
 #endif

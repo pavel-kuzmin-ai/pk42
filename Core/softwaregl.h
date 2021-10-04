@@ -7,11 +7,14 @@ class tVertexData
 {
 public:
 	tVertexData() {};
-	tVertexData(vec3<float> c) :coords{ c } {};
+	tVertexData(vec3<float> c) :_coords{ c } {};
+	tVertexData(float x, float y, float z) :_coords(x,y,z) {};
 	~tVertexData() {};
 
-public:
-	vec3<float> coords;
+	vec3<float> coords() { return _coords; }
+
+private:
+	vec3<float> _coords;
 };
 
 
@@ -54,8 +57,8 @@ public:
 
 	void sGLDrawVertex(tVertexData vertex)
 	{
-		float x = ((vertex.coords.x() - xmin) * 2 / xspan - 1);
-		float y = ((vertex.coords.y() - ymin) * 2 / yspan - 1);
+		float x = ((vertex.coords().x() - xmin) * 2 / xspan - 1);
+		float y = ((vertex.coords().y() - ymin) * 2 / yspan - 1);
 		if ((x > -1) && (x < 1) && (y > -1) && (y < 1))
 		{
 			int ix = (int)((x + 1) * width / 2);

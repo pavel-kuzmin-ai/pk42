@@ -85,26 +85,26 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>D:\Personal\Study\pk42\Core;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Personal\Study\pk42\bin;$(LibraryPath)</LibraryPath>
+    <IncludePath>E:\git\pk42\Core;D:\Personal\Study\pk42\Core;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\git\pk42\bin;D:\Personal\Study\pk42\bin;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\Personal\Study\pk42\Core;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Personal\Study\pk42\bin;$(LibraryPath)</LibraryPath>
+    <IncludePath>E:\git\pk42\Core;D:\Personal\Study\pk42\Core;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\git\pk42\bin;D:\Personal\Study\pk42\bin;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\Personal\Study\pk42\Core;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Personal\Study\pk42\bin;$(LibraryPath)</LibraryPath>
+    <IncludePath>E:\git\pk42\Core;D:\Personal\Study\pk42\Core;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\git\pk42\bin;D:\Personal\Study\pk42\bin;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>D:\Personal\Study\pk42\Core;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Personal\Study\pk42\bin;$(LibraryPath)</LibraryPath>
+    <IncludePath>E:\git\pk42\Core;D:\Personal\Study\pk42\Core;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\git\pk42\bin;D:\Personal\Study\pk42\bin;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

@@ -17,3 +17,13 @@
 extern "C" DLLDIR tClock* APIENTRY GetClock(float strtT);
 extern "C" DLLDIR tConsoleScreen* APIENTRY GetConsoleScreen(int _width, int _height, int _pixelSize);
 extern "C" DLLDIR tSoftwareRasterizer* APIENTRY GetSoftwareRasterizer(int _width, int _height);
+
+
+class DLLDIR vertexData : public tVertexData
+{
+public:
+	vertexData();
+	vertexData(vec3<float> c);
+	vertexData(float x, float y, float z);
+	~vertexData();
+};
