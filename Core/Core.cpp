@@ -1,113 +1,18 @@
 #include "core.h"
-#include "engineState.h"
-#include "engineConfig.h"
-#include "clock.h"
 
-engineState sEngineState;
-engineConfig cEngineConfig;
-
-coreSystem::coreSystem() {}
-coreSystem::~coreSystem(void) {}
-void coreSystem::startUp()
+tClock* GetClock(float strtT = 0.0f)
 {
-
-	//sysB = new sysCout("system out");
-	bus = new sysBus("msg bus");
-}
-void coreSystem::shutDown() { bus->shutDown(); }
-void coreSystem::continuousRun(){bus->continuousRun();}
-
-
-
-pk42Core::pk42Core() {}
-pk42Core::~pk42Core(void) {}
-void pk42Core::startUp()
-{
-	coreSystem::startUp();
-	//sysB = new sysCout("system out");
-	sysC = new sysMmapSaverFromMain("system mmap save from main");
-	sysD = new sysMmapLoaderFromChild("system mmap load from child");
-	sysLogic = new sysCoreLogic("core logic");
-	sysDisplay = new sysSoftwareRenderer("renderer", &cEngineConfig);
-
-	//bus.subscribeClient(*sysB);
-	bus->subscribeClient(*sysC);
-	bus->subscribeClient(*sysD);
-	bus->subscribeClient(*sysLogic);
-	bus->subscribeClient(*sysDisplay);
-
-	//sysB->startUp();
-	sysC->startUp();
-	sysD->startUp();
-	sysLogic->startUp();
-	sysDisplay->startUp();
-	
-	vGameSystems.push_back(sysDisplay);
-
-	bus->connectEngineState(&sEngineState);
-	sEngineState.bEngineInitialized = true;
-	std::cout << "engine initialized" << '\n';
-
-	//sysB->runDetached();
-	sysC->runDetached();
-	sysD->runDetached();
-	sysLogic->runDetached();
-	//sysDisplay->runDetached();
-
-	//display->buildScreen();
-	//display->build_map();
-	//display->display_colors();
+	return &tClock(strtT);
 }
 
-void pk42Core::runGameLoop()
+
+tConsoleScreen* GetConsoleScreen(int _width = 120, int _height = 80, int _pixelSize = 8)
 {
-	tClock clockCur, clockPrev;
-	clockCur.init();
-	clockPrev = clockCur;
-	clockCur.startMeasure();
-	float dt = 1.0f / 30.0f;
-	while (sEngineState.bEngineInitialized)
-	{
-		
-		step(dt);
-		clockCur.checkAndSwapMeasure();
-		dt = clockCur.calcDeltaSeconds(clockPrev);
-		clockPrev = clockCur;
-	}
-}
-void pk42Core::step(float dt)
-{
-	//for (auto sys: vGameSystems)
-	//	sys->callSystemThreadsave();
-	sysDisplay->setDt(dt);
-	sysDisplay->callSystemThreadsave();
-	bus->callSystemThreadsave();
+	return &tConsoleScreen(_width, _height, _pixelSize);
 }
 
-pk42Console::pk42Console(){};
-pk42Console::~pk42Console(void) {};
-void pk42Console::startUp()
+
+tSoftwareRasterizer* GetSoftwareRasterizer(int _width = 120, int _height = 80)
 {
-	coreSystem::startUp();
-	sysB = new sysMmapLoaderFromMain("system mmap loader from main console");
-	sysC = new sysCout("system out console");
-	sysD = new sysDetachedConsole("console");
-	sysLogic = new sysCoreLogic("core logic");
-	bus->subscribeClient(*sysB);
-	bus->subscribeClient(*sysC);
-	bus->subscribeClient(*sysD);
-	bus->subscribeClient(*sysLogic);
-	sysB->startUp();
-	sysC->startUp();
-	sysD->startUp();
-	sysLogic->startUp();
-
-	bus->connectEngineState(&sEngineState);
-	sEngineState.bEngineInitialized = true;
-	std::cout << "console initialized" << '\n';
-
-	sysB->runDetached();
-	sysC->runDetached();
-	sysD->runDetached();
-	sysLogic->runDetached();
+	return &tSoftwareRasterizer(_width, _height);
 }

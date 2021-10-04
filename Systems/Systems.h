@@ -9,13 +9,12 @@
 #include <iostream>
 #include "sysmsgbus.h"
 #include "sysconsole.h"
-#include "logging.h"
-#include "ipc.h"
+#include "sysipc.h"
 #include <queue>
 #include <string>
 #include "syscorelogic.h"
 #include "syssoftwarerenderer.h"
-
+#include "core.h"
 
 //extern "C" {
 //	void DLLDIR runEngine();

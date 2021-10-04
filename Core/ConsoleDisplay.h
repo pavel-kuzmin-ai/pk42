@@ -4,7 +4,6 @@
 #include "windows.h"
 #include <iostream>
 #include <sstream>
-#include "engineconfig.h"
 #include "vec3.h"
 #include <cwchar>
 #include <unordered_map>
@@ -133,18 +132,17 @@ public:
 
 
 
-class ConsoleScreen
+class tConsoleScreen
 {
 public:
-	ConsoleScreen() {};
-	ConsoleScreen(engineConfig* _conf) : config{ _conf } 
-	{
-		m_nScreenWidth = config->screenWidth;
-		m_nScreenHeight = config->screenHeight;
+	tConsoleScreen() {};
+	tConsoleScreen(int _width, int _height, int _pixelSize) :
+		iScreenWidth(_width), 
+		iScreenHeight(_height),
+		iPixSize(_pixelSize)
+	{};
 
-	};
-
-	~ConsoleScreen() {};
+	~tConsoleScreen() {};
 
 		
 	void startUp()
@@ -161,15 +159,15 @@ public:
 		m_rectWindow = { 0, 0, 1, 1 };
 		SetConsoleWindowInfo(hConsole, TRUE, &m_rectWindow);
 
-		COORD coord = { (short)m_nScreenWidth, (short)m_nScreenHeight };
+		COORD coord = { (short)iScreenWidth, (short)iScreenHeight };
 		SetConsoleScreenBufferSize(hConsole, coord);
 		SetConsoleActiveScreenBuffer(hConsole);
 
 		CONSOLE_FONT_INFOEX cfi;
 		cfi.cbSize = sizeof(cfi);
 		cfi.nFont = 0;
-		cfi.dwFontSize.X = config->pxlSize;
-		cfi.dwFontSize.Y = config->pxlSize;
+		cfi.dwFontSize.X = iPixSize;
+		cfi.dwFontSize.Y = iPixSize;
 		cfi.FontFamily = FF_DONTCARE;
 		cfi.FontWeight = FW_NORMAL;
 
@@ -179,16 +177,16 @@ public:
 
 		CONSOLE_SCREEN_BUFFER_INFO csbi;
 		GetConsoleScreenBufferInfo(hConsole, &csbi);
-		if (m_nScreenHeight > csbi.dwMaximumWindowSize.Y)
-			m_nScreenHeight = csbi.dwMaximumWindowSize.Y;
-		if (m_nScreenWidth > csbi.dwMaximumWindowSize.X)
-			m_nScreenWidth = csbi.dwMaximumWindowSize.X;
+		if (iScreenHeight > csbi.dwMaximumWindowSize.Y)
+			iScreenHeight = csbi.dwMaximumWindowSize.Y;
+		if (iScreenWidth > csbi.dwMaximumWindowSize.X)
+			iScreenWidth = csbi.dwMaximumWindowSize.X;
 
-		m_rectWindow = { 0, 0, (short)m_nScreenWidth - 1, (short)m_nScreenHeight - 1 };
+		m_rectWindow = { 0, 0, (short)iScreenWidth - 1, (short)iScreenHeight - 1 };
 		SetConsoleWindowInfo(hConsole, TRUE, &m_rectWindow);
 
-		m_bufScreen = new CHAR_INFO[m_nScreenWidth*m_nScreenHeight];
-		memset(m_bufScreen, 0, sizeof(CHAR_INFO) * m_nScreenWidth * m_nScreenHeight);
+		m_bufScreen = new CHAR_INFO[iScreenWidth*iScreenHeight];
+		memset(m_bufScreen, 0, sizeof(CHAR_INFO) * iScreenWidth * iScreenHeight);
 
 
 		CONSOLE_CURSOR_INFO     cursorInfo;
@@ -202,7 +200,7 @@ public:
 	void  buildRGBbuffer()
 	{
 		//_bufRGB = new colorRGB[m_nScreenWidth * m_nScreenHeight];
-		_bufRGB = new int[m_nScreenWidth * m_nScreenHeight*3];
+		_bufRGB = new int[iScreenWidth * iScreenHeight *3];
 
 	}
 
@@ -223,7 +221,7 @@ public:
 
 	int bufSize()
 	{
-		return m_nScreenWidth * m_nScreenHeight;
+		return iScreenWidth * iScreenHeight;
 	}
 
 	//colorRGB* bufRGB()
@@ -234,9 +232,9 @@ public:
 	
 	virtual void Draw(int x, int y, short c = 0x2588, short col = 0x000F)
 	{
-		if (x >= 0 && x < m_nScreenWidth && y >= 0 && y < m_nScreenHeight)
+		if (x >= 0 && x < iScreenWidth && y >= 0 && y < iScreenHeight)
 		{
-			updateBuffer(y * m_nScreenWidth + x, c, col);
+			updateBuffer(y * iScreenWidth + x, c, col);
 		}
 	}
 
@@ -248,12 +246,12 @@ public:
 	
 	void show()
 	{
-		WriteConsoleOutput(hConsole, m_bufScreen, { (short)m_nScreenWidth, (short)m_nScreenHeight }, { 0,0 }, &m_rectWindow);
+		WriteConsoleOutput(hConsole, m_bufScreen, { (short)iScreenWidth, (short)iScreenHeight }, { 0,0 }, &m_rectWindow);
 	}
 
 	void updateConsoleBuffer()
 	{
-		for (int i = 0; i < m_nScreenWidth*m_nScreenHeight; i++) 
+		for (int i = 0; i < iScreenWidth*iScreenHeight; i++)
 		{
 			consolePixel closestPix;
 			int minDist = 255 * 255 * 3;
@@ -290,7 +288,6 @@ public:
 
 	void buildColorMap()
 	{
-		char x;
 		colorRGB back_cols[2] = { cRgbCols[0], cRgbCols[15] };
 		for (int i = 0; i< std::size(cRgbCols); i++)
 		//for (int i = 0; i < 16; i++)
@@ -375,7 +372,7 @@ public:
 			
 			int col_code = k.first;
 			consolePixel pix = k.second;
-			Draw(i%m_nScreenWidth, i / m_nScreenWidth, pix.sCharacter, pix.sColorCode);
+			Draw(i%iScreenWidth, i / iScreenWidth, pix.sCharacter, pix.sColorCode);
 
 			//std::cout << std::hex << col_code << "  :  " << pix.sCharacter << pix.sColorCode << '\n';
 			i++;
@@ -383,10 +380,9 @@ public:
 		show();
 	}
 	
-	int screenWidth() { return m_nScreenWidth; }
-	int screenHeight() { return m_nScreenHeight; }
+	int screenWidth() { return iScreenWidth; }
+	int screenHeight() { return iScreenHeight; }
 private:
-	engineConfig* config;
 	HANDLE hConsole;
 	CHAR_INFO* m_bufScreen;
 	SMALL_RECT m_rectWindow;
@@ -398,8 +394,10 @@ private:
 	int coarseStep = 10;
 
 
-	int m_nScreenWidth = 120;
-	int m_nScreenHeight = 90;
+	int iScreenWidth = 120;
+	int iScreenHeight = 90;
+	int iPixSize = 8;
+	
 
 	std::unordered_map< int, consolePixel> uRgb2ConsoleCode;
 	std::unordered_map< int, consolePixel> uCoarsedRgb2ConsoleCode;

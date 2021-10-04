@@ -8,11 +8,15 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pkEng", "pkEng\pkEng.vcxproj", "{2928118F-8BDB-4F74-B6FD-9A776554D523}"
 	ProjectSection(ProjectDependencies) = postProject
 		{200DA898-1363-4FDA-8368-0957DCA8A0F3} = {200DA898-1363-4FDA-8368-0957DCA8A0F3}
+		{C723FAEA-5DAA-405C-BDEA-E811667F6B67} = {C723FAEA-5DAA-405C-BDEA-E811667F6B67}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCore", "TestCore\TestCore.vcxproj", "{1191FB51-2945-4205-A24B-3E72B16B0C87}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Systems", "Systems\Systems.vcxproj", "{C723FAEA-5DAA-405C-BDEA-E811667F6B67}"
+	ProjectSection(ProjectDependencies) = postProject
+		{200DA898-1363-4FDA-8368-0957DCA8A0F3} = {200DA898-1363-4FDA-8368-0957DCA8A0F3}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

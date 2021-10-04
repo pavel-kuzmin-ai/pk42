@@ -15,12 +15,12 @@ public:
 };
 
 
-class tRasterizer
+class tSoftwareRasterizer
 {
 public:
-	tRasterizer() {};
-	tRasterizer(int _width = 120, int _height = 90) :width(_width), height( _height ) {};
-	~tRasterizer() {};
+	tSoftwareRasterizer() {};
+	tSoftwareRasterizer(int _width = 120, int _height = 90) :width(_width), height( _height ) {};
+	~tSoftwareRasterizer() {};
 
 	void initBuffers()
 	{
@@ -58,8 +58,8 @@ public:
 		float y = ((vertex.coords.y() - ymin) * 2 / yspan - 1);
 		if ((x > -1) && (x < 1) && (y > -1) && (y < 1))
 		{
-			int ix = (x + 1) * width / 2;
-			int iy = height - (y + 1) * height / 2;
+			int ix = (int)((x + 1) * width / 2);
+			int iy = (int)(height - (y + 1) * height / 2);
 
 			int idx = (int)(iy * width + ix) * 3;
 			outColor[idx] = 255;

@@ -30,6 +30,15 @@
     <ClInclude Include="Systems.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sysipc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="engineConfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="engineState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Systems.cpp">

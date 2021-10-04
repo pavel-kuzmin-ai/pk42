@@ -21,15 +21,6 @@
     <ClInclude Include="core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="engineconfig.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="enginestate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="logging.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="vec3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -43,9 +34,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="quadtree.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sysipc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

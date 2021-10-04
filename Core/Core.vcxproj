@@ -170,13 +170,9 @@
     <ClInclude Include="clock.h" />
     <ClInclude Include="consoledisplay.h" />
     <ClInclude Include="core.h" />
-    <ClInclude Include="engineconfig.h" />
-    <ClInclude Include="enginestate.h" />
     <ClInclude Include="highrestimer.h" />
     <ClInclude Include="quadtree.h" />
     <ClInclude Include="softwaregl.h" />
-    <ClInclude Include="sysipc.h" />
-    <ClInclude Include="logging.h" />
     <ClInclude Include="vec3.h" />
   </ItemGroup>
   <ItemGroup>

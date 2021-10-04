@@ -2,10 +2,10 @@
 //
 
 #include <iostream>
-#include "Core.h"
+#include "Systems.h"
 #include "windows.h"
 #include "string.h"
-#pragma comment(lib,"Core.lib") 
+#pragma comment(lib,"Systems.lib") 
 
 void CreateChildProcess(int window_flag = 0x00000010)
 {

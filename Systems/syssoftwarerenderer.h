@@ -7,6 +7,8 @@
 #include "vec3.h"
 #include "softwaregl.h"
 #include <sstream>
+#include "engineConfig.h"
+
 
 class sysSoftwareRenderer : public Node
 {
@@ -18,13 +20,13 @@ public:
 
 	void startUp() 
 	{
-		display = new ConsoleScreen(conf);
+		display = new tConsoleScreen(conf->screenWidth, conf->screenHeight, conf->pxlSize);
 		display->startUp();
 		screenWidth = display->screenWidth();
 		screenHeight = display->screenHeight();
 		displayBuffer = display->bufRGB();
 
-		rasterizer = new tRasterizer(screenWidth, screenHeight);
+		rasterizer = new tSoftwareRasterizer(screenWidth, screenHeight);
 		rasterizer->initBuffers();
 		rasterizer->setOutBuffer(displayBuffer);
 		sGLColor = rasterizer->bufColor();
@@ -74,8 +76,8 @@ public:
 	}
 private:
 	engineConfig* conf;
-	ConsoleScreen* display;
-	tRasterizer* rasterizer;
+	tConsoleScreen* display;
+	tSoftwareRasterizer* rasterizer;
 	//colorRGB* displayBuffer;
 	int* displayBuffer;
 	int screenWidth;
