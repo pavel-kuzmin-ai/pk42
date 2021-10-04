@@ -170,17 +170,9 @@
     <ClInclude Include="clock.h" />
     <ClInclude Include="consoledisplay.h" />
     <ClInclude Include="core.h" />
-    <ClInclude Include="engineconfig.h" />
-    <ClInclude Include="enginestate.h" />
     <ClInclude Include="highrestimer.h" />
     <ClInclude Include="quadtree.h" />
     <ClInclude Include="softwaregl.h" />
-    <ClInclude Include="sysconsole.h" />
-    <ClInclude Include="syscorelogic.h" />
-    <ClInclude Include="ipc.h" />
-    <ClInclude Include="logging.h" />
-    <ClInclude Include="syssoftwarerenderer.h" />
-    <ClInclude Include="sysmsgbus.h" />
     <ClInclude Include="vec3.h" />
   </ItemGroup>
   <ItemGroup>

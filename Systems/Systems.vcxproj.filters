@@ -15,30 +15,33 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="consoledisplay.h">
+    <ClInclude Include="sysconsole.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="core.h">
+    <ClInclude Include="syscorelogic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vec3.h">
+    <ClInclude Include="sysmsgbus.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="softwaregl.h">
+    <ClInclude Include="syssoftwarerenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="highrestimer.h">
+    <ClInclude Include="Systems.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="clock.h">
+    <ClInclude Include="sysipc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="quadtree.h">
+    <ClInclude Include="engineConfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="engineState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="core.cpp">
+    <ClCompile Include="Systems.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

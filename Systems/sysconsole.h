@@ -3,7 +3,7 @@
 
 #include "sysmsgbus.h"
 #include <iostream>
-#include "ipc.h"
+#include "sysipc.h"
 
 using std::string;
 

@@ -7,63 +7,13 @@
 #endif 
 
 #include <iostream>
-#include "sysmsgbus.h"
-#include "sysconsole.h"
-#include "logging.h"
-#include "ipc.h"
 #include <queue>
 #include <string>
-#include "syscorelogic.h"
-#include "syssoftwarerenderer.h"
+#include "clock.h"
+#include "consoledisplay.h"
+#include "softwaregl.h"
 
 
-//extern "C" {
-//	void DLLDIR runEngine();
-//	void  DLLDIR runConsole();
-//};
-
-class DLLDIR coreSystem
-{
-public:
-	coreSystem();
-	~coreSystem();
-	void startUp();
-	void shutDown();
-	void continuousRun();
-
-protected:
-	vector<Node*> vSystems;
-	sysBus* bus;
-};
-
-class DLLDIR pk42Core : public coreSystem
-{
-public:
-	pk42Core();
-	~pk42Core();
-	void step(float dt);
-	void runGameLoop();
-	void startUp();
-private:
-	vector<Node*> vGameSystems;
-	sysCout* sysB;
-	sysMmapSaverFromMain* sysC;
-	sysMmapLoaderFromChild* sysD;
-	sysCoreLogic* sysLogic;
-	sysSoftwareRenderer* sysDisplay;
-	int position = 0;
-};
-
-
-class DLLDIR pk42Console : public coreSystem
-{
-public:
-	pk42Console();
-	~pk42Console();
-	void startUp();
-private:
-	sysMmapLoaderFromMain* sysB;
-	sysCout* sysC;
-	sysDetachedConsole* sysD;
-	sysCoreLogic* sysLogic;
-};
+extern "C" DLLDIR tClock* APIENTRY GetClock(float strtT);
+extern "C" DLLDIR tConsoleScreen* APIENTRY GetConsoleScreen(int _width, int _height, int _pixelSize);
+extern "C" DLLDIR tSoftwareRasterizer* APIENTRY GetSoftwareRasterizer(int _width, int _height);
