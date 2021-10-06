@@ -1,24 +1,18 @@
 #include "core.h"
 
-tClock* GetClock(float strtT = 0.0f)
-{
-	return &tClock(strtT);
-}
 
+IClock::IClock(float startTimeSeconds) : tClock(startTimeSeconds) {};
+IClock::~IClock(void) {};
 
-tConsoleScreen* GetConsoleScreen(int _width = 120, int _height = 80, int _pixelSize = 8)
-{
-	return &tConsoleScreen(_width, _height, _pixelSize);
-}
+IConsoleScreen::IConsoleScreen(int _width, int _height, int _pixelSize) : 
+	tConsoleScreen(_width, _height, _pixelSize) {};
+IConsoleScreen::~IConsoleScreen(void) {};
 
+ISoftwareRasterizer::ISoftwareRasterizer(int _width, int _height) :
+	tSoftwareRasterizer(_width, _height) {};
+ISoftwareRasterizer::~ISoftwareRasterizer(void) {};
 
-tSoftwareRasterizer* GetSoftwareRasterizer(int _width = 120, int _height = 80)
-{
-	return &tSoftwareRasterizer(_width, _height);
-}
-
-
-vertexData::vertexData(){}
-vertexData::vertexData(vec3<float> c) : tVertexData(c) {}
-vertexData::vertexData(float x, float y, float z) : tVertexData(x, y, z) {}
-vertexData::~vertexData(void) {}
+IVertexData::IVertexData() {};
+IVertexData::IVertexData(vec3<float> c) : tVertexData(c) {};
+IVertexData::IVertexData(float x, float y, float z) : tVertexData(x, y, z) {};
+IVertexData::~IVertexData(void) {};

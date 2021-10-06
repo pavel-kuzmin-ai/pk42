@@ -3,11 +3,9 @@
 
 #include "sysmsgbus.h"
 #include <iostream>
-#include "consoledisplay.h"
-#include "softwaregl.h"
 #include <sstream>
 #include "engineConfig.h"
-
+#include "systemsexternals.h"
 
 class sysSoftwareRenderer : public Node
 {
@@ -19,13 +17,13 @@ public:
 
 	void startUp() 
 	{
-		display = new tConsoleScreen(conf->screenWidth, conf->screenHeight, conf->pxlSize);
+		display = new IConsoleScreen(conf->screenWidth, conf->screenHeight, conf->pxlSize);
 		display->startUp();
 		screenWidth = display->screenWidth();
 		screenHeight = display->screenHeight();
 		displayBuffer = display->bufRGB();
 
-		rasterizer = new tSoftwareRasterizer(screenWidth, screenHeight);
+		rasterizer = new ISoftwareRasterizer(screenWidth, screenHeight);
 		rasterizer->initBuffers();
 		rasterizer->setOutBuffer(displayBuffer);
 		sGLColor = rasterizer->bufColor();
@@ -75,8 +73,8 @@ public:
 	}
 private:
 	engineConfig* conf;
-	tConsoleScreen* display;
-	tSoftwareRasterizer* rasterizer;
+	IConsoleScreen* display;
+	ISoftwareRasterizer* rasterizer;
 	//colorRGB* displayBuffer;
 	int* displayBuffer;
 	int screenWidth;
@@ -85,8 +83,8 @@ private:
 
 	float curDt;
 
-	vertexData world[3] = { vertexData(0,0,0),
-							vertexData(0,-1,0) ,
-							vertexData(-2,-2,0) };
+	IVertexData world[3] = { IVertexData(0,0,0),
+							 IVertexData(0,-1,0) ,
+							 IVertexData(-2,-2,0) };
 };
 #endif

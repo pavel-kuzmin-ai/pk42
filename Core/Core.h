@@ -14,16 +14,33 @@
 #include "softwaregl.h"
 
 
-extern "C" DLLDIR tClock* APIENTRY GetClock(float strtT);
-extern "C" DLLDIR tConsoleScreen* APIENTRY GetConsoleScreen(int _width, int _height, int _pixelSize);
-extern "C" DLLDIR tSoftwareRasterizer* APIENTRY GetSoftwareRasterizer(int _width, int _height);
 
-
-class DLLDIR vertexData : public tVertexData
+class DLLDIR IClock : public tClock
 {
 public:
-	vertexData();
-	vertexData(vec3<float> c);
-	vertexData(float x, float y, float z);
-	~vertexData();
+	IClock(float startTimeSeconds = 0.0f);
+	~IClock();
+};
+
+class DLLDIR IConsoleScreen : public tConsoleScreen
+{
+public:
+	IConsoleScreen(int _width, int _height, int _pixelSize);
+	~IConsoleScreen();
+};
+
+class DLLDIR ISoftwareRasterizer : public tSoftwareRasterizer
+{
+public:
+	ISoftwareRasterizer(int _width, int _height);
+	~ISoftwareRasterizer();
+};
+
+class DLLDIR IVertexData : public tVertexData
+{
+public:
+	IVertexData();
+	IVertexData(vec3<float> c);
+	IVertexData(float x, float y, float z);
+	~IVertexData();
 };

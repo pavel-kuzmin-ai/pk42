@@ -59,7 +59,7 @@ void pk42Core::startUp()
 
 void pk42Core::runGameLoop()
 {
-	tClock clockCur, clockPrev;
+	IClock clockCur, clockPrev;
 	clockCur.init();
 	clockPrev = clockCur;
 	clockCur.startMeasure();

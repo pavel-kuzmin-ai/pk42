@@ -39,6 +39,9 @@
     <ClInclude Include="engineState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="systemsexternals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Systems.cpp">

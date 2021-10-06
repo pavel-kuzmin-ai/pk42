@@ -18,6 +18,18 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="clock.h" />
+    <ClInclude Include="consoledisplay.h" />
+    <ClInclude Include="core.h" />
+    <ClInclude Include="highrestimer.h" />
+    <ClInclude Include="quadtree.h" />
+    <ClInclude Include="softwaregl.h" />
+    <ClInclude Include="vec3.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="core.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{200DA898-1363-4FDA-8368-0957DCA8A0F3}</ProjectGuid>
@@ -166,18 +178,6 @@
       <EnableUAC>false</EnableUAC>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="clock.h" />
-    <ClInclude Include="consoledisplay.h" />
-    <ClInclude Include="core.h" />
-    <ClInclude Include="highrestimer.h" />
-    <ClInclude Include="quadtree.h" />
-    <ClInclude Include="softwaregl.h" />
-    <ClInclude Include="vec3.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="core.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

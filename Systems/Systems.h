@@ -14,7 +14,6 @@
 #include <string>
 #include "syscorelogic.h"
 #include "syssoftwarerenderer.h"
-#include "core.h"
 
 //extern "C" {
 //	void DLLDIR runEngine();

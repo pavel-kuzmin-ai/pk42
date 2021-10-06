@@ -1,30 +1,43 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(377,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
   core.cpp
-e:\git\pk42\core\core.h(23): warning C4275: non dll-interface class 'tVertexData' used as base for dll-interface class 'vertexData'
+e:\git\pk42\core\core.h(19): warning C4275: non dll-interface class 'tClock' used as base for dll-interface class 'IClock'
+  e:\git\pk42\core\clock.h(7): note: see declaration of 'tClock'
+  e:\git\pk42\core\core.h(18): note: see declaration of 'IClock'
+e:\git\pk42\core\core.h(26): warning C4275: non dll-interface class 'tConsoleScreen' used as base for dll-interface class 'IConsoleScreen'
+  e:\git\pk42\core\consoledisplay.h(135): note: see declaration of 'tConsoleScreen'
+  e:\git\pk42\core\core.h(25): note: see declaration of 'IConsoleScreen'
+e:\git\pk42\core\core.h(33): warning C4275: non dll-interface class 'tSoftwareRasterizer' used as base for dll-interface class 'ISoftwareRasterizer'
+  e:\git\pk42\core\softwaregl.h(21): note: see declaration of 'tSoftwareRasterizer'
+  e:\git\pk42\core\core.h(32): note: see declaration of 'ISoftwareRasterizer'
+e:\git\pk42\core\core.h(40): warning C4275: non dll-interface class 'tVertexData' used as base for dll-interface class 'IVertexData'
   e:\git\pk42\core\softwaregl.h(6): note: see declaration of 'tVertexData'
-  e:\git\pk42\core\core.h(22): note: see declaration of 'vertexData'
-e:\git\pk42\core\core.cpp(4): warning C4273: 'GetClock': inconsistent dll linkage
-  e:\git\pk42\core\core.h(17): note: see previous definition of 'GetClock'
-e:\git\pk42\core\core.cpp(10): warning C4273: 'GetConsoleScreen': inconsistent dll linkage
-  e:\git\pk42\core\core.h(18): note: see previous definition of 'GetConsoleScreen'
-e:\git\pk42\core\core.cpp(16): warning C4273: 'GetSoftwareRasterizer': inconsistent dll linkage
-  e:\git\pk42\core\core.h(19): note: see previous definition of 'GetSoftwareRasterizer'
-e:\git\pk42\core\core.cpp(21): warning C4273: 'vertexData::vertexData': inconsistent dll linkage
-  e:\git\pk42\core\core.h(25): note: see previous definition of '{ctor}'
-e:\git\pk42\core\core.cpp(22): warning C4273: 'vertexData::vertexData': inconsistent dll linkage
-  e:\git\pk42\core\core.h(26): note: see previous definition of '{ctor}'
-e:\git\pk42\core\core.cpp(23): warning C4273: 'vertexData::vertexData': inconsistent dll linkage
-  e:\git\pk42\core\core.h(27): note: see previous definition of '{ctor}'
-e:\git\pk42\core\core.cpp(24): warning C4273: 'vertexData::~vertexData': inconsistent dll linkage
-  e:\git\pk42\core\core.h(28): note: see previous definition of '{dtor}'
+  e:\git\pk42\core\core.h(39): note: see declaration of 'IVertexData'
+e:\git\pk42\core\core.cpp(4): warning C4273: 'IClock::IClock': inconsistent dll linkage
+  e:\git\pk42\core\core.h(21): note: see previous definition of '{ctor}'
+e:\git\pk42\core\core.cpp(5): warning C4273: 'IClock::~IClock': inconsistent dll linkage
+  e:\git\pk42\core\core.h(22): note: see previous definition of '{dtor}'
+e:\git\pk42\core\core.cpp(7): warning C4273: 'IConsoleScreen::IConsoleScreen': inconsistent dll linkage
+  e:\git\pk42\core\core.h(28): note: see previous definition of '{ctor}'
+e:\git\pk42\core\core.cpp(9): warning C4273: 'IConsoleScreen::~IConsoleScreen': inconsistent dll linkage
+  e:\git\pk42\core\core.h(29): note: see previous definition of '{dtor}'
+e:\git\pk42\core\core.cpp(11): warning C4273: 'ISoftwareRasterizer::ISoftwareRasterizer': inconsistent dll linkage
+  e:\git\pk42\core\core.h(35): note: see previous definition of '{ctor}'
+e:\git\pk42\core\core.cpp(13): warning C4273: 'ISoftwareRasterizer::~ISoftwareRasterizer': inconsistent dll linkage
+  e:\git\pk42\core\core.h(36): note: see previous definition of '{dtor}'
+e:\git\pk42\core\core.cpp(15): warning C4273: 'IVertexData::IVertexData': inconsistent dll linkage
+  e:\git\pk42\core\core.h(42): note: see previous definition of '{ctor}'
+e:\git\pk42\core\core.cpp(16): warning C4273: 'IVertexData::IVertexData': inconsistent dll linkage
+  e:\git\pk42\core\core.h(43): note: see previous definition of '{ctor}'
+e:\git\pk42\core\core.cpp(17): warning C4273: 'IVertexData::IVertexData': inconsistent dll linkage
+  e:\git\pk42\core\core.h(44): note: see previous definition of '{ctor}'
+e:\git\pk42\core\core.cpp(18): warning C4273: 'IVertexData::~IVertexData': inconsistent dll linkage
+  e:\git\pk42\core\core.h(45): note: see previous definition of '{dtor}'
 e:\git\pk42\core\vec3.h(96): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
           with
           [
               T=int
           ]
   e:\git\pk42\core\consoledisplay.h(310): note: see reference to function template instantiation 'vec3<int> operator *<int>(float,const vec3<int> &)' being compiled
-e:\git\pk42\core\core.cpp(5): warning C4172: returning address of local variable or temporary
-e:\git\pk42\core\core.cpp(11): warning C4172: returning address of local variable or temporary
-e:\git\pk42\core\core.cpp(17): warning C4172: returning address of local variable or temporary
      Creating library E:\git\pk42\bin\Core.lib and object E:\git\pk42\bin\Core.exp
-  Core.vcxproj -> E:\git\pk42\bin\Core.dll
+core.obj : error LNK2019: unresolved external symbol "__declspec(dllimport) const IConsoleScreen::`vftable'" (__imp_??_7IConsoleScreen@@6B@) referenced in function "public: __cdecl IConsoleScreen::IConsoleScreen(int,int,int)" (??0IConsoleScreen@@QEAA@HHH@Z)
+E:\git\pk42\bin\Core.dll : fatal error LNK1120: 1 unresolved externals
