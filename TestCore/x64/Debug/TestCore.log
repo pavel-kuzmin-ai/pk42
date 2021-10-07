@@ -54,11 +54,5 @@ cl : Command line warning D9035: option 'Gm' has been deprecated and will be rem
   testQuadTree.cpp
 e:\git\pk42\core\quadtree.h(109): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   testConsoleDisplay.cpp
-e:\git\pk42\core\vec3.h(96): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
-          with
-          [
-              T=int
-          ]
-  e:\git\pk42\core\consoledisplay.h(310): note: see reference to function template instantiation 'vec3<int> operator *<int>(float,const vec3<int> &)' being compiled
   Generating Code...
 LINK : fatal error LNK1104: cannot open file 'E:\git\pk42\packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.0\build\native\..\..\lib\native\v140\windesktop\msvcstl\static\rt-dyn\x64\Debug\gtest_main.lib'

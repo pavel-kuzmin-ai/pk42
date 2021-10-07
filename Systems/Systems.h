@@ -1,9 +1,9 @@
 #pragma once
 
-#ifdef DLLDIR_EX
-#define DLLDIR  __declspec(dllexport)   // export DLL information
+#ifdef SYSTEMS_EXPORTS
+#define SYSTEMS_API  __declspec(dllexport)   // export DLL information
 #else
-#define DLLDIR  __declspec(dllimport)   // import DLL information
+#define SYSTEMS_API  __declspec(dllimport)   // import DLL information
 #endif 
 
 #include <iostream>
@@ -20,7 +20,7 @@
 //	void  DLLDIR runConsole();
 //};
 
-class DLLDIR coreSystem
+class SYSTEMS_API coreSystem
 {
 public:
 	coreSystem();
@@ -34,7 +34,7 @@ protected:
 	sysBus* bus;
 };
 
-class DLLDIR pk42Core : public coreSystem
+class SYSTEMS_API pk42Core : public coreSystem
 {
 public:
 	pk42Core();
@@ -53,7 +53,7 @@ private:
 };
 
 
-class DLLDIR pk42Console : public coreSystem
+class SYSTEMS_API pk42Console : public coreSystem
 {
 public:
 	pk42Console();

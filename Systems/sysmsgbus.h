@@ -273,7 +273,7 @@ public:
 
 	int clientSize()
 	{
-		return vClients.size();
+		return static_cast<int>(vClients.size());
 	}
 	
 protected:

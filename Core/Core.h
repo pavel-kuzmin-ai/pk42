@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef CORE_EX
+#ifdef CORE_EXPORTS
 #define CORE_API  __declspec(dllexport)   // export DLL information
 #else
 #define CORE_API  __declspec(dllimport)   // import DLL information
