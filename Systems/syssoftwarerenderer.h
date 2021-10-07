@@ -1,6 +1,10 @@
 #ifndef SYSSOFTWARERENDER_H
 #define SYSSOFTWARERENDER_H
-
+#ifdef DLLDIR2_EX
+#define DLLDIR2  __declspec(dllexport)   // export DLL information
+#else
+#define DLLDIR2  __declspec(dllimport)   // import DLL information
+#endif 
 #include "sysmsgbus.h"
 #include <iostream>
 #include <sstream>
@@ -40,10 +44,9 @@ public:
 
 	int executeCommands(messageQueue* qIn, messageQueue* qOut)
 	{
-		world[0].coords().e[0] = world[0].coords().e[0] + 0.001;
-		world[1].coords().e[1] = world[1].coords().e[1] + 0.001;
-		world[2].coords().e[0] = world[2].coords().e[0] + 0.001;
-		world[2].coords().e[1] = world[2].coords().e[1] + 0.001;
+		world[0].translate(0.001f, 0.f, 0.f);
+		world[1].translate(0.f, 0.001f, 0.f);
+		world[2].translate(0.001f, 0.001f, 0.f);
 
 		render();
 

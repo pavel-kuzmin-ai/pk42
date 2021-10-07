@@ -12,10 +12,12 @@ public:
 	~tVertexData() {};
 
 	vec3<float> coords() { return _coords; }
+	void translate(float dx, float dy, float dz) { _coords += vec3<float>(dx, dy, dz); }
 
 private:
 	vec3<float> _coords;
 };
+
 
 
 class tSoftwareRasterizer
