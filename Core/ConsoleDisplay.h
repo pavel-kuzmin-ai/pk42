@@ -201,7 +201,7 @@ public:
 	{
 		//_bufRGB = new colorRGB[m_nScreenWidth * m_nScreenHeight];
 		_bufRGB = new int[iScreenWidth * iScreenHeight *3];
-
+		clearRGBbuf();
 	}
 
 	void clearRGBbuf() 
@@ -212,7 +212,7 @@ public:
 			//_bufRGB[i].e[0] = 0;
 			//_bufRGB[i].e[1] = 0;
 			//_bufRGB[i].e[2] = 0;
-			_bufRGB[i * 3]    = 0;
+			_bufRGB[i * 3]     = 0;
 			_bufRGB[i * 3 + 1] = 0;
 			_bufRGB[i * 3 + 2] = 0;
 		}
@@ -335,7 +335,7 @@ public:
 					uCoarsedRgb2ConsoleCode;
 				    colorRGB coarsedColor(r, g, b);
 					int iColorCode = color2RGBcode(coarsedColor);
-					int minDist = 255 * 255 * 255;
+					int minDist = 255 * 255 * 3;
 					consolePixel closestPix;
 					for (int j = 0; j < uRgb2ConsoleCode.size(); j++)
 					{

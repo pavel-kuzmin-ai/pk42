@@ -34,3 +34,11 @@ IVertexData::IVertexData(float x, float y, float z) { vrtx = new tVertexData(x, 
 IVertexData::~IVertexData(void) {};
 void IVertexData::translate(float dx, float dy, float dz) { vrtx->translate(dx, dy, dz); };
 tVertexData* IVertexData::getVrtxDataPtr() { return vrtx; };
+
+ISoftwareRenderer::ISoftwareRenderer(int _width, int _height, int _pxl) { rndr = new tSoftwareRenderer(_width, _height, _pxl); };
+ISoftwareRenderer::~ISoftwareRenderer(void) { delete rndr; };
+void ISoftwareRenderer::startUp() { rndr->startUp(); };
+void ISoftwareRenderer::render() { rndr->render(); };
+void ISoftwareRenderer::updateWorld() { rndr->updateWorld(); };
+void ISoftwareRenderer::displayResult() { rndr->displayResult(); };
+

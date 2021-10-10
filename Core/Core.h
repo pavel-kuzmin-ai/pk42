@@ -9,6 +9,7 @@
 #include "clock.h"
 #include "consoledisplay.h"
 #include "softwaregl.h"
+#include "softwarerenderer.h"
 
 
 class CORE_API IClock
@@ -72,6 +73,21 @@ public:
 	void sGLDrawElements(int numElem);
 private:
 	tSoftwareRasterizer* rst;
+};
+
+
+class CORE_API ISoftwareRenderer
+{
+public:
+	ISoftwareRenderer(int _width, int _height, int _pxl);
+	~ISoftwareRenderer();
+	void startUp();
+	void render();
+	void updateWorld();
+	void displayResult();
+
+private:
+	tSoftwareRenderer* rndr;
 };
 
 

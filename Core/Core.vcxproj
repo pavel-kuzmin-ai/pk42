@@ -25,6 +25,7 @@
     <ClInclude Include="highrestimer.h" />
     <ClInclude Include="quadtree.h" />
     <ClInclude Include="softwaregl.h" />
+    <ClInclude Include="softwarerenderer.h" />
     <ClInclude Include="vec3.h" />
   </ItemGroup>
   <ItemGroup>
