@@ -23,14 +23,15 @@
     <ClInclude Include="consoledisplay.h" />
     <ClInclude Include="core.h" />
     <ClInclude Include="highrestimer.h" />
+    <ClInclude Include="mesh.h" />
     <ClInclude Include="quadtree.h" />
+    <ClInclude Include="scenekeeper.h" />
     <ClInclude Include="softwaregl.h" />
     <ClInclude Include="softwarerenderer.h" />
     <ClInclude Include="vec3.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core.cpp" />
-    <ClCompile Include="scenekeeper.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
