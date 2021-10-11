@@ -5,9 +5,10 @@ IClock::IClock(float startTimeSeconds) { clk = new tClock(startTimeSeconds); };
 IClock::~IClock(void) { delete clk; };
 void IClock::init() { clk->init(); };
 void IClock::startMeasure() { clk->startMeasure(); };
-void IClock::checkAndSwapMeasure() { clk->checkAndSwapMeasure(); };
-tClock* IClock::getClk() { return clk; };
-float IClock::calcDeltaSeconds(IClock other) { return clk->calcDeltaSeconds(*other.getClk()); };
+float IClock::checkAndSwapMeasure() { return clk->checkAndSwapMeasure(); };
+unsigned long long IClock::getTimeCycles() { return clk->getTimeCycles(); };
+float IClock::cyclesToSeconds(unsigned long long dt) { return clk->cyclesToSeconds(dt); };
+float IClock::calcDeltaSeconds(IClock other) {return clk->getTimeCycles() - other.getTimeCycles();};
 
 
 IConsoleScreen::IConsoleScreen(int _width, int _height, int _pixelSize) { scr = new tConsoleScreen(_width, _height, _pixelSize); };

@@ -17,8 +17,8 @@ using std::queue;
 using std::stringstream;
 
 #define BUF_SIZE 256
-TCHAR fromMainName[] = TEXT("Global\FromMain");
-TCHAR fromChildName[] = TEXT("Global\FromChild");
+TCHAR fromMainName[] = TEXT("GlobalFromMain");
+TCHAR fromChildName[] = TEXT("GlobalFromChild");
 
 HANDLE ghWriteFromMainEventDone = CreateEvent(NULL,               // default security attributes
 	TRUE,               // manual-reset event

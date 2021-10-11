@@ -55,13 +55,15 @@ public:
 		uStartedTicks = readHigResTimer();
 	}
 
-	void checkAndSwapMeasure()
+	float checkAndSwapMeasure()
 	{
 		uEndTicks = readHigResTimer();
 		deltaTicks = uEndTicks - uStartedTicks;
 		float dt = cyclesToSeconds(deltaTicks);
 		updateClock(dt);
 		uStartedTicks = uEndTicks;		
+
+		return dt;
 	}
 
 

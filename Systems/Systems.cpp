@@ -59,18 +59,15 @@ void pk42Core::startUp()
 
 void pk42Core::runGameLoop()
 {
-	//IClock clockCur, clockPrev;
-	//clockCur.init();
-	//clockPrev = clockCur;
-	//clockCur.startMeasure();
+	IClock clockCur;
+	clockCur.init();
+	clockCur.startMeasure();
 	float dt = 1.0f / 30.0f;
 	while (sEngineState.bEngineInitialized)
 	{
 		
 		step(dt);
-		//clockCur.checkAndSwapMeasure();
-		//dt = clockCur.calcDeltaSeconds(clockPrev);
-		//clockPrev = clockCur;
+		dt = clockCur.checkAndSwapMeasure();
 	}
 }
 void pk42Core::step(float dt)

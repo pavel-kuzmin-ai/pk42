@@ -106,7 +106,7 @@ int traverse(int x, int y, int myInd, int* myBox, bool findLeaf=true)
 void splitNode(int NodeIdx, int bordX, int bordY)
 {
 	
-	int cIdx = NodeArr.size();
+	int cIdx = (int)NodeArr.size();
 	NodeArr.push_back(tNode{ 0, 0 });
 	NodeArr.push_back(tNode{ 0, 0 });
 	NodeArr.push_back(tNode{ 0, 0 });

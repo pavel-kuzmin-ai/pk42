@@ -1,10 +1,6 @@
 #ifndef SYSSOFTWARERENDER_H
 #define SYSSOFTWARERENDER_H
-#ifdef DLLDIR2_EX
-#define DLLDIR2  __declspec(dllexport)   // export DLL information
-#else
-#define DLLDIR2  __declspec(dllimport)   // import DLL information
-#endif 
+
 #include "sysmsgbus.h"
 #include <iostream>
 #include <sstream>
@@ -18,20 +14,16 @@ public:
 	sysSoftwareRenderer(string s, engineConfig* _conf) :Node(s), conf(_conf){};
 	virtual ~sysSoftwareRenderer() {};
 
-
 	void startUp() 
 	{
 		renderer = new ISoftwareRenderer(conf->screenWidth, conf->screenHeight, conf->pxlSize);
 		renderer->startUp();
 	}
 
-
-
-
 	int executeCommands(messageQueue* qIn, messageQueue* qOut)
 	{
-		//renderer->updateWorld();
-		//renderer->render();
+		renderer->updateWorld();
+	    renderer->render();
 		renderer->displayResult();
 		
 

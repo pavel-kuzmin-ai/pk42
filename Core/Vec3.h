@@ -94,7 +94,9 @@ inline vec3<T> operator*(T t, const vec3<T> &v) {
 template <typename T>
 inline vec3<T> operator*(float t, const vec3<T> &v) {
 	T t_conv = (T)t;
-	return vec3<T>(t_conv*v.e[0], t_conv*v.e[1], t_conv*v.e[2]);
+	return vec3<T>((T)(t*(float)v.e[0]), 
+		           (T)(t*(float)v.e[1]), 
+		           (T)(t*(float)v.e[2]));
 }
 
 template <typename T>

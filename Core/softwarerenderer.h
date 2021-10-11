@@ -28,8 +28,8 @@ public:
 
 		rasterizer = new tSoftwareRasterizer(screenWidth, screenHeight);
 		rasterizer->initBuffers();
-		//rasterizer->setOutBuffer(displayBuffer);
-		//sGLColor = rasterizer->bufColor();
+		rasterizer->setOutBuffer(displayBuffer);
+		sGLColor = rasterizer->bufColor();
 	}
 
 	void render()
@@ -60,7 +60,6 @@ private:
 	
 	tConsoleScreen* display;
 	tSoftwareRasterizer* rasterizer;
-	//colorRGB* displayBuffer;
 	int* displayBuffer;
 	int screenWidth;
 	int screenHeight;

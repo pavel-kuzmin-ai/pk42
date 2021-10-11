@@ -20,11 +20,12 @@ public:
 
 	void init();
 	void startMeasure();
-	void checkAndSwapMeasure();
+	float checkAndSwapMeasure();
 	float calcDeltaSeconds(IClock other);
+	unsigned long long getTimeCycles();
+	float cyclesToSeconds(unsigned long long dt);
 	
 private:
-	tClock* getClk();
 	tClock* clk;
 };
 
@@ -41,6 +42,7 @@ public:
 	void show();
 private:
 	tConsoleScreen* scr;
+	friend class IConsoleScreen;
 };
 
 class CORE_API IVertexData
