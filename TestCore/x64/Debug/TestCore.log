@@ -52,7 +52,18 @@ d:\personal\study\pk42\packages\microsoft.googletest.v140.windesktop.msvcstl.sta
           ]
 cl : Command line warning D9035: option 'Gm' has been deprecated and will be removed in a future release
   testQuadTree.cpp
-d:\personal\study\pk42\core\quadtree.h(109): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  TestMovable.cpp
+d:\personal\study\pk42\testcore\testmovable.cpp(43): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+          with
+          [
+              RawType=float
+          ]
+d:\personal\study\pk42\testcore\testmovable.cpp(50): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+          with
+          [
+              RawType=float
+          ]
+  testMatrixMath.cpp
   testConsoleDisplay.cpp
   Generating Code...
   TestCore.vcxproj -> D:\Personal\Study\pk42\x64\Debug\TestCore.exe

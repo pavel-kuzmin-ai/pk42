@@ -42,7 +42,10 @@
     <ClInclude Include="mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="scenekeeper.h">
+    <ClInclude Include="matrixmath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="movable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

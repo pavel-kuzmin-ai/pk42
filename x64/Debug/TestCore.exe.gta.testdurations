@@ -8,5 +8,12 @@
     <TestDuration Test="QueryQuadTree.SpeedTest" Duration="10" />
     <TestDuration Test="QueryQuadTree.CeckClosestSmall" Duration="1" />
     <TestDuration Test="QueryQuadTree.CeckClosestMed" Duration="1" />
+    <TestDuration Test="MatrixMethods.CheckSetGet" Duration="1" />
+    <TestDuration Test="MatrixOperations.CheckTranspose" Duration="1" />
+    <TestDuration Test="MatrixOperations.CheckDot" Duration="1" />
+    <TestDuration Test="MatrixOperations.CheckMatmul" Duration="1" />
+    <TestDuration Test="Movables.checkMatrix" Duration="1" />
+    <TestDuration Test="Movables.CheckTranslations" Duration="1" />
+    <TestDuration Test="Movables.CheckRotations" Duration="1" />
   </TestDurations>
 </GtaTestDurations>

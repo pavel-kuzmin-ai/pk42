@@ -19,4 +19,5 @@ d:\personal\study\pk42\systems\systems.h(46): warning C4251: 'pk42Core::vGameSys
           [
               _Ty=Node *
           ]
+     Creating library D:\Personal\Study\pk42\bin\Systems.lib and object D:\Personal\Study\pk42\bin\Systems.exp
   Systems.vcxproj -> D:\Personal\Study\pk42\bin\Systems.dll
