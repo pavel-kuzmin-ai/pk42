@@ -1,4 +1,2 @@
-﻿  core.cpp
-d:\personal\study\pk42\core\core.cpp(11): warning C4244: 'return': conversion from 'unsigned __int64' to 'float', possible loss of data
-     Creating library D:\Personal\Study\pk42\bin\Core.lib and object D:\Personal\Study\pk42\bin\Core.exp
+﻿     Creating library D:\Personal\Study\pk42\bin\Core.lib and object D:\Personal\Study\pk42\bin\Core.exp
   Core.vcxproj -> D:\Personal\Study\pk42\bin\Core.dll

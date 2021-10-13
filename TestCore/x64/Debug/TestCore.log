@@ -1,69 +1,90 @@
 ﻿cl : Command line warning D9035: option 'Gm' has been deprecated and will be removed in a future release
-  pch.cpp
-d:\personal\study\pk42\packages\microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.0\build\native\include\gtest\internal\gtest-port.h(996): warning C4996: 'std::tr1': warning STL4002: The non-Standard std::tr1 namespace and TR1-only machinery are deprecated and will be REMOVED. You can define _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING to acknowledge that you have received this warning.
-  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\tuple(1333): note: see declaration of 'std::tr1'
-d:\personal\study\pk42\packages\microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.0\build\native\include\gtest\internal\gtest-port.h(997): warning C4996: 'std::tr1': warning STL4002: The non-Standard std::tr1 namespace and TR1-only machinery are deprecated and will be REMOVED. You can define _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING to acknowledge that you have received this warning.
-  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\tuple(1333): note: see declaration of 'std::tr1'
-d:\personal\study\pk42\packages\microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.0\build\native\include\gtest\internal\gtest-port.h(998): warning C4996: 'std::tr1': warning STL4002: The non-Standard std::tr1 namespace and TR1-only machinery are deprecated and will be REMOVED. You can define _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING to acknowledge that you have received this warning.
-  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\tuple(1333): note: see declaration of 'std::tr1'
-d:\personal\study\pk42\packages\microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.0\build\native\include\gtest\internal\gtest-port.h(999): warning C4996: 'std::tr1': warning STL4002: The non-Standard std::tr1 namespace and TR1-only machinery are deprecated and will be REMOVED. You can define _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING to acknowledge that you have received this warning.
-  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\tuple(1333): note: see declaration of 'std::tr1'
-d:\personal\study\pk42\packages\microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.0\build\native\include\gtest\internal\gtest-port.h(1000): warning C4996: 'std::tr1': warning STL4002: The non-Standard std::tr1 namespace and TR1-only machinery are deprecated and will be REMOVED. You can define _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING to acknowledge that you have received this warning.
-  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\tuple(1333): note: see declaration of 'std::tr1'
-d:\personal\study\pk42\packages\microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.0\build\native\include\gtest\gtest-printers.h(600): warning C4996: 'std::tr1': warning STL4002: The non-Standard std::tr1 namespace and TR1-only machinery are deprecated and will be REMOVED. You can define _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING to acknowledge that you have received this warning.
-  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\tuple(1333): note: see declaration of 'std::tr1'
-d:\personal\study\pk42\packages\microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.0\build\native\include\gtest\gtest-printers.h(605): warning C4996: 'std::tr1': warning STL4002: The non-Standard std::tr1 namespace and TR1-only machinery are deprecated and will be REMOVED. You can define _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING to acknowledge that you have received this warning.
-  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\tuple(1333): note: see declaration of 'std::tr1'
-d:\personal\study\pk42\packages\microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.0\build\native\include\gtest\gtest-printers.h(610): warning C4996: 'std::tr1': warning STL4002: The non-Standard std::tr1 namespace and TR1-only machinery are deprecated and will be REMOVED. You can define _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING to acknowledge that you have received this warning.
-  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\tuple(1333): note: see declaration of 'std::tr1'
-d:\personal\study\pk42\packages\microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.0\build\native\include\gtest\gtest-printers.h(615): warning C4996: 'std::tr1': warning STL4002: The non-Standard std::tr1 namespace and TR1-only machinery are deprecated and will be REMOVED. You can define _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING to acknowledge that you have received this warning.
-  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\tuple(1333): note: see declaration of 'std::tr1'
-d:\personal\study\pk42\packages\microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.0\build\native\include\gtest\gtest-printers.h(620): warning C4996: 'std::tr1': warning STL4002: The non-Standard std::tr1 namespace and TR1-only machinery are deprecated and will be REMOVED. You can define _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING to acknowledge that you have received this warning.
-  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\tuple(1333): note: see declaration of 'std::tr1'
-d:\personal\study\pk42\packages\microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.0\build\native\include\gtest\gtest-printers.h(625): warning C4996: 'std::tr1': warning STL4002: The non-Standard std::tr1 namespace and TR1-only machinery are deprecated and will be REMOVED. You can define _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING to acknowledge that you have received this warning.
-  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\tuple(1333): note: see declaration of 'std::tr1'
-d:\personal\study\pk42\packages\microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.0\build\native\include\gtest\gtest-printers.h(632): warning C4996: 'std::tr1': warning STL4002: The non-Standard std::tr1 namespace and TR1-only machinery are deprecated and will be REMOVED. You can define _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING to acknowledge that you have received this warning.
-  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\tuple(1333): note: see declaration of 'std::tr1'
-d:\personal\study\pk42\packages\microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.0\build\native\include\gtest\gtest-printers.h(639): warning C4996: 'std::tr1': warning STL4002: The non-Standard std::tr1 namespace and TR1-only machinery are deprecated and will be REMOVED. You can define _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING to acknowledge that you have received this warning.
-  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\tuple(1333): note: see declaration of 'std::tr1'
-d:\personal\study\pk42\packages\microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.0\build\native\include\gtest\gtest-printers.h(646): warning C4996: 'std::tr1': warning STL4002: The non-Standard std::tr1 namespace and TR1-only machinery are deprecated and will be REMOVED. You can define _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING to acknowledge that you have received this warning.
-  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\tuple(1333): note: see declaration of 'std::tr1'
-d:\personal\study\pk42\packages\microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.0\build\native\include\gtest\gtest-printers.h(653): warning C4996: 'std::tr1': warning STL4002: The non-Standard std::tr1 namespace and TR1-only machinery are deprecated and will be REMOVED. You can define _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING to acknowledge that you have received this warning.
-  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\tuple(1333): note: see declaration of 'std::tr1'
-d:\personal\study\pk42\packages\microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.0\build\native\include\gtest\gtest-printers.h(661): warning C4996: 'std::tr1': warning STL4002: The non-Standard std::tr1 namespace and TR1-only machinery are deprecated and will be REMOVED. You can define _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING to acknowledge that you have received this warning.
-  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\tuple(1333): note: see declaration of 'std::tr1'
-d:\personal\study\pk42\packages\microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.0\build\native\include\gtest\gtest-printers.h(878): warning C4996: 'std::tr1': warning STL4002: The non-Standard std::tr1 namespace and TR1-only machinery are deprecated and will be REMOVED. You can define _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING to acknowledge that you have received this warning.
-  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\tuple(1333): note: see declaration of 'std::tr1'
-  d:\personal\study\pk42\packages\microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.0\build\native\include\gtest\gtest-printers.h(878): note: see reference to class template instantiation 'testing::internal::TuplePolicy<TupleT>::tuple_element<I>' being compiled
-  d:\personal\study\pk42\packages\microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.0\build\native\include\gtest\gtest-printers.h(886): note: see reference to class template instantiation 'testing::internal::TuplePolicy<TupleT>' being compiled
-d:\personal\study\pk42\packages\microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.0\build\native\include\gtest\gtest-printers.h(882): warning C4996: 'std::tr1': warning STL4002: The non-Standard std::tr1 namespace and TR1-only machinery are deprecated and will be REMOVED. You can define _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING to acknowledge that you have received this warning.
-  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\tuple(1333): note: see declaration of 'std::tr1'
-d:\personal\study\pk42\packages\microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.0\build\native\include\gtest\gtest-printers.h(875): warning C4996: 'std::tr1': warning STL4002: The non-Standard std::tr1 namespace and TR1-only machinery are deprecated and will be REMOVED. You can define _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING to acknowledge that you have received this warning.
-  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\tuple(1333): note: see declaration of 'std::tr1'
-  d:\personal\study\pk42\packages\microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.0\build\native\include\gtest\gtest-printers.h(961): note: see reference to class template instantiation 'testing::internal::TuplePolicy<Tuple>' being compiled
-          with
-          [
-              Tuple=std::tuple<>
-          ]
-  d:\personal\study\pk42\packages\microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.0\build\native\include\gtest\gtest-printers.h(601): note: see reference to function template instantiation 'void testing::internal::PrintTupleTo<std::tuple<>>(const T &,std::ostream *)' being compiled
-          with
-          [
-              T=std::tuple<>
-          ]
-cl : Command line warning D9035: option 'Gm' has been deprecated and will be removed in a future release
-  testQuadTree.cpp
-  TestMovable.cpp
-d:\personal\study\pk42\testcore\testmovable.cpp(43): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+  TestTransformChain.cpp
+d:\personal\study\pk42\core\transformchain.h(161): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\personal\study\pk42\testcore\testtransformchain.cpp(35): warning C4305: 'argument': truncation from 'double' to 'float'
+d:\personal\study\pk42\testcore\testtransformchain.cpp(55): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
           with
           [
               RawType=float
           ]
-d:\personal\study\pk42\testcore\testmovable.cpp(50): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+d:\personal\study\pk42\testcore\testtransformchain.cpp(58): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
           with
           [
               RawType=float
           ]
-  testMatrixMath.cpp
-  testConsoleDisplay.cpp
-  Generating Code...
+d:\personal\study\pk42\testcore\testtransformchain.cpp(67): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+          with
+          [
+              RawType=float
+          ]
+d:\personal\study\pk42\testcore\testtransformchain.cpp(71): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+          with
+          [
+              RawType=float
+          ]
+d:\personal\study\pk42\testcore\testtransformchain.cpp(81): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+          with
+          [
+              RawType=float
+          ]
+d:\personal\study\pk42\testcore\testtransformchain.cpp(85): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+          with
+          [
+              RawType=float
+          ]
+d:\personal\study\pk42\testcore\testtransformchain.cpp(99): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+          with
+          [
+              RawType=float
+          ]
+d:\personal\study\pk42\testcore\testtransformchain.cpp(101): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+          with
+          [
+              RawType=float
+          ]
+d:\personal\study\pk42\testcore\testtransformchain.cpp(107): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+          with
+          [
+              RawType=float
+          ]
+d:\personal\study\pk42\testcore\testtransformchain.cpp(108): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+          with
+          [
+              RawType=float
+          ]
+d:\personal\study\pk42\testcore\testtransformchain.cpp(118): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+          with
+          [
+              RawType=float
+          ]
+d:\personal\study\pk42\testcore\testtransformchain.cpp(119): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+          with
+          [
+              RawType=float
+          ]
+d:\personal\study\pk42\testcore\testtransformchain.cpp(133): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+          with
+          [
+              RawType=float
+          ]
+d:\personal\study\pk42\testcore\testtransformchain.cpp(135): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+          with
+          [
+              RawType=float
+          ]
+d:\personal\study\pk42\testcore\testtransformchain.cpp(148): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+          with
+          [
+              RawType=float
+          ]
+d:\personal\study\pk42\testcore\testtransformchain.cpp(158): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+          with
+          [
+              RawType=float
+          ]
+d:\personal\study\pk42\testcore\testtransformchain.cpp(160): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+          with
+          [
+              RawType=float
+          ]
   TestCore.vcxproj -> D:\Personal\Study\pk42\x64\Debug\TestCore.exe

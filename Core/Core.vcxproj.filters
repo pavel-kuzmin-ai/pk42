@@ -45,7 +45,7 @@
     <ClInclude Include="matrixmath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="movable.h">
+    <ClInclude Include="transformchain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

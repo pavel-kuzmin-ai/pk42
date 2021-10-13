@@ -15,5 +15,11 @@
     <TestDuration Test="Movables.checkMatrix" Duration="1" />
     <TestDuration Test="Movables.CheckTranslations" Duration="1" />
     <TestDuration Test="Movables.CheckRotations" Duration="1" />
+    <TestDuration Test="Transforms.CheckTranslations" Duration="1" />
+    <TestDuration Test="Transforms.CheckScale" Duration="1" />
+    <TestDuration Test="Transforms.CheckBasisRotations" Duration="1" />
+    <TestDuration Test="Transforms.Check2DVecRotations" Duration="1" />
+    <TestDuration Test="Transforms.CheckTransformationChain" Duration="1" />
+    <TestDuration Test="Transforms.CheckInverseTransformationChain" Duration="1" />
   </TestDurations>
 </GtaTestDurations>

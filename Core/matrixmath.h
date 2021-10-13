@@ -45,6 +45,18 @@ inline void Multiply(tMatrix& m1, tMatrix& m2, tMatrix* result)
 	}
 }
 
+inline void Multiply(tMatrix& m1, float number, tMatrix* result)
+{
+	for (int i = 0; i < m1.getRows(); i++)
+	{
+		for (int j = 0; j < m1.getCols(); j++)
+		{
+			result->setValue(i, j, m1.getValue(i, j) * number);
+		}
+	}
+}
+
+
 inline void Transpose(tMatrix& m1, tMatrix* result)
 {
 	for (int i = 0; i < m1.getRows(); i++)

@@ -44,7 +44,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="testMatrixMath.cpp" />
-    <ClCompile Include="TestMovable.cpp" />
+    <ClCompile Include="TestTransformChain.cpp" />
     <ClCompile Include="testQuadTree.cpp" />
   </ItemGroup>
   <ItemGroup>
