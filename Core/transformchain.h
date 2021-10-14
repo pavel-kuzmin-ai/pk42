@@ -8,39 +8,35 @@
 float M_PI = 3.14159274101257324219;
 float M_2PI = 2 * M_PI;
 
+class tTransformMatrix: public tMatrix
+{
+public:
+	tTransformMatrix(float* data) : tMatrix(4, 4, data) {};
+	virtual ~tTransformMatrix() {};
+};
+
 float defaultTransformData[16] = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
-tMatrix defaultTransform(4, 4, defaultTransformData);
+tTransformMatrix defaultTransform(defaultTransformData);
 
 
-float maxAngle = 2 * M_PI;
-float minAngle = -2 * M_PI;
+inline void resetTransformData(float* m) { memcpy(m, defaultTransformData, 16 * sizeof(float)); }
+inline void resetTransformMatrix(tTransformMatrix* m) { resetTransformData(m->getDataPtr()); }
 
-
-void resetTransformMatrix(float* m)
-{
-	memcpy(m, defaultTransformData, 16 * sizeof(float));	
-}
-
-void resetTransformMatrix(tMatrix* m)
-{
-	resetTransformMatrix(m->getDataPtr());
-}
-
-void coords2TranslationMatrix(float x, float y, float z, tMatrix* m)
+void coords2TranslationMatrix(float x, float y, float z, tTransformMatrix* m)
 {
 	m->setValue(0, 3, x);
 	m->setValue(1, 3, y);
 	m->setValue(2, 3, z);
 }
 
-void scales2ScaleMatrix(float x, float y, float z, tMatrix* m)
+void scales2ScaleMatrix(float x, float y, float z, tTransformMatrix* m)
 {
 	m->setValue(0, 0, x);
 	m->setValue(1, 1, y);
 	m->setValue(2, 2, z);
 }
 
-void rot2Matr(float yaw, float pitch, float roll, tMatrix* mY, tMatrix* mZ, tMatrix* mX)
+void rot2Matr(float yaw, float pitch, float roll, tTransformMatrix* mY, tTransformMatrix* mZ, tTransformMatrix* mX)
 {
 	float cos_val = cos(yaw);
 	float sin_val = sin(yaw);
@@ -85,29 +81,29 @@ public:
 
 	void initObject()
 	{
-		ScM2W = new tMatrix(4, 4, ScM2Wdata);
+		ScM2W = new tTransformMatrix(ScM2Wdata);
 		resetTransformMatrix(ScM2W);
-		ScW2M = new tMatrix(4, 4, ScW2Mdata);
+		ScW2M = new tTransformMatrix(ScW2Mdata);
 		resetTransformMatrix(ScW2M);
 		setScale(scX, scY, scZ);
 		
-		RotXM2W = new tMatrix(4, 4, RotXM2Wdata);
-		RotYM2W = new tMatrix(4, 4, RotYM2Wdata);
-		RotZM2W = new tMatrix(4, 4, RotZM2Wdata);
+		RotXM2W = new tTransformMatrix(RotXM2Wdata);
+		RotYM2W = new tTransformMatrix(RotYM2Wdata);
+		RotZM2W = new tTransformMatrix(RotZM2Wdata);
 		resetTransformMatrix(RotXM2W);
 		resetTransformMatrix(RotYM2W);
 		resetTransformMatrix(RotZM2W);
 		setAngles(yaw, pitch, roll);
 		
-		TranslM2W = new tMatrix(4, 4, TranslM2Wdata);
+		TranslM2W = new tTransformMatrix(TranslM2Wdata);
 		resetTransformMatrix(TranslM2W);
-		TranslW2M = new tMatrix(4, 4, TranslW2Mdata);
+		TranslW2M = new tTransformMatrix(TranslW2Mdata);
 		resetTransformMatrix(TranslW2M);
 		setLocation(x, y, z);
 
-		TransfM2W = new tMatrix(4, 4, TransfM2Wdata);
-		TransfW2M = new tMatrix(4, 4, TransfW2Mdata);
-		tmpTransform = new tMatrix(4, 4, tmpTransformData);
+		TransfM2W = new tTransformMatrix(TransfM2Wdata);
+		TransfW2M = new tTransformMatrix(TransfW2Mdata);
+		tmpTransform = new tTransformMatrix(tmpTransformData);
 
 		UpdateTransforms();
 	}
@@ -194,17 +190,17 @@ public:
 		
 	}
 
-	tMatrix* getM2Wmatrix()
+	tTransformMatrix* getM2Wmatrix()
 	{
 		return TransfM2W;
 	}
 
-	tMatrix* getW2Mmatrix()
+	tTransformMatrix* getW2Mmatrix()
 	{
 		return TransfW2M;
 	}
 
-	static void makeTransform(float x, float y, float z, tMatrix* transformMatrix, float* result)
+	static void makeTransform(float x, float y, float z, tTransformMatrix* transformMatrix, float* result)
 	{
 		float inp[4] = { 1., 1., 1., 1. };
 		tMatrix coordsIn(4, 1, inp);
@@ -232,10 +228,10 @@ public:
 
 private:
 	float ScM2Wdata[16], RotXM2Wdata[16], RotYM2Wdata[16], RotZM2Wdata[16], TranslM2Wdata[16], TransfM2Wdata[16], tmpTransformData[16];
-	tMatrix *ScM2W, *RotXM2W, *RotYM2W, *RotZM2W, *TranslM2W, *TransfM2W, *tmpTransform;
+	tTransformMatrix *ScM2W, *RotXM2W, *RotYM2W, *RotZM2W, *TranslM2W, *TransfM2W, *tmpTransform;
 
 	float ScW2Mdata[16], TranslW2Mdata[16], TransfW2Mdata[16];
-	tMatrix *ScW2M, *TranslW2M, *TransfW2M;
+	tTransformMatrix *ScW2M, *TranslW2M, *TransfW2M;
 
 
 	float scX = 1, scY = 1, scZ = 1;

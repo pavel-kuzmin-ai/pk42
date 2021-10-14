@@ -1,6 +1,7 @@
 #ifndef MATRIXMATH_H
 #define MATRIXMATH_H
 
+#include <cstring>
 class tMatrix
 {
 public:
@@ -79,9 +80,5 @@ inline void matrix2Arr(tMatrix& cMatr, float* coordsOut, int size = -1)
 	if (size == -1)  size = cMatr.getRows()*cMatr.getCols();
 	memcpy(coordsOut, cMatr.getDataPtr(), size * sizeof(float));
 }
-
-
-
-
 
 #endif
