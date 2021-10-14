@@ -2,6 +2,7 @@
 #include <iostream>
 #include "../Core/transformchain.h"
 
+float tol = 1.e-5f;
 TEST(Transforms, CheckTranslations) 
 {
 	tTransformChain mvbl;
@@ -145,9 +146,9 @@ TEST(Transforms, CheckInverseTransformationChain) {
 	mvbl.UpdateTransforms();
 
 	World2Model(20, 0, 10, &mvbl, result);
-	EXPECT_FLOAT_EQ(result[0], 2*sqrt(3)/2);
-	EXPECT_FLOAT_EQ(result[1], 0);
-	EXPECT_FLOAT_EQ(result[2], -1);
+	EXPECT_NEAR(result[0], 2 * sqrt(3) / 2, tol);
+	EXPECT_NEAR(result[1], 0, tol);
+	EXPECT_NEAR(result[2], -1, tol);
 
 	mvbl.setScale(1, 1, 1);
 	mvbl.setLocation(18, 0, 10);
@@ -155,8 +156,8 @@ TEST(Transforms, CheckInverseTransformationChain) {
 	mvbl.UpdateTransforms();
 
 	World2Model(20, 0, 10, &mvbl, result);
-	EXPECT_FLOAT_EQ(result[0], 2 * sqrt(2) / 2);
-	EXPECT_FLOAT_EQ(result[1], 0);
-	EXPECT_FLOAT_EQ(result[2], - 2 * sqrt(2) / 2);
+	EXPECT_NEAR(result[0], 2 * sqrt(2) / 2, tol);
+	EXPECT_NEAR(result[1], 0, tol);
+	EXPECT_NEAR(result[2], -2 * sqrt(2) / 2, tol);
 }
 

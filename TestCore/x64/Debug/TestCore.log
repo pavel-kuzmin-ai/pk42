@@ -1,48 +1,43 @@
 ﻿cl : Command line warning D9035: option 'Gm' has been deprecated and will be removed in a future release
   TestTransformChain.cpp
 d:\personal\study\pk42\core\transformchain.h(161): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-d:\personal\study\pk42\testcore\testtransformchain.cpp(35): warning C4305: 'argument': truncation from 'double' to 'float'
-d:\personal\study\pk42\testcore\testtransformchain.cpp(55): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+d:\personal\study\pk42\testcore\testtransformchain.cpp(36): warning C4305: 'argument': truncation from 'double' to 'float'
+d:\personal\study\pk42\testcore\testtransformchain.cpp(56): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
           with
           [
               RawType=float
           ]
-d:\personal\study\pk42\testcore\testtransformchain.cpp(58): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+d:\personal\study\pk42\testcore\testtransformchain.cpp(59): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
           with
           [
               RawType=float
           ]
-d:\personal\study\pk42\testcore\testtransformchain.cpp(67): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+d:\personal\study\pk42\testcore\testtransformchain.cpp(68): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
           with
           [
               RawType=float
           ]
-d:\personal\study\pk42\testcore\testtransformchain.cpp(71): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+d:\personal\study\pk42\testcore\testtransformchain.cpp(72): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
           with
           [
               RawType=float
           ]
-d:\personal\study\pk42\testcore\testtransformchain.cpp(81): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+d:\personal\study\pk42\testcore\testtransformchain.cpp(82): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
           with
           [
               RawType=float
           ]
-d:\personal\study\pk42\testcore\testtransformchain.cpp(85): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+d:\personal\study\pk42\testcore\testtransformchain.cpp(86): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
           with
           [
               RawType=float
           ]
-d:\personal\study\pk42\testcore\testtransformchain.cpp(99): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+d:\personal\study\pk42\testcore\testtransformchain.cpp(100): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
           with
           [
               RawType=float
           ]
-d:\personal\study\pk42\testcore\testtransformchain.cpp(101): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
-          with
-          [
-              RawType=float
-          ]
-d:\personal\study\pk42\testcore\testtransformchain.cpp(107): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+d:\personal\study\pk42\testcore\testtransformchain.cpp(102): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
           with
           [
               RawType=float
@@ -52,7 +47,7 @@ d:\personal\study\pk42\testcore\testtransformchain.cpp(108): warning C4244: 'arg
           [
               RawType=float
           ]
-d:\personal\study\pk42\testcore\testtransformchain.cpp(118): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+d:\personal\study\pk42\testcore\testtransformchain.cpp(109): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
           with
           [
               RawType=float
@@ -62,27 +57,17 @@ d:\personal\study\pk42\testcore\testtransformchain.cpp(119): warning C4244: 'arg
           [
               RawType=float
           ]
-d:\personal\study\pk42\testcore\testtransformchain.cpp(133): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+d:\personal\study\pk42\testcore\testtransformchain.cpp(120): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
           with
           [
               RawType=float
           ]
-d:\personal\study\pk42\testcore\testtransformchain.cpp(135): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+d:\personal\study\pk42\testcore\testtransformchain.cpp(134): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
           with
           [
               RawType=float
           ]
-d:\personal\study\pk42\testcore\testtransformchain.cpp(148): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
-          with
-          [
-              RawType=float
-          ]
-d:\personal\study\pk42\testcore\testtransformchain.cpp(158): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
-          with
-          [
-              RawType=float
-          ]
-d:\personal\study\pk42\testcore\testtransformchain.cpp(160): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
+d:\personal\study\pk42\testcore\testtransformchain.cpp(136): warning C4244: 'argument': conversion from 'double' to 'RawType', possible loss of data
           with
           [
               RawType=float
