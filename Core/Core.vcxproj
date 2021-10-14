@@ -23,6 +23,7 @@
     <ClInclude Include="consoledisplay.h" />
     <ClInclude Include="core.h" />
     <ClInclude Include="highrestimer.h" />
+    <ClInclude Include="mathutils.h" />
     <ClInclude Include="matrixmath.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="transformchain.h" />

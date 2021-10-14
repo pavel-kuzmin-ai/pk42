@@ -7,25 +7,25 @@ TEST(Transforms, CheckTranslations)
 {
 	tTransformChain mvbl;
 	float result[3];
-	Model2World(10, 20, 30, &mvbl, result);
+	mvbl.Model2World(10.f, 20.f, 30.f, result);
 	
-	EXPECT_FLOAT_EQ(result[0], 10);
-	EXPECT_FLOAT_EQ(result[1], 20);
-	EXPECT_FLOAT_EQ(result[2], 30);
+	EXPECT_FLOAT_EQ(result[0], 10.f);
+	EXPECT_FLOAT_EQ(result[1], 20.f);
+	EXPECT_FLOAT_EQ(result[2], 30.f);
 
-	mvbl.setLocation(10, 10, 10);
+	mvbl.setLocation(10.f, 10.f, 10.f);
 	mvbl.UpdateTransforms();
-	Model2World(10, 20, 30, &mvbl, result);
-	EXPECT_FLOAT_EQ(result[0], 20);
-	EXPECT_FLOAT_EQ(result[1], 30);
-	EXPECT_FLOAT_EQ(result[2], 40);
+	mvbl.Model2World(10.f, 20.f, 30.f, result);
+	EXPECT_FLOAT_EQ(result[0], 20.f);
+	EXPECT_FLOAT_EQ(result[1], 30.f);
+	EXPECT_FLOAT_EQ(result[2], 40.f);
 
-	mvbl.translate(-7, 32, 81);
+	mvbl.translate(-7.f, 32.f, 81.f);
 	mvbl.UpdateTransforms();
-	Model2World(10, 20, 30, &mvbl, result);
-	EXPECT_FLOAT_EQ(result[0], 13);
-	EXPECT_FLOAT_EQ(result[1], 62);
-	EXPECT_FLOAT_EQ(result[2], 121);
+	mvbl.Model2World(10.f, 20.f, 30.f, result);
+	EXPECT_FLOAT_EQ(result[0], 13.f);
+	EXPECT_FLOAT_EQ(result[1], 62.f);
+	EXPECT_FLOAT_EQ(result[2], 121.f);
 }
 TEST(Transforms, CheckScale) 
 {
@@ -33,12 +33,12 @@ TEST(Transforms, CheckScale)
 	tTransformChain mvbl;
 	float result[3];
 	
-	mvbl.setScale(2, 3, 0.1);
+	mvbl.setScale(2.f, 3.f, 0.1f);
 	mvbl.UpdateTransforms();
-	Model2World(10, 20, 30, &mvbl, result);
-	EXPECT_FLOAT_EQ(result[0], 20);
-	EXPECT_FLOAT_EQ(result[1], 60);
-	EXPECT_FLOAT_EQ(result[2], 3);
+	mvbl.Model2World(10.f, 20.f, 30.f, result);
+	EXPECT_FLOAT_EQ(result[0], 20.f);
+	EXPECT_FLOAT_EQ(result[1], 60.f);
+	EXPECT_FLOAT_EQ(result[2], 3.f);
 }
 TEST(Transforms, CheckBasisRotations) 
 {
@@ -46,45 +46,45 @@ TEST(Transforms, CheckBasisRotations)
 	tTransformChain mvbl;
 	float result[3];
 
-	mvbl.setLocation(0, 0, 0);
-	mvbl.setAngles(0, M_PI / 3, 0);
+	mvbl.setLocation(0.f, 0.f, 0.f);
+	mvbl.setAngles(0, M_PI / 3.f, 0);
 	mvbl.UpdateTransforms();
 	
-	Model2World(10, 0, 0, &mvbl, result);
-	EXPECT_FLOAT_EQ(result[0], 5);
-	EXPECT_FLOAT_EQ(result[1], 0);
-	EXPECT_FLOAT_EQ(result[2], -10 * sqrt(3) / 2);
+	mvbl.Model2World(10, 0, 0, result);
+	EXPECT_FLOAT_EQ(result[0], 5.f);
+	EXPECT_FLOAT_EQ(result[1], 0.f);
+	EXPECT_FLOAT_EQ(result[2], -10.f * sqrt(3.f) / 2.f);
 
-	Model2World(0, 0, 30, &mvbl, result);
-	EXPECT_FLOAT_EQ(result[0], 30 * sqrt(3) / 2);
-	EXPECT_FLOAT_EQ(result[1], 0);
-	EXPECT_FLOAT_EQ(result[2], 15);
+	mvbl.Model2World(0.f, 0.f, 30.f, result);
+	EXPECT_FLOAT_EQ(result[0], 30.f * sqrt(3.f) / 2.f);
+	EXPECT_FLOAT_EQ(result[1], 0.f);
+	EXPECT_FLOAT_EQ(result[2], 15.f);
 
-	mvbl.setAngles(0, 0, M_PI / 3);
+	mvbl.setAngles(0.f, 0.f, M_PI / 3.f);
 	mvbl.UpdateTransforms();
 
-	Model2World(10, 0, 0, &mvbl, result);
-	EXPECT_FLOAT_EQ(result[0], 5);
-	EXPECT_FLOAT_EQ(result[1], 10 * sqrt(3) / 2);
-	EXPECT_FLOAT_EQ(result[2], 0);
+	mvbl.Model2World(10.f, 0.f, 0.f, result);
+	EXPECT_FLOAT_EQ(result[0], 5.f);
+	EXPECT_FLOAT_EQ(result[1], 10.f * sqrt(3.f) / 2.f);
+	EXPECT_FLOAT_EQ(result[2], 0.f);
 
-	Model2World(0, 20, 0, &mvbl, result);
-	EXPECT_FLOAT_EQ(result[0], - 20 * sqrt(3) / 2);
-	EXPECT_FLOAT_EQ(result[1], 10);
-	EXPECT_FLOAT_EQ(result[2], 0);
+	mvbl.Model2World(0.f, 20.f, 0.f, result);
+	EXPECT_FLOAT_EQ(result[0], - 20.f * sqrt(3.f) / 2.f);
+	EXPECT_FLOAT_EQ(result[1], 10.f);
+	EXPECT_FLOAT_EQ(result[2], 0.f);
 
-	mvbl.setAngles(M_PI / 3, 0, 0);
+	mvbl.setAngles(M_PI / 3.f, 0.f, 0.f);
 	mvbl.UpdateTransforms();
 
-	Model2World(0, 20, 0, &mvbl, result);
-	EXPECT_FLOAT_EQ(result[0], 0);
-	EXPECT_FLOAT_EQ(result[1], 10);
-	EXPECT_FLOAT_EQ(result[2], 20 * sqrt(3) / 2);
+	mvbl.Model2World(0.f, 20.f, 0.f, result);
+	EXPECT_FLOAT_EQ(result[0], 0.f);
+	EXPECT_FLOAT_EQ(result[1], 10.f);
+	EXPECT_FLOAT_EQ(result[2], 20.f * sqrt(3.f) / 2.f);
 
-	Model2World(0, 0, 30, &mvbl, result);
-	EXPECT_FLOAT_EQ(result[0], 0);
-	EXPECT_FLOAT_EQ(result[1], -30 * sqrt(3) / 2);
-	EXPECT_FLOAT_EQ(result[2], 15);
+	mvbl.Model2World(0.f, 0.f, 30.f, result);
+	EXPECT_FLOAT_EQ(result[0], 0.f);
+	EXPECT_FLOAT_EQ(result[1], -30.f * sqrt(3.f) / 2.f);
+	EXPECT_FLOAT_EQ(result[2], 15.f);
 }
 TEST(Transforms, Check2DVecRotations) 
 {
@@ -92,32 +92,32 @@ TEST(Transforms, Check2DVecRotations)
 	tTransformChain mvbl;
 	float result[3];
 
-	mvbl.setLocation(0, 0, 0);
-	mvbl.setAngles(0, M_PI / 3, 0);
+	mvbl.setLocation(0.f, 0.f, 0.f);
+	mvbl.setAngles(0.f, M_PI / 3.f, 0.f);
+	mvbl.UpdateTransforms();
+	
+	mvbl.Model2World(10.f, 0.f, 30.f, result);
+	EXPECT_FLOAT_EQ(result[0], 5.f + 30.f * sqrt(3.f) / 2.f);
+	EXPECT_FLOAT_EQ(result[1], 0.f);
+	EXPECT_FLOAT_EQ(result[2], -10.f * sqrt(3.f) / 2.f + 15.f);
+
+	mvbl.setAngles(0.f, 0.f, M_PI / 3.f);
 	mvbl.UpdateTransforms();
 
-	Model2World(10, 0, 30, &mvbl, result);
-	EXPECT_FLOAT_EQ(result[0], 5 + 30 * sqrt(3) / 2);
-	EXPECT_FLOAT_EQ(result[1], 0);
-	EXPECT_FLOAT_EQ(result[2], -10 * sqrt(3) / 2 + 15);
-
-	mvbl.setAngles(0, 0, M_PI / 3);
-	mvbl.UpdateTransforms();
-
-	Model2World(10, 20, 0, &mvbl, result);
-	EXPECT_FLOAT_EQ(result[0], 5 - 20 * sqrt(3) / 2);
-	EXPECT_FLOAT_EQ(result[1], 10 * sqrt(3) / 2+ 10);
-	EXPECT_FLOAT_EQ(result[2], 0);
+	mvbl.Model2World(10.f, 20.f, 0.f, result);
+	EXPECT_FLOAT_EQ(result[0], 5.f - 20.f * sqrt(3.f) / 2.f);
+	EXPECT_FLOAT_EQ(result[1], 10.f * sqrt(3.f) / 2.f + 10.f);
+	EXPECT_FLOAT_EQ(result[2], 0.f);
 
 	
 
-	mvbl.setAngles(M_PI / 3, 0, 0);
+	mvbl.setAngles(M_PI / 3.f, 0.f, 0.f);
 	mvbl.UpdateTransforms();
 
-	Model2World(0, 20, 30, &mvbl, result);
-	EXPECT_FLOAT_EQ(result[0], 0);
-	EXPECT_FLOAT_EQ(result[1], 10 - 30 * sqrt(3) / 2);
-	EXPECT_FLOAT_EQ(result[2], 20 * sqrt(3) / 2+ 15);
+	mvbl.Model2World(0.f, 20.f, 30.f, result);
+	EXPECT_FLOAT_EQ(result[0], 0.f);
+	EXPECT_FLOAT_EQ(result[1], 10.f - 30.f * sqrt(3.f) / 2.f);
+	EXPECT_FLOAT_EQ(result[2], 20.f * sqrt(3.f) / 2.f + 15.f);
 }
 TEST(Transforms, CheckTransformationChain) 
 {
@@ -125,39 +125,39 @@ TEST(Transforms, CheckTransformationChain)
 	tTransformChain mvbl;
 	float result[3];
 
-	mvbl.setScale(2, 1, 3);
-	mvbl.setLocation(7, 11, 19);
-	mvbl.setAngles(0, M_PI / 3, 0);
+	mvbl.setScale(2.f, 1.f, 3.f);
+	mvbl.setLocation(7.f, 11.f, 19.f);
+	mvbl.setAngles(0.f, M_PI / 3.f, 0.f);
 	mvbl.UpdateTransforms();
 
-	Model2World(5, 0, 10, &mvbl, result);
-	EXPECT_FLOAT_EQ(result[0], 5 + 30 * sqrt(3) / 2 + 7);
-	EXPECT_FLOAT_EQ(result[1], 0 + 11);
-	EXPECT_FLOAT_EQ(result[2], -10 * sqrt(3) / 2 + 15 + 19);
+	mvbl.Model2World(5.f, 0.f, 10.f, result);
+	EXPECT_FLOAT_EQ(result[0], 5.f + 30.f * sqrt(3.f) / 2.f + 7.f);
+	EXPECT_FLOAT_EQ(result[1], 0.f + 11.f);
+	EXPECT_FLOAT_EQ(result[2], -10.f * sqrt(3.f) / 2.f + 15.f + 19.f);
 }
 TEST(Transforms, CheckInverseTransformationChain) {
 
 	tTransformChain mvbl;
 	float result[3];
 
-	mvbl.setScale(1, 1, 1);
-	mvbl.setLocation(18, 0, 10);
-	mvbl.setAngles(0, -M_PI / 6, 0);
+	mvbl.setScale(1.f, 1.f, 1.f);
+	mvbl.setLocation(18.f, 0.f, 10.f);
+	mvbl.setAngles(0.f, -M_PI / 6.f, 0.f);
 	mvbl.UpdateTransforms();
 
-	World2Model(20, 0, 10, &mvbl, result);
-	EXPECT_NEAR(result[0], 2 * sqrt(3) / 2, tol);
-	EXPECT_NEAR(result[1], 0, tol);
-	EXPECT_NEAR(result[2], -1, tol);
+	mvbl.World2Model(20.f, 0.f, 10.f, result);
+	EXPECT_NEAR(result[0], 2.f * sqrt(3.f) / 2.f, tol);
+	EXPECT_NEAR(result[1], 0.f, tol);
+	EXPECT_NEAR(result[2], -1.f, tol);
 
-	mvbl.setScale(1, 1, 1);
-	mvbl.setLocation(18, 0, 10);
-	mvbl.setAngles(0, -M_PI / 4, 0);
+	mvbl.setScale(1.f, 1.f, 1.f);
+	mvbl.setLocation(18.f, 0.f, 10.f);
+	mvbl.setAngles(0.f, -M_PI / 4.f, 0.f);
 	mvbl.UpdateTransforms();
 
-	World2Model(20, 0, 10, &mvbl, result);
-	EXPECT_NEAR(result[0], 2 * sqrt(2) / 2, tol);
-	EXPECT_NEAR(result[1], 0, tol);
-	EXPECT_NEAR(result[2], -2 * sqrt(2) / 2, tol);
+	mvbl.World2Model(20.f, 0.f, 10.f, result);
+	EXPECT_NEAR(result[0], 2.f * sqrt(2.f) / 2.f, tol);
+	EXPECT_NEAR(result[1], 0.f, tol);
+	EXPECT_NEAR(result[2], -2.f * sqrt(2.f) / 2.f, tol);
 }
 

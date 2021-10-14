@@ -3,8 +3,10 @@
 
 #include "matrixmath.h"
 #include "mesh.h"
+#include "mathutils.h"
 
-#define M_PI 3.14159274101257324219
+float M_PI = 3.14159274101257324219;
+float M_2PI = 2 * M_PI;
 
 float defaultTransformData[16] = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
 tMatrix defaultTransform(4, 4, defaultTransformData);
@@ -16,21 +18,12 @@ float minAngle = -2 * M_PI;
 
 void resetTransformMatrix(float* m)
 {
-	for (int i = 0; i < 16; i++)
-	{
-		m[i] = defaultTransformData[i];
-	}
+	memcpy(m, defaultTransformData, 16 * sizeof(float));	
 }
 
 void resetTransformMatrix(tMatrix* m)
 {
-	for (int i = 0; i < m->getRows(); i++)
-	{
-		for (int j = 0; j < m->getCols(); j++)
-		{
-			m->setValue(i, j, defaultTransform.getValue(i, j));
-		}
-	}
+	resetTransformMatrix(m->getDataPtr());
 }
 
 void coords2TranslationMatrix(float x, float y, float z, tMatrix* m)
@@ -75,20 +68,7 @@ void rot2Matr(float yaw, float pitch, float roll, tMatrix* mY, tMatrix* mZ, tMat
 	mX->setValue(2, 1, sin_val);
 }
 
-float removePeriodic(float inp)
-{
 
-	while (inp > maxAngle)
-	{
-		inp -= maxAngle;
-	}
-	while (inp < minAngle)
-	{
-		inp -= minAngle;
-	}
-
-	return inp;
-}
 
 
 class tTransformChain
@@ -158,7 +138,7 @@ public:
 		scZ = _z;
 		
 		scales2ScaleMatrix(scX, scY, scZ, ScM2W);
-		scales2ScaleMatrix(1. / scX, 1. / scY, 1. / scZ, ScW2M);
+		scales2ScaleMatrix(1.f / scX, 1.f / scY, 1.f / scZ, ScW2M);
 	}
 
 	void ScaleBy(float ScaleX, float ScaleY, float ScaleZ)
@@ -171,9 +151,9 @@ public:
 
 	void setAngles(float rotX, float rotY, float rotZ )
 	{
-		yaw = removePeriodic(rotY);
-		pitch = removePeriodic(rotZ);
-		roll = removePeriodic(rotX);
+		yaw = removePeriodic(rotY, 0, M_2PI);
+		pitch = removePeriodic(rotZ, 0, M_2PI);
+		roll = removePeriodic(rotX, 0, M_2PI);
 		rot2Matr(yaw, pitch, roll, RotYM2W, RotZM2W, RotXM2W);
 	}
 
@@ -224,6 +204,32 @@ public:
 		return TransfW2M;
 	}
 
+	static void makeTransform(float x, float y, float z, tMatrix* transformMatrix, float* result)
+	{
+		float inp[4] = { 1., 1., 1., 1. };
+		tMatrix coordsIn(4, 1, inp);
+		float arr[3] = { x, y, z };
+		arr2Matrix(arr, coordsIn, 3);
+
+		float res[4];
+		tMatrix coordsOut(4, 1, res);
+
+		Multiply(*transformMatrix, coordsIn, &coordsOut);
+		matrix2Arr(coordsOut, result, 3);
+	}
+
+	void Model2World(float x, float y, float z, float* result)
+	{
+		makeTransform(x, y, z, TransfM2W, result);
+	}
+
+	void World2Model(float x, float y, float z, float* result)
+	{
+		makeTransform(x, y, z, TransfW2M, result);
+	}
+
+
+
 private:
 	float ScM2Wdata[16], RotXM2Wdata[16], RotYM2Wdata[16], RotZM2Wdata[16], TranslM2Wdata[16], TransfM2Wdata[16], tmpTransformData[16];
 	tMatrix *ScM2W, *RotXM2W, *RotYM2W, *RotZM2W, *TranslM2W, *TransfM2W, *tmpTransform;
@@ -237,44 +243,5 @@ private:
 	float yaw = 0, pitch = 0, roll = 0;
 };
 
-void coords2Matrix(float x, float y, float z, tMatrix& cMatr)
-{
-	float* arr = cMatr.getDataPtr();
-	arr[0] = x;
-	arr[1] = y;
-	arr[2] = z;
-}
-
-void matrix2Coords(tMatrix& cMatr, float* coordsOut)
-{
-	coordsOut[0] = cMatr.getValue(0, 0);
-	coordsOut[1] = cMatr.getValue(1, 0);
-	coordsOut[2] = cMatr.getValue(2, 0);
-}
-
-
-void makeTransform(float x, float y, float z, tMatrix* transformMatrix, float* result)
-{
-	float inp[4] = { 1., 1., 1., 1. };
-	tMatrix coordsIn(4, 1, inp);
-	coords2Matrix(x, y, z, coordsIn);
-
-	float res[4];
-	tMatrix coordsOut(4, 1, res);
-
-	Multiply(*transformMatrix, coordsIn, &coordsOut);
-	matrix2Coords(coordsOut, result);
-}
-
-void Model2World(float x, float y, float z, tTransformChain* movable, float* result)
-{
-	makeTransform(x, y, z, movable->getM2Wmatrix(), result);
-}
-
-void World2Model(float x, float y, float z, tTransformChain* movable, float* result)
-{
-
-	makeTransform(x, y, z, movable->getW2Mmatrix(), result);
-}
 
 #endif

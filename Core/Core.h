@@ -21,7 +21,6 @@ public:
 	void init();
 	void startMeasure();
 	float checkAndSwapMeasure();
-	float calcDeltaSeconds(IClock other);
 	unsigned long long getTimeCycles();
 	float cyclesToSeconds(unsigned long long dt);
 	

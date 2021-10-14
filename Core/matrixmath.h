@@ -68,6 +68,19 @@ inline void Transpose(tMatrix& m1, tMatrix* result)
 	}
 }
 
+inline void arr2Matrix(float* arr, tMatrix& cMatr, int size = -1)
+{
+	if (size == -1)  size = cMatr.getRows()*cMatr.getCols();
+	memcpy(cMatr.getDataPtr(), arr, size * sizeof(float));	
+}
+
+inline void matrix2Arr(tMatrix& cMatr, float* coordsOut, int size = -1)
+{
+	if (size == -1)  size = cMatr.getRows()*cMatr.getCols();
+	memcpy(coordsOut, cMatr.getDataPtr(), size * sizeof(float));
+}
+
+
 
 
 
