@@ -26,6 +26,7 @@
     <ClInclude Include="mathutils.h" />
     <ClInclude Include="matrixmath.h" />
     <ClInclude Include="mesh.h" />
+    <ClInclude Include="modelregistry.h" />
     <ClInclude Include="transformchain.h" />
     <ClInclude Include="quadtree.h" />
     <ClInclude Include="softwaregl.h" />
