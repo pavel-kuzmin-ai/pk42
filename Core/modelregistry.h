@@ -6,21 +6,48 @@
 #include <string>
 #include "mesh.h"
 
+struct tRegRecord
+{
+	std::shared_ptr<tMesh> meshPtr;
+	int refCount;
+};
+
 class tModelRegistry
 {
 public:
 	tModelRegistry() {};
 	~tModelRegistry() {};
 
-	std::shared_ptr<tMesh> registerNewMesh(std::string sName)
+	void registerMesh(std::string& sName)	
 	{
-		std::shared_ptr<tMesh> new_ptr = std::make_shared<tMesh>();
-		model_collection[sName] = new_ptr;
-		return new_ptr;
+		if (!keyRegistered(sName))
+		{
+			tRegRecord rec;
+			rec.refCount = 0;
+			modelCollection[sName] = rec;
+		}
+		modelCollection[sName].refCount += 1;
+	}
+
+	void unregisterMesh(std::string& sName)
+	{
+		
+		if (keyRegistered(sName))
+			modelCollection[sName].refCount -= 1;
+		if (modelCollection[sName].refCount <= 0)
+			modelCollection.erase(sName);			
+	}
+
+
+	bool keyRegistered(std::string& sName)
+	{
+		if (modelCollection.find(sName) == modelCollection.end())
+			return false;
+		return true;
 	}
 
 private:
-	std::unordered_map<std::string, std::shared_ptr<tMesh>> model_collection;
+	std::unordered_map<std::string, tRegRecord> modelCollection;
 };
 
 
