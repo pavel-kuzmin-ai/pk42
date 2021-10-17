@@ -4,12 +4,10 @@ e:\git\pk42\testcore\x64\debug\vc141.idb
 e:\git\pk42\testcore\x64\debug\pch.obj
 e:\git\pk42\testcore\x64\debug\testconsoledisplay.obj
 e:\git\pk42\testcore\x64\debug\testmatrixmath.obj
-e:\git\pk42\testcore\x64\debug\testmovable.obj
+e:\git\pk42\testcore\x64\debug\testtransformchain.obj
 e:\git\pk42\testcore\x64\debug\testquadtree.obj
 e:\git\pk42\x64\debug\gtest.pdb
 e:\git\pk42\x64\debug\gtest_main.pdb
-e:\git\pk42\x64\debug\testcore.pdb
-e:\git\pk42\x64\debug\testcore.ilk
 e:\git\pk42\testcore\x64\debug\testcore.tlog\cl.command.1.tlog
 e:\git\pk42\testcore\x64\debug\testcore.tlog\cl.read.1.tlog
 e:\git\pk42\testcore\x64\debug\testcore.tlog\cl.write.1.tlog

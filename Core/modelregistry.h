@@ -18,12 +18,13 @@ public:
 	tModelRegistry() {};
 	~tModelRegistry() {};
 
-	void registerMesh(std::string& sName)	
+	void registerMesh(const std::string& sName, std::shared_ptr<tMesh> _meshPtr)
 	{
 		if (!keyRegistered(sName))
 		{
 			tRegRecord rec;
 			rec.refCount = 0;
+			rec.meshPtr = _meshPtr;
 			modelCollection[sName] = rec;
 		}
 		modelCollection[sName].refCount += 1;
@@ -39,7 +40,7 @@ public:
 	}
 
 
-	bool keyRegistered(std::string& sName)
+	bool keyRegistered(const std::string& sName)
 	{
 		if (modelCollection.find(sName) == modelCollection.end())
 			return false;

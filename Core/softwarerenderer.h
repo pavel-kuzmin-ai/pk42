@@ -5,6 +5,7 @@
 #include <sstream>
 #include "consoledisplay.h"
 #include "softwaregl.h"
+#include "world.h"
 
 class tSoftwareRenderer
 {
@@ -68,6 +69,7 @@ private:
 
 
 	float curDt;
+
 
 	tVertexData world[3] = { tVertexData(0,0,0),
 							 tVertexData(0,-1,0) ,
