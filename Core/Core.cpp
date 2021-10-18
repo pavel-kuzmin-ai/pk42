@@ -21,12 +21,12 @@ void IConsoleScreen::show() { scr->show(); };
 
 ISoftwareRasterizer::ISoftwareRasterizer(int _width, int _height) { rst = new tSoftwareRasterizer(_width, _height); };
 ISoftwareRasterizer::~ISoftwareRasterizer(void) { delete rst; };
-void ISoftwareRasterizer::initBuffers() { rst->initBuffers(); };
+/*void ISoftwareRasterizer::initBuffers() { rst->initBuffers(); };
 void ISoftwareRasterizer::setOutBuffer(int* displayBuf) { rst->setOutBuffer(displayBuf); };
 int* ISoftwareRasterizer::bufColor() { return rst->bufColor(); };
 void ISoftwareRasterizer::sGLFreeOutput() { rst->sGLFreeOutput(); };
 void ISoftwareRasterizer::sGLBufferData(int size, IVertexData* ivrtx) { rst->sGLBufferData(size, ivrtx->getVrtxDataPtr()); };
-void ISoftwareRasterizer::sGLDrawElements(int numElem) { rst->sGLDrawElements(numElem); };
+void ISoftwareRasterizer::sGLDrawElements(int numElem) { rst->sGLDrawElements(numElem); };*/
 
 IVertexData::IVertexData() {};
 IVertexData::IVertexData(vec3<float> c) { vrtx = new tVertexData(c); };
@@ -39,6 +39,6 @@ ISoftwareRenderer::ISoftwareRenderer(int _width, int _height, int _pxl) { rndr =
 ISoftwareRenderer::~ISoftwareRenderer(void) { delete rndr; };
 void ISoftwareRenderer::startUp() { rndr->startUp(); };
 void ISoftwareRenderer::render() { rndr->render(); };
-void ISoftwareRenderer::updateWorld() { rndr->updateWorld(); };
+//void ISoftwareRenderer::updateWorld() { rndr->updateWorld(); };
 void ISoftwareRenderer::displayResult() { rndr->displayResult(); };
 

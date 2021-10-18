@@ -47,6 +47,11 @@ public:
 		return true;
 	}
 
+	std::shared_ptr<tMesh> getMesh(std::string key)
+	{
+		return modelCollection[key].meshPtr;
+	}
+
 private:
 	std::unordered_map<std::string, tRegRecord> modelCollection;
 };

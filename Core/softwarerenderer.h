@@ -31,22 +31,38 @@ public:
 		rasterizer->initBuffers();
 		rasterizer->setOutBuffer(displayBuffer);
 		sGLColor = rasterizer->bufColor();
+		world.addBox(0, 0, 0, 0.3, 0.4, 0.5);
 	}
 
 	void render()
 	{
 		rasterizer->sGLFreeOutput();
-		rasterizer->sGLBufferData(3, world);
-		rasterizer->sGLDrawElements(3);
+
+		for (auto keyVal : *world.getObjectsPtr())
+		{
+			tMeshObject* obj = keyVal.second;
+			tTransformMatrix* transform = obj->getM2Wmatrix();
+			std::shared_ptr<tMesh> mesh = obj->getMeshPtr();
+
+			rasterizer->setModel2ViewMatrix(transform->getDataPtr());
+			int size = mesh->vertsToBuffer(floatBuf);
+
+			rasterizer->setVertexData(floatBuf, size);
+			size = mesh->trisToBuffer(intBuf);
+			rasterizer->sGLBufferData(size, intBuf);
+			rasterizer->sGLDrawElements(size);
+		}
+		
+		
 	}
 
 
-	void updateWorld()
+	/*void updateWorld()
 	{
 		world[0].translate(0.001f, 0.f, 0.f);
 		world[1].translate(0.f, 0.001f, 0.f);
 		world[2].translate(0.001f, 0.001f, 0.f);
-	}
+	}*/
 	void displayResult()
 	{
 		display->updateConsoleBuffer();
@@ -67,12 +83,12 @@ private:
 	int pxlSize;
 	int* sGLColor;
 
+	int intBuf[1000];
+	float floatBuf[1000];
+
 
 	float curDt;
 
-
-	tVertexData world[3] = { tVertexData(0,0,0),
-							 tVertexData(0,-1,0) ,
-							 tVertexData(-2,-2,0) };
+	tScene world;
 };
 #endif

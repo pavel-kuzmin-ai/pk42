@@ -22,7 +22,9 @@ public:
 
 	int executeCommands(messageQueue* qIn, messageQueue* qOut)
 	{
-		renderer->updateWorld();
+		//renderer->updateWorld();
+
+		
 	    renderer->render();
 		renderer->displayResult();
 		

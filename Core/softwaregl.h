@@ -2,7 +2,7 @@
 #define SOFTWAREGL_H
 
 #include "vec3.h"
-
+#include "matrixmath.h"
 class tVertexData
 {
 public:
@@ -29,21 +29,37 @@ public:
 
 	void initBuffers()
 	{
-		VertexBuffer = new tVertexData[maxVerts];
+		VertexData = new float[maxVerts];
+		VertexBuffer = new int[maxVerts];
+		outVertexBuffer = new float[maxVerts];
 		outColor = new int[width*height * 3];
+		transform = new tMatrix(4, 4, Model2View);
+
+		tmpIntermed = new tMatrix(4, 1, tmpIntermedData);
+		tmpOut = new tMatrix(4, 1, tmpOutData);;
 	}
 	void setOutBuffer(int * _buf)
 	{
 		outColor = _buf;
 	}
 
-	void sGLBufferData(int size, tVertexData* vertexData)
+	void setModel2ViewMatrix(float* inMatrix)
+	{
+		std::memcpy(Model2View, inMatrix, 16 * sizeof(float));
+	}
+
+	void setVertexData(float* inVerts, int size)
 	{
 		if (size > maxVerts) size = maxVerts;
-		for (int i = 0; i < size; i++)
-		{
-			VertexBuffer[i] = vertexData[i];
-		}
+		std::memcpy(VertexData, inVerts, size * sizeof(float));
+		
+	}
+
+
+	void sGLBufferData(int size, int* vertexIds)
+	{
+		if (size > maxVerts) size = maxVerts;
+		std::memcpy(VertexBuffer, vertexIds, size * sizeof(int));
 		bufVerts = size;
 	}
 
@@ -57,10 +73,15 @@ public:
 		}
 	}
 
-	void sGLDrawVertex(tVertexData vertex)
+
+
+	void sGLDrawVertex(int vertexIdx)
 	{
-		float x = ((vertex.coords().x() - xmin) * 2 / xspan - 1);
-		float y = ((vertex.coords().y() - ymin) * 2 / yspan - 1);
+		arr2Matrix(VertexData, *tmpIntermed, 3, vertexIdx * 3);
+		Multiply(*transform, *tmpIntermed, tmpOut);
+
+		float x = tmpOutData[0];
+		float y = tmpOutData[1];
 		if ((x > -1) && (x < 1) && (y > -1) && (y < 1))
 		{
 			int ix = (int)((x + 1) * width / 2);
@@ -82,9 +103,14 @@ public:
 	int* bufColor() { return outColor; }
 
 private:
-	tVertexData* VertexBuffer;
 	int maxTris = 1000;
 	int maxVerts = maxTris * 3;
+	float* VertexData;
+	
+	int* VertexBuffer;
+	float* outVertexBuffer;
+
+
 	int bufTris = 0;
 	int bufVerts = 0;
 
@@ -92,12 +118,6 @@ private:
 	int height;
 	int* outColor;
 
-	//float xmin = -5;
-	//float xmax = 15;
-	//float xspan = fabs(xmax - xmin);
-	//float ymin = -13;
-	//float ymax = 2;
-	//float yspan = fabs(ymax - ymin);
 
 	float xmin = -1;
 	float xmax = 1;
@@ -105,6 +125,18 @@ private:
 	float ymin = -1;
 	float ymax = 1;
 	float yspan = fabs(ymax - ymin);
+
+	float Model2View[16];
+	tMatrix* transform;
+
+	float tmpIntermedData[4] = { 1.f, 1.f, 1.f, 1.f };
+	tMatrix* tmpIntermed;
+
+	float tmpOutData[4] = { 1.f, 1.f, 1.f, 1.f };;
+	tMatrix* tmpOut;
+
+
+
 
 };
 

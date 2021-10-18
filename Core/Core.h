@@ -66,12 +66,12 @@ public:
 	ISoftwareRasterizer(int _width, int _height);
 	~ISoftwareRasterizer();
 
-	void initBuffers();
+	/*void initBuffers();
 	void setOutBuffer(int* displayBuf);
 	int* bufColor();
 	void sGLFreeOutput();
 	void sGLBufferData(int size, IVertexData*);
-	void sGLDrawElements(int numElem);
+	void sGLDrawElements(int numElem);*/
 private:
 	tSoftwareRasterizer* rst;
 };
@@ -84,7 +84,7 @@ public:
 	~ISoftwareRenderer();
 	void startUp();
 	void render();
-	void updateWorld();
+	//void updateWorld();
 	void displayResult();
 
 private:

@@ -54,7 +54,12 @@ public:
 		}
 	}
 
-	void addTriangle(int vertex0, int vertex1, int vertex2) { tris.push_back(tTriangle(vertex0, vertex1, vertex2)); }
+	void addTriangle(int vertex0, int vertex1, int vertex2) 
+	{ 
+		tris.push_back(vertex0);
+		tris.push_back(vertex1);
+		tris.push_back(vertex2);
+	}
 	//void addTriangle(int* vertIds) { tris.push_back(tTriangle(vertIds)); }
 
 	void setTris(int trisnum, int* vertids)
@@ -67,9 +72,28 @@ public:
 		}
 	}
 
+	std::vector<float>* getDataPtr()
+	{
+		return &vertices;
+	}
+
+
+	
+	int vertsToBuffer(float* buf)
+	{
+		buf = &vertices[0];
+		return (int)(vertices.size());
+	}
+
+	int trisToBuffer(int* buf)
+	{
+		buf = &tris[0];
+		return (int)(tris.size());
+	}
+
 protected:
 	std::vector<float> vertices;
-	std::vector<tTriangle> tris;
+	std::vector<int> tris;
 private:
 	
 };
@@ -78,20 +102,20 @@ private:
 class tBox:private tMesh
 {
 public:
-	tBox()
+	tBox():tMesh()
 	{
 		float arr[24] = { 0,0,0, 1,0,0, 1,1,0, 0,1,0, 0,0,1, 1,0,1, 1,1,1, 0,1,1 };
 		for (int i = 0; i < 24; i++)
 			vertices.push_back(arr[i]);
 
-		tTriangle arr2[12] = { tTriangle(0,1,2) , tTriangle(0,2,3),
-							   tTriangle(0,4,5) , tTriangle(0,5,1),
-							   tTriangle(0,4,7) , tTriangle(0,7,3),
-							   tTriangle(6,5,1) , tTriangle(6,1,2),
-							   tTriangle(6,2,3) , tTriangle(6,3,7),
-							   tTriangle(6,7,4) , tTriangle(6,4,5) };
+		int arr2[36] = { 0,1,2 , 0,2,3,
+							   0,4,5 , 0,5,1,
+							   0,4,7 , 0,7,3,
+							   6,5,1 , 6,1,2,
+							   6,2,3 , 6,3,7,
+							   6,7,4 , 6,4,5 };
 		
-		for (int i = 0; i < 12; i++)
+		for (int i = 0; i < 36; i++)
 			tris.push_back(arr2[i]);		
 	};
 	virtual ~tBox() {};

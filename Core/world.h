@@ -86,24 +86,15 @@ public:
 	{
 		transform.UpdateTransforms();
 	}
+
+	tTransformMatrix* getM2Wmatrix()
+	{
+		return transform.getM2Wmatrix();
+	}
 protected:
 	std::string sName, sMeshName;
 	std::shared_ptr<tMesh> geometry;
 	tTransformChain transform;
-};
-
-class tBoxObj:private tMeshObject
-{
-public:
-	tBoxObj(float _x = 0, float _y = 0, float _z = 0, float _xLen = 1, float _yLen = 1, float _zLen = 1)
-	{
-		geometry = std::make_shared<tBox>();
-		setName("box");
-		setLocation(_x, _y, _z);
-		setScale(_xLen, _yLen, _zLen);
-		UpdateTransforms();
-	};
-	virtual ~tBoxObj() {};
 };
 
 
@@ -137,17 +128,22 @@ public:
 		std::shared_ptr<tMesh> geometry;
 		if (registry.keyRegistered("box"))
 		{
-			geometry = registry["box"].meshPtr;
+			geometry = registry.getMesh("box");
 		}			
 		else
 		{
-			geometry = std::make_shared<tBox>();
+			geometry = std::make_shared<tMesh>();
+			geometry->setVerices(8, fTmp);
+			geometry->setTris(12, iTmp);
 		}
 		 
 		addObject("box", "boxModel", geometry);
 	}
 
-	
+	std::unordered_map<int, tMeshObject*>* getObjectsPtr()
+	{
+		return &sceneObjects;
+	}
 	
 
 private:
@@ -156,7 +152,13 @@ private:
 	std::unordered_map<int, tMeshObject*> sceneObjects ;
 	int nextIdx = 0;
 	
-
+	float fTmp[24] = { 0,0,0, 1,0,0, 1,1,0, 0,1,0, 0,0,1, 1,0,1, 1,1,1, 0,1,1 };
+	int iTmp[36] = { 0,1,2 , 0,2,3,
+							   0,4,5 , 0,5,1,
+							   0,4,7 , 0,7,3,
+							   6,5,1 , 6,1,2,
+							   6,2,3 , 6,3,7,
+							   6,7,4 , 6,4,5 };
 
 };
 
