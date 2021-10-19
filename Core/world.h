@@ -104,12 +104,14 @@ public:
 	tScene() {};
 	~tScene() {};
 
-	void addObject(std::string meshName, std::string modelName, std::shared_ptr<tMesh> geometry)
+	int addObject(std::string meshName, std::string modelName, std::shared_ptr<tMesh> geometry)
 	{
 		registry.registerMesh(meshName, geometry);
 		tMeshObject* obj = new tMeshObject(modelName, meshName, geometry);
 		sceneObjects[nextIdx] = obj;
+		int myidx = nextIdx;
 		nextIdx++;
+		return myidx;
 	}
 
 	void removeObject(int idx)
@@ -137,7 +139,11 @@ public:
 			geometry->setTris(12, iTmp);
 		}
 		 
-		addObject("box", "boxModel", geometry);
+		int newidx = addObject("box", "boxModel", geometry);
+		tMeshObject* objPtr = sceneObjects[newidx];
+		objPtr->setLocation(_x, _y, _z);
+		objPtr->setScale(_xLen, _yLen, _zLen);
+		objPtr->UpdateTransforms();
 	}
 
 	std::unordered_map<int, tMeshObject*>* getObjectsPtr()

@@ -1,4 +1,5 @@
 ﻿  pkEng.cpp
+e:\git\pk42\core\softwarerenderer.h(34): warning C4305: 'argument': truncation from 'double' to 'float'
 e:\git\pk42\systems\systems.h(33): warning C4251: 'coreSystem::vSystems': class 'std::vector<Node *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'coreSystem'
           with
           [

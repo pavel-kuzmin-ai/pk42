@@ -81,13 +81,17 @@ public:
 	
 	int vertsToBuffer(float* buf)
 	{
-		buf = &vertices[0];
+		//buf = &vertices[0];
+		for (size_t i = 0; i < vertices.size(); i++)
+			buf[i] = vertices[i];
 		return (int)(vertices.size());
 	}
 
 	int trisToBuffer(int* buf)
 	{
-		buf = &tris[0];
+		//buf = &tris[0];
+		for (size_t i = 0; i < tris.size(); i++)
+			buf[i] = tris[i];
 		return (int)(tris.size());
 	}
 

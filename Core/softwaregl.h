@@ -61,27 +61,32 @@ public:
 		if (size > maxVerts) size = maxVerts;
 		std::memcpy(VertexBuffer, vertexIds, size * sizeof(int));
 		bufVerts = size;
+		bufTris = size / 3;
 	}
 
 	void sGLDrawElements(int maxcount)
 	{
 
-		for (int i = 0; i < bufVerts; i++)
+		for (int i = 0; i < bufTris; i++)
 		{
 			if (i >= maxcount) break;
-			sGLDrawVertex(VertexBuffer[i]);
+			sGLDrawTriangle(VertexBuffer[i * 3], VertexBuffer[i * 3 + 1], VertexBuffer[i * 3 + 2]);
 		}
 	}
 
-
-
+	void sGLDrawTriangle(int vertexIdx0, int vertexIdx1, int vertexIdx2)
+	{
+		sGLDrawVertex(vertexIdx0);
+		sGLDrawVertex(vertexIdx1);
+		sGLDrawVertex(vertexIdx2);
+	}
 	void sGLDrawVertex(int vertexIdx)
 	{
 		arr2Matrix(VertexData, *tmpIntermed, 3, vertexIdx * 3);
 		Multiply(*transform, *tmpIntermed, tmpOut);
 
-		float x = tmpOutData[0];
-		float y = tmpOutData[1];
+		float x = tmpOut->getValue(0,0);
+		float y = tmpOut->getValue(1, 0);
 		if ((x > -1) && (x < 1) && (y > -1) && (y < 1))
 		{
 			int ix = (int)((x + 1) * width / 2);
