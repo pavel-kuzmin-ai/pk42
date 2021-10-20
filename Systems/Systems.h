@@ -13,7 +13,9 @@
 #include <queue>
 #include <string>
 #include "syscorelogic.h"
+#include "sysgamelogic.h"
 #include "syssoftwarerenderer.h"
+
 
 //extern "C" {
 //	void DLLDIR runEngine();
@@ -47,7 +49,8 @@ private:
 	sysCout* sysB;
 	sysMmapSaverFromMain* sysC;
 	sysMmapLoaderFromChild* sysD;
-	sysCoreLogic* sysLogic;
+	sysCoreLogic* sysProgLogic;
+	sysGameLogic* sysLogic;
 	sysSoftwareRenderer* sysDisplay;
 	int position = 0;
 };
@@ -63,5 +66,5 @@ private:
 	sysMmapLoaderFromMain* sysB;
 	sysCout* sysC;
 	sysDetachedConsole* sysD;
-	sysCoreLogic* sysLogic;
+	sysCoreLogic* sysProgLogic;
 };

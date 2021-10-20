@@ -42,6 +42,11 @@ public:
 	{
 		curDt = dt;
 	}
+
+	void setWorld(tScene* _wrld)
+	{
+		renderer->setWorldPtr(_wrld);
+	}
 private:
 	engineConfig* conf;
 	ISoftwareRenderer* renderer;

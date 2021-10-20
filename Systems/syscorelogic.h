@@ -11,6 +11,8 @@ public:
 	sysCoreLogic(string s) :Node(s) {};
 	virtual ~sysCoreLogic() {};
 
+
+
 	int executeCommands(messageQueue* qIn, messageQueue* qOut)
 	{
 		while (!qIn->empty())
@@ -24,6 +26,8 @@ public:
 		}
 		return 0;
 	}
+private:
+
 };
 
 

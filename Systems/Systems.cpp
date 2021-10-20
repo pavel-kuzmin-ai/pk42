@@ -25,31 +25,37 @@ void pk42Core::startUp()
 	//sysB = new sysCout("system out");
 	sysC = new sysMmapSaverFromMain("system mmap save from main");
 	sysD = new sysMmapLoaderFromChild("system mmap load from child");
-	sysLogic = new sysCoreLogic("core logic");
+	sysProgLogic = new sysCoreLogic("core logic");
+	sysLogic = new sysGameLogic("game logic");
 	sysDisplay = new sysSoftwareRenderer("renderer", &cEngineConfig);
 
 	//bus.subscribeClient(*sysB);
 	bus->subscribeClient(*sysC);
 	bus->subscribeClient(*sysD);
+	bus->subscribeClient(*sysProgLogic);
 	bus->subscribeClient(*sysLogic);
 	bus->subscribeClient(*sysDisplay);
 
 	//sysB->startUp();
 	sysC->startUp();
 	sysD->startUp();
+	sysProgLogic->startUp();
 	sysLogic->startUp();
 	sysDisplay->startUp();
 	
+	vGameSystems.push_back(sysLogic);
 	vGameSystems.push_back(sysDisplay);
 
 	bus->connectEngineState(&sEngineState);
+
+	sysDisplay->setWorld(sysLogic->getWorldPtr());
 	sEngineState.bEngineInitialized = true;
 	std::cout << "engine initialized" << '\n';
 
 	//sysB->runDetached();
 	sysC->runDetached();
 	sysD->runDetached();
-	sysLogic->runDetached();
+	sysProgLogic->runDetached();
 	//sysDisplay->runDetached();
 
 	//display->buildScreen();
@@ -87,15 +93,15 @@ void pk42Console::startUp()
 	sysB = new sysMmapLoaderFromMain("system mmap loader from main console");
 	sysC = new sysCout("system out console");
 	sysD = new sysDetachedConsole("console");
-	sysLogic = new sysCoreLogic("core logic");
+	sysProgLogic = new sysCoreLogic("core logic");
 	bus->subscribeClient(*sysB);
 	bus->subscribeClient(*sysC);
 	bus->subscribeClient(*sysD);
-	bus->subscribeClient(*sysLogic);
+	bus->subscribeClient(*sysProgLogic);
 	sysB->startUp();
 	sysC->startUp();
 	sysD->startUp();
-	sysLogic->startUp();
+	sysProgLogic->startUp();
 
 	bus->connectEngineState(&sEngineState);
 	sEngineState.bEngineInitialized = true;
@@ -104,5 +110,5 @@ void pk42Console::startUp()
 	sysB->runDetached();
 	sysC->runDetached();
 	sysD->runDetached();
-	sysLogic->runDetached();
+	sysProgLogic->runDetached();
 }

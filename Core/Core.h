@@ -10,6 +10,7 @@
 #include "consoledisplay.h"
 #include "softwaregl.h"
 #include "softwarerenderer.h"
+#include "world.h"
 
 
 class CORE_API IClock
@@ -23,6 +24,8 @@ public:
 	float checkAndSwapMeasure();
 	unsigned long long getTimeCycles();
 	float cyclesToSeconds(unsigned long long dt);
+	void setPaused(bool paused);
+	void setTimeScale(float scale);
 	
 private:
 	tClock* clk;
@@ -83,6 +86,7 @@ public:
 	ISoftwareRenderer(int _width, int _height, int _pxl);
 	~ISoftwareRenderer();
 	void startUp();
+	void setWorldPtr(tScene* _wrld);
 	void render();
 	//void updateWorld();
 	void displayResult();

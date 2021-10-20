@@ -9,16 +9,12 @@
 #include <string>
 #include <memory>
 
-class tMeshObject
+class tTransformable
 {
 public:
-	tMeshObject() {};
-	tMeshObject(std::string _sName, std::string _sMeshName, std::shared_ptr<tMesh> geometry)
-	{
-		bindMesh(geometry);
-		setName(_sName);
-	};
-	~tMeshObject() {};
+	tTransformable() {};
+	tTransformable(std::string _sName) { setName(_sName); };
+	~tTransformable() {};
 
 	void setLocation(float _x, float _y, float _z)
 	{
@@ -50,6 +46,48 @@ public:
 		transform.rotateBy(rotX, rotY, rotZ);
 	}
 
+	void setName(std::string _sName)
+	{
+		sName = _sName;
+	}
+
+	std::string getName()
+	{
+		return sName;
+	}
+
+
+	void UpdateTransforms()
+	{
+		transform.UpdateTransforms();
+	}
+
+	tTransformMatrix* getM2Wmatrix()
+	{
+		return transform.getM2Wmatrix();
+	}
+
+	tTransformMatrix* getW2Mmatrix()
+	{
+		return transform.getW2Mmatrix();
+	}
+protected:
+	std::string sName;
+	tTransformChain transform;
+};
+
+
+class tMeshObject: public tTransformable
+{
+public:
+	tMeshObject() : tTransformable() {};
+	tMeshObject(std::string _sName, std::string _sMeshName, std::shared_ptr<tMesh> _geometry): tTransformable(_sName)
+	{
+		bindMesh(_geometry);
+		setName(_sName);
+	};
+	virtual ~tMeshObject() {};
+
 	void bindMesh(std::shared_ptr<tMesh> meshPtr) 
 	{
 		geometry = meshPtr;
@@ -60,15 +98,6 @@ public:
 		return geometry;
 	}
 
-	void setName(std::string _sName)
-	{
-		sName = _sName;
-	}
-
-	std::string getName()
-	{
-		return sName;
-	}
 
 	void setMeshName(std::string _sName)
 	{
@@ -81,20 +110,47 @@ public:
 	}
 
 
-
-	void UpdateTransforms()
-	{
-		transform.UpdateTransforms();
-	}
-
-	tTransformMatrix* getM2Wmatrix()
-	{
-		return transform.getM2Wmatrix();
-	}
 protected:
-	std::string sName, sMeshName;
+	std::string  sMeshName;
 	std::shared_ptr<tMesh> geometry;
-	tTransformChain transform;
+};
+
+class tCameraObject : public tTransformable
+{
+public:
+	tCameraObject() : tTransformable() {};
+	tCameraObject(std::string _sName, std::string _sCameraName, std::shared_ptr<tCamera> _camera) : tTransformable(_sName)
+	{
+		bindCamera(_camera);
+		setName(_sName);
+	};
+	virtual ~tCameraObject() {};
+
+	void bindCamera(std::shared_ptr<tCamera> camPtr)
+	{
+		camera = camPtr;
+	}
+
+	std::shared_ptr<tCamera> getCamPtr()
+	{
+		return camera;
+	}
+
+
+	void setCameraName(std::string _sName)
+	{
+		sCameraName = _sName;
+	}
+
+	std::string getCameraName()
+	{
+		return sCameraName;
+	}
+
+
+protected:
+	std::string  sCameraName;
+	std::shared_ptr<tCamera> camera;
 };
 
 

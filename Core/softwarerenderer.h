@@ -31,14 +31,15 @@ public:
 		rasterizer->initBuffers();
 		rasterizer->setOutBuffer(displayBuffer);
 		sGLColor = rasterizer->bufColor();
-		world.addBox(0, 0, 0, 0.3, 0.4, 0.5);
 	}
+
+	void setWorldPtr(tScene* _wrld) { world = _wrld; }
 
 	void render()
 	{
 		rasterizer->sGLFreeOutput();
 
-		for (auto keyVal : *world.getObjectsPtr())
+		for (auto keyVal : *(world->getObjectsPtr()))
 		{
 			tMeshObject* obj = keyVal.second;
 			tTransformMatrix* transform = obj->getM2Wmatrix();
@@ -89,6 +90,6 @@ private:
 
 	float curDt;
 
-	tScene world;
+	tScene* world;
 };
 #endif

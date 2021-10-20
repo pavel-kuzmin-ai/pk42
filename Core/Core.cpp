@@ -8,6 +8,8 @@ void IClock::startMeasure() { clk->startMeasure(); };
 float IClock::checkAndSwapMeasure() { return clk->checkAndSwapMeasure(); };
 unsigned long long IClock::getTimeCycles() { return clk->getTimeCycles(); };
 float IClock::cyclesToSeconds(unsigned long long dt) { return clk->cyclesToSeconds(dt); };
+void IClock::setPaused(bool paused) { clk->setPaused(paused); };
+void IClock::setTimeScale(float scale) { clk->setTimeScale(scale); };
 
 
 IConsoleScreen::IConsoleScreen(int _width, int _height, int _pixelSize) { scr = new tConsoleScreen(_width, _height, _pixelSize); };
@@ -38,6 +40,7 @@ tVertexData* IVertexData::getVrtxDataPtr() { return vrtx; };
 ISoftwareRenderer::ISoftwareRenderer(int _width, int _height, int _pxl) { rndr = new tSoftwareRenderer(_width, _height, _pxl); };
 ISoftwareRenderer::~ISoftwareRenderer(void) { delete rndr; };
 void ISoftwareRenderer::startUp() { rndr->startUp(); };
+void ISoftwareRenderer::setWorldPtr(tScene* _wrld) { rndr->setWorldPtr(_wrld); }
 void ISoftwareRenderer::render() { rndr->render(); };
 //void ISoftwareRenderer::updateWorld() { rndr->updateWorld(); };
 void ISoftwareRenderer::displayResult() { rndr->displayResult(); };
