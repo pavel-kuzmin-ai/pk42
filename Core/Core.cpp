@@ -41,6 +41,7 @@ ISoftwareRenderer::ISoftwareRenderer(int _width, int _height, int _pxl) { rndr =
 ISoftwareRenderer::~ISoftwareRenderer(void) { delete rndr; };
 void ISoftwareRenderer::startUp() { rndr->startUp(); };
 void ISoftwareRenderer::setWorldPtr(tScene* _wrld) { rndr->setWorldPtr(_wrld); }
+void ISoftwareRenderer::setCamPtr(tCameraObject* _cam) { rndr->setCamPtr(_cam); }
 void ISoftwareRenderer::render() { rndr->render(); };
 //void ISoftwareRenderer::updateWorld() { rndr->updateWorld(); };
 void ISoftwareRenderer::displayResult() { rndr->displayResult(); };

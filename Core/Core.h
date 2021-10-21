@@ -87,6 +87,7 @@ public:
 	~ISoftwareRenderer();
 	void startUp();
 	void setWorldPtr(tScene* _wrld);
+	void setCamPtr(tCameraObject* _cam);
 	void render();
 	//void updateWorld();
 	void displayResult();

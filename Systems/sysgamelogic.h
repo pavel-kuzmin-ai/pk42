@@ -15,7 +15,12 @@ public:
 	void startUp() 
 	{
 		world = new tScene();
-		world->addBox(0, 0, 0, 0.1, 0.2, 0.3);
+		world->addBox(0, 0, 0, 0.1, 0.2, 0.3, 0.0, 0.7, 0.2);
+	}
+
+	void shutDown()
+	{
+		delete world;
 	}
 
 	tScene* getWorldPtr()

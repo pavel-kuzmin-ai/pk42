@@ -46,6 +46,13 @@ public:
 	void setWorld(tScene* _wrld)
 	{
 		renderer->setWorldPtr(_wrld);
+		setCamera(_wrld->getCameraPtr());
+	}
+
+	void setCamera(tCameraObject* _cam)
+	{
+		_cam->setCamera(conf->screenWidth / conf->screenHeight);
+		renderer->setCamPtr(_cam);
 	}
 private:
 	engineConfig* conf;

@@ -1,3 +1,2 @@
 ﻿  core.cpp
-e:\git\pk42\core\softwarerenderer.h(34): warning C4305: 'argument': truncation from 'double' to 'float'
   Core.vcxproj -> E:\git\pk42\bin\Core.dll

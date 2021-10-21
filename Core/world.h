@@ -4,6 +4,8 @@
 #include "modelregistry.h"
 #include "mesh.h"
 #include "transformchain.h"
+#include "camera.h"
+#include "matrixmath.h"
 
 #include <unordered_map>
 #include <string>
@@ -118,24 +120,20 @@ protected:
 class tCameraObject : public tTransformable
 {
 public:
-	tCameraObject() : tTransformable() {};
-	tCameraObject(std::string _sName, std::string _sCameraName, std::shared_ptr<tCamera> _camera) : tTransformable(_sName)
+	tCameraObject() : tTransformable() { construct(); };
+	tCameraObject(std::string _sName, std::string _sCameraName, float _ratio) : tTransformable(_sName)
 	{
-		bindCamera(_camera);
+		construct(_ratio);
 		setName(_sName);
+		
 	};
-	virtual ~tCameraObject() {};
+	virtual ~tCameraObject() { delete W2Projection; };
 
-	void bindCamera(std::shared_ptr<tCamera> camPtr)
+	void construct(float _ratio = 1.f)
 	{
-		camera = camPtr;
+		camera = std::make_shared<tCamera>(_ratio);
+		W2Projection = new tTransformMatrix(W2ProjectionData);
 	}
-
-	std::shared_ptr<tCamera> getCamPtr()
-	{
-		return camera;
-	}
-
 
 	void setCameraName(std::string _sName)
 	{
@@ -147,18 +145,32 @@ public:
 		return sCameraName;
 	}
 
+	tTransformMatrix* getW2Projection()
+	{
+		Multiply(*(camera->getProjectionmatrix()), *(transform.getW2Mmatrix()), W2Projection);
+		return W2Projection;
+	}
+
+	void setCamera(float _ratio)
+	{
+		camera->setParams(_ratio);
+	}
+
 
 protected:
 	std::string  sCameraName;
 	std::shared_ptr<tCamera> camera;
+	float W2ProjectionData[16];
+	tTransformMatrix* W2Projection;
+
 };
 
 
 class tScene
 {
 public:
-	tScene() {};
-	~tScene() {};
+	tScene() { cam = new tCameraObject(); };
+	~tScene() { delete cam; };
 
 	int addObject(std::string meshName, std::string modelName, std::shared_ptr<tMesh> geometry)
 	{
@@ -181,7 +193,8 @@ public:
 		registry.unregisterMesh(meshName);
 	}
 
-	void addBox(float _x = 0, float _y = 0, float _z = 0, float _xLen = 1, float _yLen = 1, float _zLen = 1)
+	void addBox(float _x = 0, float _y = 0, float _z = 0, float _xLen = 1, float _yLen = 1, float _zLen = 1,
+				float xang=0, float yang=0, float zang=0 )
 	{
 		std::shared_ptr<tMesh> geometry;
 		if (registry.keyRegistered("box"))
@@ -199,19 +212,35 @@ public:
 		tMeshObject* objPtr = sceneObjects[newidx];
 		objPtr->setLocation(_x, _y, _z);
 		objPtr->setScale(_xLen, _yLen, _zLen);
+		objPtr->setAngles(xang, yang, zang);
+
 		objPtr->UpdateTransforms();
+	}
+
+	void setCamera(float _ratio)
+	{
+		cam->setCamera(_ratio);
+	}
+	
+	tCameraObject* getCameraPtr()
+	{
+		return cam;
 	}
 
 	std::unordered_map<int, tMeshObject*>* getObjectsPtr()
 	{
 		return &sceneObjects;
 	}
+
+	
 	
 
 private:
 
 	tModelRegistry registry;
 	std::unordered_map<int, tMeshObject*> sceneObjects ;
+	tCameraObject* cam;
+
 	int nextIdx = 0;
 	
 	float fTmp[24] = { 0,0,0, 1,0,0, 1,1,0, 0,1,0, 0,0,1, 1,0,1, 1,1,1, 0,1,1 };

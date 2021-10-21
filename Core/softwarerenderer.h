@@ -34,18 +34,23 @@ public:
 	}
 
 	void setWorldPtr(tScene* _wrld) { world = _wrld; }
+	void setCamPtr(tCameraObject* _cam) { cam = _cam; }
 
 	void render()
 	{
 		rasterizer->sGLFreeOutput();
+		tTransformMatrix* w2proj = cam->getW2Projection();
 
+		float m2projData[16];
+		tTransformMatrix m2proj(m2projData);
 		for (auto keyVal : *(world->getObjectsPtr()))
 		{
 			tMeshObject* obj = keyVal.second;
 			tTransformMatrix* transform = obj->getM2Wmatrix();
 			std::shared_ptr<tMesh> mesh = obj->getMeshPtr();
 
-			rasterizer->setModel2ViewMatrix(transform->getDataPtr());
+			Multiply(*w2proj, *transform, &m2proj);
+			rasterizer->setModel2ViewMatrix(m2proj.getDataPtr());
 			int size = mesh->vertsToBuffer(floatBuf);
 
 			rasterizer->setVertexData(floatBuf, size);
@@ -91,5 +96,6 @@ private:
 	float curDt;
 
 	tScene* world;
+	tCameraObject* cam;
 };
 #endif
