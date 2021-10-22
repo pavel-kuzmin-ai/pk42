@@ -20,6 +20,13 @@ public:
 		renderer->startUp();
 	}
 
+	void shutDown()
+	{
+		renderer->shutDown();
+		delete renderer;
+		Node::shutDown();
+	}
+
 	int executeCommands(messageQueue* qIn, messageQueue* qOut)
 	{
 		//renderer->updateWorld();

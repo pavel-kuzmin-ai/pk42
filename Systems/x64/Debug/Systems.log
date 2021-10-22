@@ -1,6 +1,6 @@
 ﻿  Systems.cpp
 e:\git\pk42\systems\sysgamelogic.h(18): warning C4305: 'argument': truncation from 'double' to 'float'
-e:\git\pk42\systems\syssoftwarerenderer.h(54): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+e:\git\pk42\systems\syssoftwarerenderer.h(61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 e:\git\pk42\systems\systems.h(35): warning C4251: 'coreSystem::vSystems': class 'std::vector<Node *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'coreSystem'
           with
           [

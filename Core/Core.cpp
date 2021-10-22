@@ -40,6 +40,7 @@ tVertexData* IVertexData::getVrtxDataPtr() { return vrtx; };
 ISoftwareRenderer::ISoftwareRenderer(int _width, int _height, int _pxl) { rndr = new tSoftwareRenderer(_width, _height, _pxl); };
 ISoftwareRenderer::~ISoftwareRenderer(void) { delete rndr; };
 void ISoftwareRenderer::startUp() { rndr->startUp(); };
+void ISoftwareRenderer::shutDown() { rndr->shutDown(); };
 void ISoftwareRenderer::setWorldPtr(tScene* _wrld) { rndr->setWorldPtr(_wrld); }
 void ISoftwareRenderer::setCamPtr(tCameraObject* _cam) { rndr->setCamPtr(_cam); }
 void ISoftwareRenderer::render() { rndr->render(); };

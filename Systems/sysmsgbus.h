@@ -8,6 +8,7 @@
 #include <mutex>
 #include <thread>
 #include "engineState.h"
+#include <list>
 
 
 using std::queue;
@@ -17,6 +18,8 @@ using std::mutex;
 using std::lock_guard;
 using std::thread;
 using std::stringstream;
+
+
 
 
 /**
@@ -42,7 +45,7 @@ public:
 
 		set_empty();
 	};
-	virtual ~message() {};
+	~message() {};
 
 	bool empty() { return bEmpty; }
 	void set_empty() { bEmpty = (sValue == ""); }
@@ -64,8 +67,10 @@ class messageQueue
 {
 public:
 	messageQueue() {};
-	messageQueue(string sDumpedQueue)
+	messageQueue(string& sDumpedQueue)
 	{
+		load(sDumpedQueue);
+		/*
 		string input;
 		stringstream ss;
 		ss << sDumpedQueue;
@@ -82,15 +87,42 @@ public:
 			std::getline(ss, input);
 			message cmd(input);
 			q.push(cmd);
-		}
+		}*/
 	};
 	virtual ~messageQueue() {};
 
+	void load(string& sDumpedQueue)
+	{
+		string input;
+		stringstream ss;
+		ss << sDumpedQueue;
+
+		int num_cmd = 0;
+		std::getline(ss, input);
+		stringstream tmp;
+		tmp << input;
+		tmp >> num_cmd;
+
+		messageQueue out;
+		for (int i = 0; i < num_cmd; i++)
+		{
+			std::getline(ss, input);
+			message cmd(input);
+			//q.push(cmd);
+			q.push_back(cmd);
+		}
+	}
 	
-	message front(){ return q.front(); }
-	void pop() { q.pop(); }
-	void push(message mVal) { q.push(mVal); }
-	bool empty(){return q.empty();}
+	//message front(){ return q.front(); }
+	//void pop() { q.pop(); }
+	//void push(message mVal) { q.push(mVal); }
+	//bool empty(){return q.empty();}
+
+	message front() { return q.front(); }
+	void pop() { q.pop_front(); }
+	void push(message mVal) { q.push_back(mVal); }
+	void erase() { q.erase(q.begin(), q.end()); }
+	bool empty() { return q.empty(); }
 
 	message getMsgAndPop()
 	{
@@ -101,7 +133,8 @@ public:
 
 	string str()
 	{
-		queue<message> q_copied = q;
+		//queue<message> q_copied = q;
+		std::list<message>q_copied = q;
 		size_t size = q_copied.size();
 
 		stringstream ss;
@@ -113,11 +146,13 @@ public:
 		while (!q_copied.empty())
 			{
 				message cmd = q_copied.front();
-				q_copied.pop();
+				//q_copied.pop();
+				q_copied.pop_back();
 				out += cmd.str();
 				out += "\n";
 			}
 		return out;		
+		
 	}
 
 	static messageQueue fromString(string& s)
@@ -139,8 +174,20 @@ public:
 		}
 		return out;
 	}
+
+	void join(messageQueue& qAdd)
+	{
+		q.splice(q.end(), *(qAdd.getContainerPtr()));
+	}
+	
+	std::list<message>* getContainerPtr()
+	{
+		return &q;
+	}
+
 private:
-	queue<message> q;
+	//queue<message> q;
+	std::list<message>q;
 };
 
 
@@ -154,6 +201,8 @@ public:
 	void subscribeClient(Node& c) { vClients.push_back(&c); }	
 	bool bInputEmpty() { return qInputMsgQueue.empty(); }
 	bool bOutputEmpty() { return qOutputMsgQueue.empty(); }
+
+	
 
 	void connectEngineState(engineState* _sState)
 	{ 
@@ -276,6 +325,8 @@ public:
 		return static_cast<int>(vClients.size());
 	}
 	
+	
+
 protected:
 	messageQueue qInputMsgQueue;
 	messageQueue qOutputMsgQueue;

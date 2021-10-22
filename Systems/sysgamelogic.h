@@ -21,6 +21,7 @@ public:
 	void shutDown()
 	{
 		delete world;
+		Node::shutDown();
 	}
 
 	tScene* getWorldPtr()

@@ -64,15 +64,24 @@ public:
 	sysCout(string s) :Node(s) {};
 	virtual ~sysCout() {};
 
+
+
 	int executeCommands(messageQueue* qIn, messageQueue* qOut)
 	{
 		while (!qIn->empty())
 		{
 			message msg = qIn->getMsgAndPop();
-			std::cout << ">> " << msg.str() << "\n";
+
+			if (msg.value() == "silent") { bIsSilent = true; }
+			if (msg.value() == string("verbose")) { bIsSilent = false; }
+
+			if (!bIsSilent) std::cout << ">> " << msg.str() << "\n";
+			
 		}
 		return 0;
 	}
+private:
+	bool bIsSilent=false;
 };
 
 

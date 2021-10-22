@@ -125,15 +125,14 @@ void openFileMapBuf(TCHAR* szName, LPTSTR& pBuf, HANDLE& hMapFile)
 
 }
 
-messageQueue getFromShared(TCHAR* szName, LPTSTR& pBuf, HANDLE& hMapFile)
+void getFromShared(TCHAR* szName, LPTSTR& pBuf, HANDLE& hMapFile, messageQueue& q)
 {
 	string s;
 	for (int i = 0; i < _tcslen(pBuf); i++)
 	{
 		s.push_back((char)pBuf[i]);
 	}
-	messageQueue q(s);
-	return q;
+	q.load(s);
 }
 
 /*
@@ -184,13 +183,16 @@ public:
 			10);    // indefinite wait
 		if (dwWaitResult == WAIT_OBJECT_0)
 		{
-			messageQueue q = getFromShared(szName, pBuf, hMapFile);
+			messageQueue q;
+			getFromShared(szName, pBuf, hMapFile, q);
 
-			while (!q.empty())
-			{
-				message mycmd = q.getMsgAndPop();
-				qOut->push(mycmd);
-			}
+			//while (!q.empty())
+			//{
+			//	message mycmd = q.getMsgAndPop();
+			//	qOut->push(mycmd);
+			//}
+
+			qOut->join(q);
 
 			ResetEvent(ghWriteFromChildEventDone);
 			SetEvent(ghReadFromChildEventDone);
@@ -277,12 +279,14 @@ public:
 		if (dwWaitResult == WAIT_OBJECT_0)
 		{
 			
-			messageQueue q = getFromShared(szName, pBuf, hMapFile);
-			while (!q.empty())
-			{
-				message mycmd = q.getMsgAndPop();
-				qOut->push(mycmd);
-			}
+			messageQueue q;
+			getFromShared(szName, pBuf, hMapFile, q);
+			//while (!q.empty())
+			//{
+			//	message mycmd = q.getMsgAndPop();
+			//	qOut->push(mycmd);
+			//}
+			qOut->join(q);
 			ResetEvent(ghWriteFromMainEventDone);
 			SetEvent(ghReadFromMainEventDone);
 		}
@@ -321,10 +325,11 @@ public:
 		{
 			putToShared(szName, q, pBuf, hMapFile);
 			
-			while (!q.empty())
-			{
-				q.pop();
-			}
+			//while (!q.empty())
+			//{
+			//	q.pop();
+			//}
+			q.erase();
 			ResetEvent(ghReadFromChildEventDone);
 			SetEvent(ghWriteFromChildEventDone);
 		}
