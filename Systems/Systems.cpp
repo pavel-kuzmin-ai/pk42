@@ -28,6 +28,7 @@ void pk42Core::startUp()
 	sysProgLogic = new sysCoreLogic("core logic");
 	sysLogic = new sysGameLogic("game logic");
 	sysDisplay = new sysSoftwareRenderer("renderer", &cEngineConfig);
+	sysPlayer = new sysPlayerMechanics("player", &cEngineConfig);
 
 	//bus.subscribeClient(*sysB);
 	bus->subscribeClient(*sysC);
@@ -35,6 +36,7 @@ void pk42Core::startUp()
 	bus->subscribeClient(*sysProgLogic);
 	bus->subscribeClient(*sysLogic);
 	bus->subscribeClient(*sysDisplay);
+	bus->subscribeClient(*sysPlayer);
 
 	//sysB->startUp();
 	sysC->startUp();
@@ -42,13 +44,16 @@ void pk42Core::startUp()
 	sysProgLogic->startUp();
 	sysLogic->startUp();
 	sysDisplay->startUp();
+	sysPlayer->startUp();
 	
 	vGameSystems.push_back(sysLogic);
 	vGameSystems.push_back(sysDisplay);
+	vGameSystems.push_back(sysPlayer);
 
 	bus->connectEngineState(&sEngineState);
 
 	sysDisplay->setWorld(sysLogic->getWorldPtr());
+	sysPlayer->setWorld(sysLogic->getWorldPtr());
 	sEngineState.bEngineInitialized = true;
 	std::cout << "engine initialized" << '\n';
 
@@ -80,6 +85,7 @@ void pk42Core::step(float dt)
 {
 	//for (auto sys: vGameSystems)
 	//	sys->callSystemThreadsave();
+	sysPlayer->callSystemThreadsave();
 	sysDisplay->setDt(dt);
 	sysDisplay->callSystemThreadsave();
 	bus->callSystemThreadsave();

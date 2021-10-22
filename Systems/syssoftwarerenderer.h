@@ -41,7 +41,7 @@ public:
 		ss << "render done, fps = " << 1./curDt;
 		std::getline(ss, output);
 		message msg(sName, output);
-		qOut->push(msg);	
+		//qOut->push(msg);	
 		return 0;
 	}
 

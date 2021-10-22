@@ -91,7 +91,7 @@ public:
 	};
 	virtual ~messageQueue() {};
 
-	void load(string& sDumpedQueue)
+	void load(string sDumpedQueue)
 	{
 		string input;
 		stringstream ss;
@@ -108,21 +108,22 @@ public:
 		{
 			std::getline(ss, input);
 			message cmd(input);
-			//q.push(cmd);
-			q.push_back(cmd);
+			q.push(cmd);
+			// q.push_back(cmd);
 		}
 	}
 	
-	//message front(){ return q.front(); }
-	//void pop() { q.pop(); }
-	//void push(message mVal) { q.push(mVal); }
-	//bool empty(){return q.empty();}
+	message front(){ return q.front(); }
+	void pop() { q.pop(); }
+	void push(message mVal) { q.push(mVal); }
+	void erase() { while (!q.empty()) q.pop(); }
+	bool empty(){return q.empty();}
 
-	message front() { return q.front(); }
-	void pop() { q.pop_front(); }
-	void push(message mVal) { q.push_back(mVal); }
-	void erase() { q.erase(q.begin(), q.end()); }
-	bool empty() { return q.empty(); }
+	//message front() { return q.front(); }
+	//void pop() { q.pop_front(); }
+	//void push(message mVal) { q.push_back(mVal); }
+	//void erase() { q.erase(q.begin(), q.end()); }
+	//bool empty() { return q.empty(); }
 
 	message getMsgAndPop()
 	{
@@ -133,8 +134,8 @@ public:
 
 	string str()
 	{
-		//queue<message> q_copied = q;
-		std::list<message>q_copied = q;
+		queue<message> q_copied = q;
+		//std::list<message>q_copied = q;
 		size_t size = q_copied.size();
 
 		stringstream ss;
@@ -146,8 +147,8 @@ public:
 		while (!q_copied.empty())
 			{
 				message cmd = q_copied.front();
-				//q_copied.pop();
-				q_copied.pop_back();
+				q_copied.pop();
+				//q_copied.pop_back();
 				out += cmd.str();
 				out += "\n";
 			}
@@ -177,17 +178,24 @@ public:
 
 	void join(messageQueue& qAdd)
 	{
-		q.splice(q.end(), *(qAdd.getContainerPtr()));
+		//q.splice(q.end(), *(qAdd.getContainerPtr()));
+
+		while (!qAdd.empty())
+		{
+			q.push(qAdd.getMsgAndPop());
+		}
+
 	}
 	
-	std::list<message>* getContainerPtr()
+	//std::list<message>* getContainerPtr()
+	queue<message>* getContainerPtr()
 	{
 		return &q;
 	}
 
 private:
-	//queue<message> q;
-	std::list<message>q;
+	queue<message> q;
+	//std::list<message>q;
 };
 
 
@@ -281,10 +289,11 @@ public:
 	void copyInpQueueAndClean(messageQueue* q)
 	{
 		lock_guard<mutex> lck(mtx);
-		*q = qInputMsgQueue;
+		//*q = qInputMsgQueue;
 		while (!bInputEmpty())
 		{
-			qInputMsgQueue.pop();
+			q->push(qInputMsgQueue.getMsgAndPop());
+			//qInputMsgQueue.pop();
 		}
 	}
 
