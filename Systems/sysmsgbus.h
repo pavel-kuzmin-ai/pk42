@@ -261,7 +261,8 @@ public:
 		messageQueue qOut;
 		int out = executeCommands(&qInp, &qOut);
 		updateOutputQueue(qOut);
-
+		qInp.erase();
+		qOut.erase();
 
 		return out;
 	}

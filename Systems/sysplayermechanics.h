@@ -7,6 +7,18 @@
 #include "systemsexternals.h"
 #include "engineConfig.h"
 #include <sstream>
+#include "player.h"
+#include <unordered_map>
+
+typedef void(*func)(std::stringstream*);
+
+void unpackStream(std::stringstream& ss, float* buf, int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		ss >> buf[i];
+	}
+}
 
 class sysPlayerMechanics : public Node
 {
@@ -17,10 +29,13 @@ public:
 
 	void startUp()
 	{
+		player = new tPlayer;
+		buildCmdDict();
 	}
 
 	void shutDown()
 	{
+		delete player;
 	}
 
 	int executeCommands(messageQueue* qIn, messageQueue* qOut)
@@ -28,70 +43,25 @@ public:
 		
 		while (!qIn->empty())
 		{
+			std::stringstream().swap(sscmd);
 			message msg = qIn->getMsgAndPop();
-			std::stringstream ss;
+			sscmd << msg.value();
 			std::string cmd;
-			ss >> cmd;
-			if (cmd == "camerapos")
+			sscmd >> cmd;
+
+			if ((cmd[0] == 'p') &(cmd[1] == '_'))
 			{
-				string output;
-				std::stringstream ss;
-				for (int i = 0; i < 4; i++)
+				auto iter = cmdFuncDict.find(cmd);
+				if (iter != cmdFuncDict.end())
 				{
-					for (int j = 0; j < 4; j++)
-					{
-						ss << camera->getW2Projection()->getValue(i, j)<<" ";
-					}
+					(*iter->second)(&sscmd);
 				}
-				ss << '\n';
-				
-				std::getline(ss, output);
-				message msg3(sName, output);
-				qOut->push(msg3);
 
-				float x, y, z;
-				ss >> x;
-				ss >> y;
-				ss >> z;
-
-				camera->setLocation(x, y, z);
-				camera->UpdateTransforms();
-
-				
-				for (int i = 0; i < 4; i++)
-				{
-					for (int j = 0; j < 4; j++)
-					{
-						ss << camera->getW2Projection()->getValue(i, j) << " ";
-					}
-				}
-				ss << '\n';
-
-				
-				std::getline(ss, output);
-				message msg2(sName, output);
-				qOut->push(msg);
 			}
-
-			if (cmd == "cameraang")
-			{
-				float x, y, z;
-				ss >> x;
-				ss >> y;
-				ss >> z;
-
-				camera->setAngles(x, y, z);
-				camera->UpdateTransforms();
-			}
-
-			string output;
-			ss << "my message: ";
-			std::getline(ss, output);
-			message msg4(sName, output);
-		    qOut->push(msg4);
-			qOut->push(msg);
 			
 		}
+		player->commitUpdates();
+
 		
 		return 0;
 	}
@@ -99,18 +69,78 @@ public:
 	void setWorld(tScene* _wrld)
 	{
 		world = _wrld;
-		setCamera(_wrld->getCameraPtr());
+		player->setCamera(_wrld->getCameraPtr());
 	}
 
-	void setCamera(tCameraObject* _cam)
+
+	void setLocation(std::stringstream* ss)
 	{
-		camera = _cam;
+		unpackStream(*ss, fBuf, 3);
+		player->setLocation(fBuf[0], fBuf[1], fBuf[2]);
 	}
+
+	void setAngles(std::stringstream* ss)
+	{
+		unpackStream(*ss, fBuf, 3);
+		player->setAngles(fBuf[0], fBuf[1], fBuf[2]);
+	}
+
+	void stepForward(std::stringstream ss)
+	{
+		unpackStream(ss, fBuf, 0);
+		player->stepForward(curDt);
+	}
+
+	void stepBack(std::stringstream ss)
+	{
+		unpackStream(ss, fBuf, 0);
+		player->stepBack(curDt);
+	}
+
+	void stepLeft(std::stringstream ss)
+	{
+		unpackStream(ss, fBuf, 0);
+		player->stepLeft(curDt);
+	}
+
+	void stepRight(std::stringstream ss)
+	{
+		unpackStream(ss, fBuf, 0);
+		player->stepRight(curDt);
+	}
+
+	void stepUp(std::stringstream ss)
+	{
+		unpackStream(ss, fBuf, 0);
+		player->stepUp(curDt);
+	}
+
+	void stepDown(std::stringstream ss)
+	{
+		unpackStream(ss, fBuf, 0);
+		player->stepDown(curDt);
+	}
+
+	void buildCmdDict()
+	{
+		cmdFuncDict.emplace("p_pos", &sysPlayerMechanics::setLocation);
+		cmdFuncDict.emplace("p_ang", &sysPlayerMechanics::setAngles);
+	}
+
+
 private:
 	tScene* world;
-	tCameraObject* camera;
+	//tCameraObject* camera;
+	tPlayer* player;
 	float curDt;
 	engineConfig* conf;
+	std::unordered_map<std::string, func> cmdFuncDict;
+	std::stringstream sscmd;
+
+
+	float fBuf[3];
+	int iBuf[3];
+
 };
 
 #endif

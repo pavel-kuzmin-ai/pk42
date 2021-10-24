@@ -15,7 +15,7 @@ public:
 	void startUp() 
 	{
 		world = new tScene();
-		world->addBox(0, 0, 0, 0.1, 0.2, 0.3, 0.0, 0.7, 0.2);
+		world->addBox(0.f, 0.f, 0.f, 0.1f, 0.2f, 0.3f, 0.f, 0.f, 0.f);
 	}
 
 	void shutDown()

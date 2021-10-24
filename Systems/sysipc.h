@@ -125,14 +125,15 @@ void openFileMapBuf(TCHAR* szName, LPTSTR& pBuf, HANDLE& hMapFile)
 
 }
 
-void getFromShared(TCHAR* szName, LPTSTR& pBuf, HANDLE& hMapFile, messageQueue& q)
+messageQueue getFromShared(TCHAR* szName, LPTSTR& pBuf, HANDLE& hMapFile)
 {
 	string s;
 	for (int i = 0; i < _tcslen(pBuf); i++)
 	{
 		s.push_back((char)pBuf[i]);
 	}
-	q.load(s);
+	messageQueue q(s);
+	return q;
 }
 
 /*
@@ -183,8 +184,8 @@ public:
 			10);    // indefinite wait
 		if (dwWaitResult == WAIT_OBJECT_0)
 		{
-			messageQueue q;
-			getFromShared(szName, pBuf, hMapFile, q);
+			messageQueue q = getFromShared(szName, pBuf, hMapFile);
+			
 
 			//while (!q.empty())
 			//{
@@ -279,8 +280,7 @@ public:
 		if (dwWaitResult == WAIT_OBJECT_0)
 		{
 			
-			messageQueue q;
-			getFromShared(szName, pBuf, hMapFile, q);
+			messageQueue q = getFromShared(szName, pBuf, hMapFile);;
 			//while (!q.empty())
 			//{
 			//	message mycmd = q.getMsgAndPop();
