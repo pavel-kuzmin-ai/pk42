@@ -85,6 +85,7 @@ void pk42Core::step(float dt)
 {
 	//for (auto sys: vGameSystems)
 	//	sys->callSystemThreadsave();
+	sysPlayer->setDt(dt);
 	sysPlayer->callSystemThreadsave();
 	sysDisplay->setDt(dt);
 	sysDisplay->callSystemThreadsave();

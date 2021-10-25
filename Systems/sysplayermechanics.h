@@ -9,8 +9,9 @@
 #include <sstream>
 #include "player.h"
 #include <unordered_map>
+#include <string>
 
-typedef void(*func)(std::stringstream*);
+
 
 void unpackStream(std::stringstream& ss, float* buf, int n)
 {
@@ -20,9 +21,20 @@ void unpackStream(std::stringstream& ss, float* buf, int n)
 	}
 }
 
+void unpackString(std::string& s, float* buf, int n)
+{
+	std::stringstream ss;
+	ss << s;
+	for (int i = 0; i < n; i++)
+	{
+		ss>>buf[i];
+	}
+}
+
 class sysPlayerMechanics : public Node
 {
 public:
+	typedef void(sysPlayerMechanics::*func)(std::string&);
 	sysPlayerMechanics() {};
 	sysPlayerMechanics(string s, engineConfig* _conf) :Node(s), conf(_conf) {};
 	virtual ~sysPlayerMechanics() {};
@@ -48,17 +60,18 @@ public:
 			sscmd << msg.value();
 			std::string cmd;
 			sscmd >> cmd;
+			
 
 			if ((cmd[0] == 'p') &(cmd[1] == '_'))
 			{
 				auto iter = cmdFuncDict.find(cmd);
 				if (iter != cmdFuncDict.end())
 				{
-					(*iter->second)(&sscmd);
+					std::string params;
+					std::getline(sscmd, params);
+					(this->*iter->second)(params);
 				}
-
 			}
-			
 		}
 		player->commitUpdates();
 
@@ -73,51 +86,45 @@ public:
 	}
 
 
-	void setLocation(std::stringstream* ss)
+	void setLocation(std::string& s)
 	{
-		unpackStream(*ss, fBuf, 3);
+		unpackString(s, fBuf, 3);
 		player->setLocation(fBuf[0], fBuf[1], fBuf[2]);
 	}
 
-	void setAngles(std::stringstream* ss)
+	void setAngles(std::string& s)
 	{
-		unpackStream(*ss, fBuf, 3);
+		unpackString(s, fBuf, 3);
 		player->setAngles(fBuf[0], fBuf[1], fBuf[2]);
 	}
 
-	void stepForward(std::stringstream ss)
+	void stepForward(std::string& s)
 	{
-		unpackStream(ss, fBuf, 0);
 		player->stepForward(curDt);
 	}
 
-	void stepBack(std::stringstream ss)
+	void stepBack(std::string& s)
 	{
-		unpackStream(ss, fBuf, 0);
 		player->stepBack(curDt);
 	}
 
-	void stepLeft(std::stringstream ss)
+	void stepLeft(std::string& s)
 	{
-		unpackStream(ss, fBuf, 0);
 		player->stepLeft(curDt);
 	}
 
-	void stepRight(std::stringstream ss)
+	void stepRight(std::string& s)
 	{
-		unpackStream(ss, fBuf, 0);
 		player->stepRight(curDt);
 	}
 
-	void stepUp(std::stringstream ss)
+	void stepUp(std::string& s)
 	{
-		unpackStream(ss, fBuf, 0);
 		player->stepUp(curDt);
 	}
 
-	void stepDown(std::stringstream ss)
+	void stepDown(std::string& s)
 	{
-		unpackStream(ss, fBuf, 0);
 		player->stepDown(curDt);
 	}
 
@@ -125,6 +132,10 @@ public:
 	{
 		cmdFuncDict.emplace("p_pos", &sysPlayerMechanics::setLocation);
 		cmdFuncDict.emplace("p_ang", &sysPlayerMechanics::setAngles);
+		cmdFuncDict.emplace("p_forward", &sysPlayerMechanics::stepForward);
+		cmdFuncDict.emplace("p_back", &sysPlayerMechanics::stepBack);
+		cmdFuncDict.emplace("p_right", &sysPlayerMechanics::stepRight);
+		cmdFuncDict.emplace("p_left", &sysPlayerMechanics::stepLeft);
 	}
 
 
@@ -132,7 +143,6 @@ private:
 	tScene* world;
 	//tCameraObject* camera;
 	tPlayer* player;
-	float curDt;
 	engineConfig* conf;
 	std::unordered_map<std::string, func> cmdFuncDict;
 	std::stringstream sscmd;

@@ -47,10 +47,7 @@ public:
 		return 0;
 	}
 
-	void setDt(float dt)
-	{
-		curDt = dt;
-	}
+	
 
 	void setWorld(tScene* _wrld)
 	{
@@ -66,6 +63,5 @@ public:
 private:
 	engineConfig* conf;
 	ISoftwareRenderer* renderer;
-	float curDt;
 };
 #endif

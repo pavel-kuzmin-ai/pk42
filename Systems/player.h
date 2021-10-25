@@ -31,7 +31,7 @@ public:
 private:
 	tCameraObject* camera;
 	float health;
-	float speed;
+	float speed = 3;
 	float unpackParams;
 
 

@@ -334,6 +334,11 @@ public:
 	{
 		return static_cast<int>(vClients.size());
 	}
+
+	void setDt(float dt)
+	{
+		curDt = dt;
+	}
 	
 	
 
@@ -345,6 +350,7 @@ protected:
 	mutex mtx;
 	engineState* sEngineState;
 	bool bPausable = false;
+	float curDt;
 };
 
 class sysBus: public Node
