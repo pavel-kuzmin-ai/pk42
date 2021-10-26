@@ -24,8 +24,10 @@
   <ItemGroup>
     <ClInclude Include="engineConfig.h" />
     <ClInclude Include="engineState.h" />
+    <ClInclude Include="input.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="sysgamelogic.h" />
+    <ClInclude Include="sysinput.h" />
     <ClInclude Include="sysplayermechanics.h" />
     <ClInclude Include="systemsexternals.h" />
     <ClInclude Include="sysipc.h" />

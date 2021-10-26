@@ -16,6 +16,7 @@
 #include "sysgamelogic.h"
 #include "syssoftwarerenderer.h"
 #include "sysplayermechanics.h"
+#include "sysinput.h"
 
 //extern "C" {
 //	void DLLDIR runEngine();
@@ -53,6 +54,7 @@ private:
 	sysGameLogic* sysLogic;
 	sysSoftwareRenderer* sysDisplay;
 	sysPlayerMechanics* sysPlayer;
+	sysInput* sysInp;
 	int position = 0;
 };
 

@@ -29,6 +29,7 @@ void pk42Core::startUp()
 	sysLogic = new sysGameLogic("game logic");
 	sysDisplay = new sysSoftwareRenderer("renderer", &cEngineConfig);
 	sysPlayer = new sysPlayerMechanics("player", &cEngineConfig);
+	sysInp = new sysInput("input", &cEngineConfig);
 
 	//bus.subscribeClient(*sysB);
 	bus->subscribeClient(*sysC);
@@ -37,6 +38,8 @@ void pk42Core::startUp()
 	bus->subscribeClient(*sysLogic);
 	bus->subscribeClient(*sysDisplay);
 	bus->subscribeClient(*sysPlayer);
+	bus->subscribeClient(*sysInp);
+	
 
 	//sysB->startUp();
 	sysC->startUp();
@@ -45,10 +48,12 @@ void pk42Core::startUp()
 	sysLogic->startUp();
 	sysDisplay->startUp();
 	sysPlayer->startUp();
+	sysInp->startUp();
 	
 	vGameSystems.push_back(sysLogic);
 	vGameSystems.push_back(sysDisplay);
 	vGameSystems.push_back(sysPlayer);
+	vGameSystems.push_back(sysInp);
 
 	bus->connectEngineState(&sEngineState);
 
@@ -85,6 +90,7 @@ void pk42Core::step(float dt)
 {
 	//for (auto sys: vGameSystems)
 	//	sys->callSystemThreadsave();
+	sysInp->callSystemThreadsave();
 	sysPlayer->setDt(dt);
 	sysPlayer->callSystemThreadsave();
 	sysDisplay->setDt(dt);
