@@ -29,20 +29,76 @@ public:
 					bKeyPressed[i] = false;
 				}
 			}
-				
 		}
 	}
+
+	void readConsoleEvents()
+	{
+		INPUT_RECORD inBuf[32];
+		DWORD events = 0;
+		GetNumberOfConsoleInputEvents(hConsoleIn, &events);
+		if (events > 0)
+			ReadConsoleInput(hConsoleIn, inBuf, events, &events);
+
+		for (DWORD i = 0; i < events; i++)
+		{
+			if (inBuf[i].EventType == FOCUS_EVENT)	{
+				bConsoleInFocus = inBuf[i].Event.FocusEvent.bSetFocus;
+			}
+
+			if (bConsoleInFocus)
+			{
+				if (inBuf[i].EventType == MOUSE_EVENT)
+				{
+					if (inBuf[i].Event.MouseEvent.dwEventFlags == MOUSE_MOVED)
+					{
+						iMousePos[0] = inBuf[i].Event.MouseEvent.dwMousePosition.X;
+						iMousePos[1] = inBuf[i].Event.MouseEvent.dwMousePosition.Y;
+					}
+
+					if (inBuf[i].Event.MouseEvent.dwEventFlags == 0)
+					{
+						for (int m = 0; m < 5; m++)
+						{
+							bMousePressed[m] = (inBuf[i].Event.MouseEvent.dwButtonState & (1 << m)) > 0;
+						}
+					}
+				}
+			}
+			
+		}
+	}
+
+	void readInputs()
+	{
+		readConsoleEvents();
+		if (bConsoleInFocus) updateKeyboardState();
+	}
+
 
 	bool* getKeysPtr()
 	{
 		return bKeyPressed;
 	}
 
+	bool* getMousePtr()
+	{
+		return bMousePressed;
+	}
+
+	int* getMouseCoordsPtr()
+	{
+		return iMousePos;
+	}
+
 private:
 	HANDLE hConsoleIn;
 	short sRawKeyState[256];
 	bool bKeyPressed[256];
+	short sRawMouseState[5];
+	bool bMousePressed[5];
 	bool bConsoleInFocus = true;
+	int iMousePos[2];
 	
 };
 

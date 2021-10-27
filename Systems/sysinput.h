@@ -25,7 +25,8 @@ public:
 	{
 		inp = new tInputHandler;
 		bKeys = inp->getKeysPtr();
-
+		bMouse = inp->getMousePtr();
+		iMouseCoords = inp->getMouseCoordsPtr();
 	}
 
 	void shutDown()
@@ -56,6 +57,49 @@ public:
 			message msg(sName, "p_right");
 			qOut->push(msg);
 		}
+		if (bKeys[0x10])
+		{
+			message msg(sName, "p_up");
+			qOut->push(msg);
+		}
+		if (bKeys[0x11])
+		{
+			message msg(sName, "p_down");
+			qOut->push(msg);
+		}
+		if (bKeys[0x01])
+		{
+			message msg(sName, "p_mouse_left");
+			qOut->push(msg);
+		}
+		if (bKeys[0x02])
+		{
+			message msg(sName, "p_mouse_right");
+			qOut->push(msg);
+		}
+		if (bKeys[0x04])
+		{
+			message msg(sName, "p_mouse_mid");
+			qOut->push(msg);
+		}
+		if (bKeys[0x05])
+		{
+			message msg(sName, "p_mouse_x1");
+			qOut->push(msg);
+		}
+		if (bKeys[0x06])
+		{
+			message msg(sName, "p_mouse_x2");
+			qOut->push(msg);
+		}
+
+		std::stringstream ss;
+		ss << "p_mousepos " << iMouseCoords[0] << " " << iMouseCoords[1]<<'\n';
+		std::string cmd;
+
+		std::getline(ss, cmd);
+		message msg(sName, cmd);
+		qOut->push(msg);
 		
 		return 0;
 	}
@@ -65,6 +109,8 @@ public:
 private:
 	tInputHandler* inp;
 	bool* bKeys;
+	bool* bMouse;
+	int* iMouseCoords;
 	engineConfig* conf;
 };
 

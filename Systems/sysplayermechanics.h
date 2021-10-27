@@ -136,6 +136,8 @@ public:
 		cmdFuncDict.emplace("p_back", &sysPlayerMechanics::stepBack);
 		cmdFuncDict.emplace("p_right", &sysPlayerMechanics::stepRight);
 		cmdFuncDict.emplace("p_left", &sysPlayerMechanics::stepLeft);
+		cmdFuncDict.emplace("p_up", &sysPlayerMechanics::stepUp);
+		cmdFuncDict.emplace("p_down", &sysPlayerMechanics::stepDown);
 	}
 
 

@@ -85,7 +85,7 @@ public:
 		arr2Matrix(VertexData, *tmpIntermed, 3, vertexIdx * 3);
 		Multiply(*transform, *tmpIntermed, tmpOut);
 
-		float x = tmpOut->getValue(0,0);
+		float x = tmpOut->getValue(0, 0);
 		float y = tmpOut->getValue(1, 0);
 		if ((x > -1) && (x < 1) && (y > -1) && (y < 1))
 		{

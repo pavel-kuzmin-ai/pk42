@@ -25,7 +25,7 @@ public:
 
 	void translate(float dx, float dy, float dz)
 	{
-		transform.setLocation(dx, dy, dz);
+		transform.translate(dx, dy, dz);
 	}
 
 	void setScale(float _x, float _y, float _z)
