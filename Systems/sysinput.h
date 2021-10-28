@@ -36,7 +36,7 @@ public:
 
 	int executeCommands(messageQueue* qIn, messageQueue* qOut)
 	{
-		inp->updateKeyboardState();
+		inp->readInputs();
 		if (bKeys[0x57])
 		{
 			message msg(sName, "p_forward");
@@ -110,7 +110,7 @@ private:
 	tInputHandler* inp;
 	bool* bKeys;
 	bool* bMouse;
-	int* iMouseCoords;
+	short* iMouseCoords;
 	engineConfig* conf;
 };
 

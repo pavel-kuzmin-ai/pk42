@@ -49,7 +49,6 @@ public:
 	}
 	
 
-protected:
 	
 private:
 	float ratio;

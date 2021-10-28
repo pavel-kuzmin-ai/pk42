@@ -8,6 +8,7 @@ class tInputHandler
 public:
 	tInputHandler() 
 	{
+		hConsoleIn = GetStdHandle(STD_INPUT_HANDLE);
 		SetConsoleMode(hConsoleIn, ENABLE_EXTENDED_FLAGS | ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT);
 	};
 	~tInputHandler() {};
@@ -86,7 +87,7 @@ public:
 		return bMousePressed;
 	}
 
-	int* getMouseCoordsPtr()
+	short* getMouseCoordsPtr()
 	{
 		return iMousePos;
 	}
@@ -98,7 +99,7 @@ private:
 	short sRawMouseState[5];
 	bool bMousePressed[5];
 	bool bConsoleInFocus = true;
-	int iMousePos[2];
+	short iMousePos[2];
 	
 };
 
