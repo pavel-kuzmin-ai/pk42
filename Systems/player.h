@@ -11,6 +11,7 @@ public:
 	
 	void setLocation(float x, float y, float z) { camera->setLocation(x, y, z); }
 	void setAngles(float x, float y, float z) { camera->setAngles(x, y, z); }
+	void rotateBy(float x, float y, float z) { camera->rotateBy(x, y, z); }
 
 	void stepForward(float dt) { camera->translate(0.f, 0.f, -speed * dt); }
 	void stepBack(float dt) { camera->translate(0.f, 0.f, speed * dt); }

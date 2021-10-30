@@ -90,6 +90,8 @@ public:
 	void setWorldPtr(tScene* _wrld);
 	void setCamPtr(tCameraObject* _cam);
 	void render();
+	int width();
+	int height();
 	//void updateWorld();
 	void displayResult();
 

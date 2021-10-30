@@ -40,6 +40,8 @@ void pk42Core::startUp()
 	bus->subscribeClient(*sysPlayer);
 	bus->subscribeClient(*sysInp);
 	
+	bus->connectEngineState(&sEngineState);
+
 
 	//sysB->startUp();
 	sysC->startUp();
@@ -55,7 +57,6 @@ void pk42Core::startUp()
 	vGameSystems.push_back(sysPlayer);
 	vGameSystems.push_back(sysInp);
 
-	bus->connectEngineState(&sEngineState);
 
 	sysDisplay->setWorld(sysLogic->getWorldPtr());
 	sysPlayer->setWorld(sysLogic->getWorldPtr());

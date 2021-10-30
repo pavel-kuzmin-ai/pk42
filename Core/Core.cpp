@@ -44,6 +44,8 @@ void ISoftwareRenderer::shutDown() { rndr->shutDown(); };
 void ISoftwareRenderer::setWorldPtr(tScene* _wrld) { rndr->setWorldPtr(_wrld); }
 void ISoftwareRenderer::setCamPtr(tCameraObject* _cam) { rndr->setCamPtr(_cam); }
 void ISoftwareRenderer::render() { rndr->render(); };
+int ISoftwareRenderer::width() { return rndr->getWidth(); };
+int ISoftwareRenderer::height() { return rndr->getHeight(); };
 //void ISoftwareRenderer::updateWorld() { rndr->updateWorld(); };
 void ISoftwareRenderer::displayResult() { rndr->displayResult(); };
 

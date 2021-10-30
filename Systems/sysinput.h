@@ -36,7 +36,7 @@ public:
 
 	int executeCommands(messageQueue* qIn, messageQueue* qOut)
 	{
-		inp->readInputs();
+		inp->readInputs(sEngineState->bMouseModeDelta);
 		if (bKeys[0x57])
 		{
 			message msg(sName, "p_forward");

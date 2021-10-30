@@ -20,6 +20,9 @@ public:
 	{
 		renderer = new ISoftwareRenderer(conf->screenWidth, conf->screenHeight, conf->pxlSize);
 		renderer->startUp();
+		sEngineState->screenHeight = renderer->height();
+		sEngineState->screenWidth = renderer->width();
+		
 	}
 
 	void shutDown()

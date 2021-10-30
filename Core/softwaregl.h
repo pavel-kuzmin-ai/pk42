@@ -87,7 +87,8 @@ public:
 
 		float x = tmpOut->getValue(0, 0);
 		float y = tmpOut->getValue(1, 0);
-		if ((x > -1) && (x < 1) && (y > -1) && (y < 1))
+		float z = tmpOut->getValue(2, 0);
+		if ((x > -1) && (x < 1) && (y > -1) && (y < 1) && (z > -1) && (z < 1))
 		{
 			int ix = (int)((x + 1) * width / 2);
 			int iy = (int)(height - (y + 1) * height / 2);

@@ -128,6 +128,13 @@ public:
 		player->stepDown(curDt);
 	}
 
+	void rotate(std::string& s)
+	{
+		unpackString(s, fBuf, 2);
+
+		player->rotateBy(0.f, radInPxl * fBuf[0], radInPxl * fBuf[1]);
+	}
+
 	void buildCmdDict()
 	{
 		cmdFuncDict.emplace("p_pos", &sysPlayerMechanics::setLocation);
@@ -138,6 +145,7 @@ public:
 		cmdFuncDict.emplace("p_left", &sysPlayerMechanics::stepLeft);
 		cmdFuncDict.emplace("p_up", &sysPlayerMechanics::stepUp);
 		cmdFuncDict.emplace("p_down", &sysPlayerMechanics::stepDown);
+		cmdFuncDict.emplace("p_mousepos", &sysPlayerMechanics::rotate);
 	}
 
 
@@ -148,6 +156,8 @@ private:
 	engineConfig* conf;
 	std::unordered_map<std::string, func> cmdFuncDict;
 	std::stringstream sscmd;
+
+	float radInPxl = 0.01;
 
 
 	float fBuf[3];

@@ -7,6 +7,10 @@ struct engineState
 	bool bEngineInitialized = false;
 	bool bPaused = false;
 	float fTimeScale = 1.f;
+	bool bMouseModeDelta = true;
+
+	int screenWidth;
+	int screenHeight;
 };
 
 #endif

@@ -41,6 +41,7 @@ void CreateChildProcess(int window_flag = 0x00000010)
 
 int main(int argc, char* argv[])
 {
+	
 	bool show_console = true;
 	int type = 0;
 
@@ -88,10 +89,35 @@ int main(int argc, char* argv[])
 		sys->shutDown();
 	}	
 	
-	/*std::unordered_map< int, int> map;
-	map[10] = 20;
-	std::cout << map[10] << '\n';
-	std::cin;*/
+	/*
+	while (true)
+	{
+		int a;
+		std::cin >> a;
+		CONSOLE_SCREEN_BUFFER_INFO csbi;
+		HWND wnd = GetConsoleWindow();
+		WINDOWINFO wndInfo;
+
+		GetWindowInfo(wnd, &wndInfo);
+
+		GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+		short columns = csbi.dwSize.X;
+		short rows = csbi.dwSize.Y;
+
+		GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+
+		
+		int left = csbi.srWindow.Left;// ((int)csbi.srWindow.Left + (int)csbi.srWindow.Right) / 2;
+		int right = csbi.srWindow.Top; //((int)csbi.srWindow.Top + (int)csbi.srWindow.Bottom) / 2;
+		int centerx = (csbi.srWindow.Left + csbi.srWindow.Right) / 2;
+		int centery = (csbi.srWindow.Top + csbi.srWindow.Bottom) / 2;
+		std::cout << wndInfo.rcClient.left << " " << wndInfo.rcClient.top << " "
+			<< wndInfo.rcClient.right << " " << wndInfo.rcClient.bottom << " "
+			<< centerx << " " << centery << " " << columns << " " << rows << '\n';
+
+	}
+	*/
+
 
 	return 1;
 }

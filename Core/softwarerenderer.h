@@ -18,6 +18,8 @@ public:
 	{};
 	virtual ~tSoftwareRenderer() {};
 
+	int getWidth() { return screenWidth; }
+	int getHeight() { return screenHeight; }
 
 	void startUp()
 	{
