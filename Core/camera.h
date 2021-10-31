@@ -54,7 +54,7 @@ private:
 	float ratio;
 	float xfov=75, yfov=45;
 	float width=1, height=1;
-	float znear = 0, zfar = 100;
+	float znear = 0.f, zfar = 1000.f;
 
 	float orthoTransformData[16], perspTransformData[16];
 	tTransformMatrix* orthoTransform;

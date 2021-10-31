@@ -94,6 +94,9 @@ public:
 		resetTransformMatrix(RotYM2W);
 		resetTransformMatrix(RotZM2W);
 		setAngles(yaw, pitch, roll);
+
+		RotM2W = new tTransformMatrix(RotM2Wdata);
+		RotW2M = new tTransformMatrix(RotW2Mdata);
 		
 		TranslM2W = new tTransformMatrix(TranslM2Wdata);
 		resetTransformMatrix(TranslM2W);
@@ -158,7 +161,7 @@ public:
 		yaw += rotY;
 		pitch += rotZ;
 		roll += rotX;
-		setAngles(yaw, pitch, roll);
+		setAngles(roll, yaw, pitch);
 	}
 
 	
@@ -177,14 +180,14 @@ public:
 
 
 		Multiply(*RotXM2W, *RotZM2W, tmpTransform);
-		Multiply(*tmpTransform, *RotYM2W, TransfM2W);
-		Transpose(*TransfM2W, TransfW2M);
+		Multiply(*tmpTransform, *RotYM2W, RotM2W);
+		Transpose(*RotM2W, RotW2M);
 		
-		Multiply(*TranslM2W, *TransfM2W, tmpTransform);
+		Multiply(*TranslM2W, *RotM2W, tmpTransform);
 		Multiply(*tmpTransform, *ScM2W, TransfM2W);
 
 		
-		Multiply(*ScW2M, *TransfW2M, tmpTransform);
+		Multiply(*ScW2M, *RotW2M, tmpTransform);
 		Multiply(*tmpTransform, *TranslW2M, TransfW2M);
 
 		
@@ -199,6 +202,17 @@ public:
 	{
 		return TransfW2M;
 	}
+
+	tTransformMatrix* getRotM2Wmatrix()
+	{
+		return RotM2W;
+	}
+
+	tTransformMatrix* getRotW2Mmatrix()
+	{
+		return RotW2M;
+	}
+
 
 	static void makeTransform(float x, float y, float z, tTransformMatrix* transformMatrix, float* result)
 	{
@@ -224,14 +238,26 @@ public:
 		makeTransform(x, y, z, TransfW2M, result);
 	}
 
+	void getLocation(float *_x)
+	{
+		_x[0] = x;
+		_x[1] = y;
+		_x[2] = z;
+	}
 
+	void getAngles(float *_x)
+	{
+		_x[0] = roll;
+		_x[1] = yaw;
+		_x[2] = pitch;
+	}
 
 private:
-	float ScM2Wdata[16], RotXM2Wdata[16], RotYM2Wdata[16], RotZM2Wdata[16], TranslM2Wdata[16], TransfM2Wdata[16], tmpTransformData[16];
-	tTransformMatrix *ScM2W, *RotXM2W, *RotYM2W, *RotZM2W, *TranslM2W, *TransfM2W, *tmpTransform;
+	float ScM2Wdata[16], RotXM2Wdata[16], RotYM2Wdata[16], RotZM2Wdata[16], RotM2Wdata[16], TranslM2Wdata[16], TransfM2Wdata[16], tmpTransformData[16];
+	tTransformMatrix *ScM2W, *RotXM2W, *RotYM2W, *RotZM2W, *RotM2W, *TranslM2W, *TransfM2W, *tmpTransform;
 
-	float ScW2Mdata[16], TranslW2Mdata[16], TransfW2Mdata[16];
-	tTransformMatrix *ScW2M, *TranslW2M, *TransfW2M;
+	float ScW2Mdata[16], TranslW2Mdata[16], RotW2Mdata[16], TransfW2Mdata[16];
+	tTransformMatrix *ScW2M, *TranslW2M, *RotW2M, *TransfW2M;
 
 
 	float scX = 1, scY = 1, scZ = 1;

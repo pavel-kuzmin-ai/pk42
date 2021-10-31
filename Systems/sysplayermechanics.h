@@ -75,6 +75,17 @@ public:
 		}
 		player->commitUpdates();
 
+
+		player->getLocation(fBuf);
+		std::stringstream ss;
+		ss << "cameraposition " << fBuf[0] << " " << fBuf[1] << " " << fBuf[2]<< '\n';
+		std::string cmd;
+
+		std::getline(ss, cmd);
+		message msg(sName, cmd);
+		qOut->push(msg);
+
+
 		
 		return 0;
 	}
@@ -132,7 +143,7 @@ public:
 	{
 		unpackString(s, fBuf, 2);
 
-		player->rotateBy(0.f, radInPxl * fBuf[0], radInPxl * fBuf[1]);
+		player->rotateBy(- angGain * fBuf[1], - angGain * fBuf[0], 0.f);
 	}
 
 	void buildCmdDict()
@@ -157,7 +168,7 @@ private:
 	std::unordered_map<std::string, func> cmdFuncDict;
 	std::stringstream sscmd;
 
-	float radInPxl = 0.01;
+	float angGain = 0.001;
 
 
 	float fBuf[3];

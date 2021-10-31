@@ -36,7 +36,7 @@ public:
 		transform = new tMatrix(4, 4, Model2View);
 
 		tmpIntermed = new tMatrix(4, 1, tmpIntermedData);
-		tmpOut = new tMatrix(4, 1, tmpOutData);;
+		tmpOut = new tMatrix(4, 1, tmpOutData);
 	}
 	void setOutBuffer(int * _buf)
 	{

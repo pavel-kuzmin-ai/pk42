@@ -73,6 +73,26 @@ public:
 	{
 		return transform.getW2Mmatrix();
 	}
+
+	tTransformMatrix* getRotM2Wmatrix()
+	{
+		return transform.getRotM2Wmatrix();
+	}
+
+	tTransformMatrix* getRotW2Mmatrix()
+	{
+		return transform.getRotW2Mmatrix();
+	}
+
+	void getLocation(float* _x)
+	{
+		transform.getLocation(_x);
+	}
+
+	void getAngles(float* _x)
+	{
+		transform.getAngles(_x);
+	}
 protected:
 	std::string sName;
 	tTransformChain transform;
@@ -155,7 +175,6 @@ public:
 	{
 		camera->setParams(_ratio);
 	}
-
 
 protected:
 	std::string  sCameraName;
