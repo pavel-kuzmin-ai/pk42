@@ -28,10 +28,11 @@ public:
 	void rotateBy(float x, float y, float z) 
 	{ 
 		camera->getAngles(fBuf);
-
 		float maxAng = M_PI / 2 - 0.01;
-		float xang = fBuf[0] - M_PI;
-		camera->rotateBy(clamp(xang + x, -maxAng, maxAng)-xang, y, z);
+		float xang = fBuf[0];
+		if (xang > M_PI) xang -= M_2PI;
+		xang = clamp(xang, - maxAng, maxAng);
+		camera->rotateBy(clamp(xang + x, - maxAng, maxAng)-xang, y, z);
 	}
 
 	void putXvec(float* trg)
