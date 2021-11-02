@@ -71,13 +71,6 @@ public:
 		
 	}
 
-
-	/*void updateWorld()
-	{
-		world[0].translate(0.001f, 0.f, 0.f);
-		world[1].translate(0.f, 0.001f, 0.f);
-		world[2].translate(0.001f, 0.001f, 0.f);
-	}*/
 	void displayResult()
 	{
 		display->updateConsoleBuffer();

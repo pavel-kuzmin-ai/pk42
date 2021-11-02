@@ -41,12 +41,17 @@ public:
 		renderer->displayResult();
 		
 
-		string output;
-		std::stringstream ss;
-		ss << "render done, fps = " << 1./curDt;
-		std::getline(ss, output);
-		message msg(sName, output);
+		//string output;
+		//std::stringstream ss;
+		//ss << "render done, fps = " << 1./curDt;
+		//std::getline(ss, output);
+		//message msg(sName, output);
 		//qOut->push(msg);	
+		
+		updateMeanFPS(1.f / curDt);
+		wchar_t s[256];
+		swprintf_s(s, 256, L"pk42 - FPS: %3.2f", meanFPS);
+		SetConsoleTitle(s);
 		return 0;
 	}
 
@@ -63,8 +68,17 @@ public:
 		_cam->setCamera(conf->screenWidth / conf->screenHeight);
 		renderer->setCamPtr(_cam);
 	}
+
+	void updateMeanFPS(float currFPS)
+	{
+		meanFPS = alpha * meanFPS + (1. - alpha) * currFPS;
+	}
+
 private:
 	engineConfig* conf;
 	ISoftwareRenderer* renderer;
+
+	float meanFPS = 0;
+	float alpha = 0.99;
 };
 #endif

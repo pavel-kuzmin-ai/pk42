@@ -3,6 +3,10 @@
 
 #include "vec3.h"
 #include "matrixmath.h"
+
+
+
+
 class tVertexData
 {
 public:
@@ -18,7 +22,52 @@ private:
 	vec3<float> _coords;
 };
 
+struct tInOutVertex
+{
+	float x[3];
+};
 
+
+float tmpIntermediateData[4] = {1., 1., 1., 1.};
+tMatrix* tmpIntermediate = new tMatrix(4, 1, tmpIntermediateData);
+
+float tmpOutputData[4] = { 1., 1., 1., 1. };
+tMatrix* tmpOutput = new tMatrix(4, 1, tmpOutputData);
+
+tInOutVertex geometryShader(tInOutVertex& v, tMatrix* M)
+{
+	tInOutVertex out;
+	arr2Matrix(v.x, *tmpIntermediate, 3, 0);
+	Multiply(*M, *tmpIntermediate, tmpOutput);
+
+	out.x[0] = tmpOutput->getValue(0, 0);
+	out.x[1] = tmpOutput->getValue(1, 0);
+	out.x[2] = tmpOutput->getValue(2, 0);
+
+	return out;
+}
+void rasterizePixel(tInOutVertex& vrtx, int* outColor, int width, int height)
+{
+	float x = vrtx.x[0];
+	float y = vrtx.x[1];
+	float z = vrtx.x[2];
+	if ((x > -1) && (x < 1) && (y > -1) && (y < 1) && (z > -1) && (z < 1))
+	{
+		int ix = (int)((x + 1) * width / 2);
+		int iy = (int)(height - (y + 1) * height / 2);
+		int idx = (int)(iy * width + ix) * 3;
+		outColor[idx] = 255;
+		outColor[idx + 1] = 255;
+		outColor[idx + 2] = 255;
+	}
+}
+
+void pixelRasterizer(tInOutVertex& vrtx0, tInOutVertex& vrtx1, tInOutVertex& vrtx2, int* outColor, int width, int height)
+{
+	rasterizePixel(vrtx0, outColor, width, height);
+	rasterizePixel(vrtx1, outColor, width, height);
+	rasterizePixel(vrtx2, outColor, width, height);
+}
 
 class tSoftwareRasterizer
 {
@@ -74,31 +123,32 @@ public:
 		}
 	}
 
+	tInOutVertex applyVertexShader(tInOutVertex(*vertexShader)(tInOutVertex&, tMatrix*), int bufferedIdx)
+	{
+		tInOutVertex shadedVrtx;
+		shadedVrtx.x[0] = VertexData[bufferedIdx * 3];
+		shadedVrtx.x[1] = VertexData[bufferedIdx * 3 + 1];
+		shadedVrtx.x[2] = VertexData[bufferedIdx * 3 + 2];
+
+		shadedVrtx = vertexShader(shadedVrtx, transform);
+		return shadedVrtx;
+	}
+
+	void rasterizeTriangle(void(*rasterizer)(tInOutVertex&, tInOutVertex&, tInOutVertex&, int*, int, int), 
+				   tInOutVertex& vrtx0, tInOutVertex& vrtx1, tInOutVertex& vrtx2)
+	{
+		rasterizer(vrtx0, vrtx1, vrtx2, outColor, width, height);
+	}
+
 	void sGLDrawTriangle(int vertexIdx0, int vertexIdx1, int vertexIdx2)
 	{
-		sGLDrawVertex(vertexIdx0);
-		sGLDrawVertex(vertexIdx1);
-		sGLDrawVertex(vertexIdx2);
-	}
-	void sGLDrawVertex(int vertexIdx)
-	{
-		arr2Matrix(VertexData, *tmpIntermed, 3, vertexIdx * 3);
-		Multiply(*transform, *tmpIntermed, tmpOut);
+		tInOutVertex out0 = applyVertexShader(geometryShader, vertexIdx0);
+		tInOutVertex out1 = applyVertexShader(geometryShader, vertexIdx1);
+		tInOutVertex out2 = applyVertexShader(geometryShader, vertexIdx2);
 
-		float x = tmpOut->getValue(0, 0);
-		float y = tmpOut->getValue(1, 0);
-		float z = tmpOut->getValue(2, 0);
-		if ((x > -1) && (x < 1) && (y > -1) && (y < 1) && (z > -1) && (z < 1))
-		{
-			int ix = (int)((x + 1) * width / 2);
-			int iy = (int)(height - (y + 1) * height / 2);
-
-			int idx = (int)(iy * width + ix) * 3;
-			outColor[idx] = 255;
-			outColor[idx + 1] = 255;
-			outColor[idx + 2] = 255;
-		}
+		rasterizeTriangle(pixelRasterizer, out0, out1, out2);
 	}
+
 
 	void sGLFreeOutput()
 	{
