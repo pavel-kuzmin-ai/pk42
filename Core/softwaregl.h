@@ -61,8 +61,7 @@ void rasterizePixel(tInOutVertex& vrtx, int* outColor, int width, int height)
 	float x = vrtx.x[0];
 	float y = vrtx.x[1];
 	float z = vrtx.x[2];
-	//if ((x > -1) && (x < 1) && (y > -1) && (y < 1) && (z > -1) && (z < 1))
-	if ((x > -1) && (x < 1) && (y > -1) && (y < 1))
+	if ((x > -1) && (x < 1) && (y > -1) && (y < 1) && (z > -1) && (z < 1))
 	{
 		int ix = (int)((x + 1) * width / 2);
 		int iy = (int)(height - (y + 1) * height / 2);
@@ -86,12 +85,14 @@ void rasterizeEdge(tInOutVertex& vrtx0, tInOutVertex& vrtx1, int* outColor, int 
 
 	float dx = vrtx1.x[0] - vrtx0.x[0];
 	float dy = vrtx1.x[1] - vrtx0.x[1];
+	float dz = vrtx1.x[2] - vrtx0.x[2];
 	float xsteps = std::abs(dx) / step;
 	float ysteps = std::abs(dy) / step;
 
 	int argIdx = 0;
 	int funcIdx = 1;
 	float tan = 0;
+	
 	int stepSign = sign(dx);
 	if (xsteps > ysteps)
 	{
@@ -105,13 +106,21 @@ void rasterizeEdge(tInOutVertex& vrtx0, tInOutVertex& vrtx1, int* outColor, int 
 		stepSign = sign(dy);
 	}
 
+	float dist = sqrt(dx * dx + dy * dy);
+	float zTan = 0; 
+	if (dist > step) zTan = dz / dist;
+	
+
+
 	tInOutVertex currVrtx;
 	std::memcpy(currVrtx.x, vrtx0.x, 3 * sizeof(float));
-	currVrtx.x[2] = 0;
 	float delta = 0.f;
+	float delta2 = 0.f;
 	while ((vrtx1.x[argIdx]- currVrtx.x[argIdx])/ (stepSign * step) >= 1.)
 	{ 
-		currVrtx.x[funcIdx] = delta * tan + vrtx0.x[funcIdx];
+		delta2 = delta * tan;
+		currVrtx.x[funcIdx] = delta2 + vrtx0.x[funcIdx];
+		currVrtx.x[2] = sqrt(delta*delta + delta2*delta2) * zTan + vrtx0.x[2];
 
 		rasterizePixel(currVrtx, outColor, width, height);
 
@@ -180,7 +189,6 @@ public:
 
 	void sGLDrawElements(int maxcount)
 	{
-		//maxcount = 3;
 		for (int i = 0; i < bufTris; i++)
 		{
 			if (i >= maxcount) break;
