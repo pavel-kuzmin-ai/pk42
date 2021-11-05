@@ -3,8 +3,7 @@
 
 #include "vec3.h"
 #include "matrixmath.h"
-
-
+#include <cmath>
 
 
 class tVertexData
@@ -46,12 +45,24 @@ tInOutVertex geometryShader(tInOutVertex& v, tMatrix* M)
 
 	return out;
 }
+
+tInOutVertex whitePixShader(tInOutVertex& v)
+{
+	tInOutVertex out;
+	out.x[0] = 255;
+	out.x[1] = 255;
+	out.x[2] = 255;
+
+	return out;
+}
+
 void rasterizePixel(tInOutVertex& vrtx, int* outColor, int width, int height)
 {
 	float x = vrtx.x[0];
 	float y = vrtx.x[1];
 	float z = vrtx.x[2];
-	if ((x > -1) && (x < 1) && (y > -1) && (y < 1) && (z > -1) && (z < 1))
+	//if ((x > -1) && (x < 1) && (y > -1) && (y < 1) && (z > -1) && (z < 1))
+	if ((x > -1) && (x < 1) && (y > -1) && (y < 1))
 	{
 		int ix = (int)((x + 1) * width / 2);
 		int iy = (int)(height - (y + 1) * height / 2);
@@ -62,11 +73,65 @@ void rasterizePixel(tInOutVertex& vrtx, int* outColor, int width, int height)
 	}
 }
 
+inline int sign(float x)
+{
+	if (x >= 0) return 1;
+	return -1;
+	
+}
+
+void rasterizeEdge(tInOutVertex& vrtx0, tInOutVertex& vrtx1, int* outColor, int width, int height)
+{
+	float step = std::fmin(2.f / (float)width, 2.f / (float)height);
+
+	float dx = vrtx1.x[0] - vrtx0.x[0];
+	float dy = vrtx1.x[1] - vrtx0.x[1];
+	float xsteps = std::abs(dx) / step;
+	float ysteps = std::abs(dy) / step;
+
+	int argIdx = 0;
+	int funcIdx = 1;
+	float tan = 0;
+	int stepSign = sign(dx);
+	if (xsteps > ysteps)
+	{
+		tan = dy / dx;
+	}
+	else if (xsteps < ysteps)
+	{
+		argIdx = 1;
+		funcIdx = 0;
+		tan = dx / dy;
+		stepSign = sign(dy);
+	}
+
+	tInOutVertex currVrtx;
+	std::memcpy(currVrtx.x, vrtx0.x, 3 * sizeof(float));
+	currVrtx.x[2] = 0;
+	float delta = 0.f;
+	while ((vrtx1.x[argIdx]- currVrtx.x[argIdx])/ (stepSign * step) >= 1.)
+	{ 
+		currVrtx.x[funcIdx] = delta * tan + vrtx0.x[funcIdx];
+
+		rasterizePixel(currVrtx, outColor, width, height);
+
+		currVrtx.x[argIdx] += stepSign * step;
+		delta += stepSign * step;
+	}
+}
+
 void pixelRasterizer(tInOutVertex& vrtx0, tInOutVertex& vrtx1, tInOutVertex& vrtx2, int* outColor, int width, int height)
 {
 	rasterizePixel(vrtx0, outColor, width, height);
 	rasterizePixel(vrtx1, outColor, width, height);
 	rasterizePixel(vrtx2, outColor, width, height);
+}
+
+void edgeRasterizer(tInOutVertex& vrtx0, tInOutVertex& vrtx1, tInOutVertex& vrtx2, int* outColor, int width, int height)
+{
+	rasterizeEdge(vrtx0, vrtx1, outColor, width, height);
+	rasterizeEdge(vrtx1, vrtx2, outColor, width, height);
+	rasterizeEdge(vrtx2, vrtx0, outColor, width, height);
 }
 
 class tSoftwareRasterizer
@@ -115,7 +180,7 @@ public:
 
 	void sGLDrawElements(int maxcount)
 	{
-
+		//maxcount = 3;
 		for (int i = 0; i < bufTris; i++)
 		{
 			if (i >= maxcount) break;
@@ -146,7 +211,8 @@ public:
 		tInOutVertex out1 = applyVertexShader(geometryShader, vertexIdx1);
 		tInOutVertex out2 = applyVertexShader(geometryShader, vertexIdx2);
 
-		rasterizeTriangle(pixelRasterizer, out0, out1, out2);
+		//rasterizeTriangle(pixelRasterizer, out0, out1, out2);
+		rasterizeTriangle(edgeRasterizer, out0, out1, out2);
 	}
 
 

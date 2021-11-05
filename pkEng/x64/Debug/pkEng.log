@@ -1,5 +1,9 @@
 ﻿  pkEng.cpp
-e:\git\pk42\systems\syssoftwarerenderer.h(60): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+e:\git\pk42\systems\syssoftwarerenderer.h(82): warning C4305: 'initializing': truncation from 'double' to 'float'
+e:\git\pk42\systems\syssoftwarerenderer.h(68): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+e:\git\pk42\systems\syssoftwarerenderer.h(74): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+e:\git\pk42\systems\player.h(31): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+e:\git\pk42\systems\sysplayermechanics.h(171): warning C4305: 'initializing': truncation from 'double' to 'float'
 e:\git\pk42\systems\systems.h(36): warning C4251: 'coreSystem::vSystems': class 'std::vector<Node *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'coreSystem'
           with
           [
