@@ -81,17 +81,20 @@ inline int sign(float x)
 
 void rasterizeEdge(tInOutVertex& vrtx0, tInOutVertex& vrtx1, int* outColor, int width, int height)
 {
-	float step = std::fmin(2.f / (float)width, 2.f / (float)height);
+	//Naive implementation. Better use Bresenham's algorithm here
+	float xstep = 2.f / (float)width;
+	float ystep = 2.f / (float)height;
 
 	float dx = vrtx1.x[0] - vrtx0.x[0];
 	float dy = vrtx1.x[1] - vrtx0.x[1];
 	float dz = vrtx1.x[2] - vrtx0.x[2];
-	float xsteps = std::abs(dx) / step;
-	float ysteps = std::abs(dy) / step;
+	float xsteps = std::abs(dx) / xstep;
+	float ysteps = std::abs(dy) / ystep;
 
 	int argIdx = 0;
 	int funcIdx = 1;
 	float tan = 0;
+	float step = xstep;
 	
 	int stepSign = sign(dx);
 	if (xsteps > ysteps)
@@ -104,6 +107,7 @@ void rasterizeEdge(tInOutVertex& vrtx0, tInOutVertex& vrtx1, int* outColor, int 
 		funcIdx = 0;
 		tan = dx / dy;
 		stepSign = sign(dy);
+		step = ystep;
 	}
 
 	float dist = sqrt(dx * dx + dy * dy);
@@ -129,6 +133,61 @@ void rasterizeEdge(tInOutVertex& vrtx0, tInOutVertex& vrtx1, int* outColor, int 
 	}
 }
 
+struct tBbox
+{
+	float xmin, xmax, ymin, ymax, zmin, zmax;
+};
+
+void setBbox(tInOutVertex& vrtx0, tInOutVertex& vrtx1, tInOutVertex& vrtx2, tBbox& box)
+{
+	box.xmin = std::fmaxf(std::fminf(vrtx0.x[0], std::fminf(vrtx1.x[0], vrtx2.x[0])), -1);
+	box.xmax = std::fminf(std::fmaxf(vrtx0.x[0], std::fmaxf(vrtx1.x[0], vrtx2.x[0])), 1);
+
+	box.ymin = std::fmaxf(std::fminf(vrtx0.x[1], std::fminf(vrtx1.x[1], vrtx2.x[1])), -1);
+	box.ymax = std::fminf(std::fmaxf(vrtx0.x[1], std::fmaxf(vrtx1.x[1], vrtx2.x[1])), 1);
+
+	box.zmin = std::fmaxf(std::fminf(vrtx0.x[2], std::fminf(vrtx1.x[2], vrtx2.x[2])), -1);
+	box.zmax = std::fminf(std::fmaxf(vrtx0.x[2], std::fmaxf(vrtx1.x[2], vrtx2.x[2])), 1);
+}
+
+float edgePointDoubleArea(tInOutVertex& vrtx0, tInOutVertex& vrtx1, tInOutVertex& testVrtx)
+{
+	return (vrtx1.x[0] - vrtx0.x[0]) * (testVrtx.x[1] - vrtx0.x[1]) - (vrtx1.x[1] - vrtx0.x[1]) * (testVrtx.x[0] - vrtx0.x[0]);
+}
+
+void rasterizeTriang(tInOutVertex& vrtx0, tInOutVertex& vrtx1, tInOutVertex& vrtx2, int* outColor, int width, int height)
+{
+	tBbox box;
+	setBbox(vrtx0, vrtx1, vrtx2, box);
+
+	tInOutVertex currVrtx;
+	currVrtx.x[0] = box.xmin;
+	currVrtx.x[1] = box.ymin;
+	currVrtx.x[2] = box.zmin;
+
+	bool bEscapedTriangle = false;
+	float xstep = 2.f / (float)width;
+	float ystep = 2.f / (float)height;
+
+	while (currVrtx.x[0] < box.xmax)
+	{
+		currVrtx.x[1] = box.ymin;
+		while (currVrtx.x[1] < box.ymax)
+		{
+			float ar1 = edgePointDoubleArea(vrtx0, vrtx1, currVrtx);
+			float ar2 = edgePointDoubleArea(vrtx1, vrtx2, currVrtx);
+			float ar3 = edgePointDoubleArea(vrtx2, vrtx0, currVrtx);
+
+			if ((ar1 > 0) && (ar2 > 0) && (ar3 > 0))
+			{
+				rasterizePixel(currVrtx, outColor, width, height);
+			}
+			currVrtx.x[1] += ystep;
+		}
+		currVrtx.x[0] += xstep;
+	}
+}
+
 void pixelRasterizer(tInOutVertex& vrtx0, tInOutVertex& vrtx1, tInOutVertex& vrtx2, int* outColor, int width, int height)
 {
 	rasterizePixel(vrtx0, outColor, width, height);
@@ -141,6 +200,11 @@ void edgeRasterizer(tInOutVertex& vrtx0, tInOutVertex& vrtx1, tInOutVertex& vrtx
 	rasterizeEdge(vrtx0, vrtx1, outColor, width, height);
 	rasterizeEdge(vrtx1, vrtx2, outColor, width, height);
 	rasterizeEdge(vrtx2, vrtx0, outColor, width, height);
+}
+
+void triangleRasterizer(tInOutVertex& vrtx0, tInOutVertex& vrtx1, tInOutVertex& vrtx2, int* outColor, int width, int height)
+{
+	rasterizeTriang(vrtx0, vrtx1, vrtx2, outColor, width, height);
 }
 
 class tSoftwareRasterizer
@@ -220,7 +284,8 @@ public:
 		tInOutVertex out2 = applyVertexShader(geometryShader, vertexIdx2);
 
 		//rasterizeTriangle(pixelRasterizer, out0, out1, out2);
-		rasterizeTriangle(edgeRasterizer, out0, out1, out2);
+		//rasterizeTriangle(edgeRasterizer, out0, out1, out2);
+		rasterizeTriangle(triangleRasterizer, out0, out1, out2);
 	}
 
 
