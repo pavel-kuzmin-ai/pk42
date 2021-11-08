@@ -26,6 +26,11 @@ struct tInOutVertex
 	float x[3];
 };
 
+struct tIntInOutVertex
+{
+	int x[3];
+};
+
 
 float tmpIntermediateData[4] = {1., 1., 1., 1.};
 tMatrix* tmpIntermediate = new tMatrix(4, 1, tmpIntermediateData);
@@ -70,6 +75,18 @@ void rasterizePixel(tInOutVertex& vrtx, int* outColor, int width, int height)
 		outColor[idx + 1] = 255;
 		outColor[idx + 2] = 255;
 	}
+}
+
+void dummyPxlShader(int x, int y, int z, int* outColor, int width, int height)
+{
+	if ((0 >= -1) && (x < width) && (y >= 0) && (y < height) && (z >= 0) && (z < 10000))
+	{
+		int idx = (int)(y * width + x) * 3;
+		outColor[idx] = 255;
+		outColor[idx + 1] = 255;
+		outColor[idx + 2] = 255;
+	}
+	
 }
 
 inline int sign(float x)
@@ -155,9 +172,23 @@ float edgePointDoubleArea(tInOutVertex& vrtx0, tInOutVertex& vrtx1, tInOutVertex
 	return (vrtx1.x[0] - vrtx0.x[0]) * (testVrtx.x[1] - vrtx0.x[1]) - (vrtx1.x[1] - vrtx0.x[1]) * (testVrtx.x[0] - vrtx0.x[0]);
 }
 
-void rasterizeTriang(tInOutVertex& vrtx0, tInOutVertex& vrtx1, tInOutVertex& vrtx2, int* outColor, int width, int height)
+float edgePointDoubleArea(tIntInOutVertex& vrtx0, tIntInOutVertex& vrtx1, tIntInOutVertex& testVrtx)
+{
+	return (vrtx1.x[0] - vrtx0.x[0]) * (testVrtx.x[1] - vrtx0.x[1]) - (vrtx1.x[1] - vrtx0.x[1]) * (testVrtx.x[0] - vrtx0.x[0]);
+}
+
+void vrtx2int(tInOutVertex& vrtx, int width, int height)
+{
+	vrtx.x[0] = (int)((vrtx.x[0]+1.f)/2 * width);
+	vrtx.x[0] = (((float)vrtx.x[0]) / width - 0.5f)*2.f;
+
+	vrtx.x[1] = (int)((vrtx.x[1] + 1.f) / 2 * height);
+	vrtx.x[1] = (((float)vrtx.x[1]) / height - 0.5f)*2.f;
+}
+/*void rasterizeTriang(tInOutVertex& vrtx0, tInOutVertex& vrtx1, tInOutVertex& vrtx2, int* outColor, int width, int height)
 {
 	tBbox box;
+
 	setBbox(vrtx0, vrtx1, vrtx2, box);
 
 	tInOutVertex currVrtx;
@@ -169,22 +200,93 @@ void rasterizeTriang(tInOutVertex& vrtx0, tInOutVertex& vrtx1, tInOutVertex& vrt
 	float xstep = 2.f / (float)width;
 	float ystep = 2.f / (float)height;
 
-	while (currVrtx.x[0] < box.xmax)
+	while (currVrtx.x[0] <= box.xmax)
 	{
 		currVrtx.x[1] = box.ymin;
-		while (currVrtx.x[1] < box.ymax)
+		while (currVrtx.x[1] <= box.ymax)
 		{
 			float ar1 = edgePointDoubleArea(vrtx0, vrtx1, currVrtx);
 			float ar2 = edgePointDoubleArea(vrtx1, vrtx2, currVrtx);
 			float ar3 = edgePointDoubleArea(vrtx2, vrtx0, currVrtx);
 
-			if ((ar1 > 0) && (ar2 > 0) && (ar3 > 0))
+			if ((ar1 >= 0) && (ar2 >= 0) && (ar3 >= 0))
 			{
 				rasterizePixel(currVrtx, outColor, width, height);
 			}
 			currVrtx.x[1] += ystep;
 		}
 		currVrtx.x[0] += xstep;
+	}
+}*/
+
+void toIntVert(tInOutVertex& vrtx, tIntInOutVertex& vrtxOut, int width, int height)
+{
+	vrtxOut.x[0] = (int)((vrtx.x[0] + 1.f)*0.5 * width);
+	vrtxOut.x[1] = (int)((vrtx.x[1] + 1.f)*0.5 * height);
+	vrtxOut.x[2] = (int)((vrtx.x[2] + 1.f)*0.5 * 10000);
+}
+struct tBboxInt
+{
+	int xmin, xmax, ymin, ymax, zmin, zmax;
+};
+
+inline int intMin(int a, int b)
+{
+	if (a < b) return a;
+	return b;
+}
+
+inline int intMax(int a, int b)
+{
+	if (a > b) return a;
+	return b;
+}
+void setBboxInt(tIntInOutVertex& vrtx0, tIntInOutVertex& vrtx1, tIntInOutVertex& vrtx2, tBboxInt& box, int width, int height)
+{
+	box.xmin = intMax(intMin(vrtx0.x[0], intMin(vrtx1.x[0], vrtx2.x[0])), 0);
+	box.xmax = intMin(intMax(vrtx0.x[0], intMax(vrtx1.x[0], vrtx2.x[0])), width);
+
+	box.ymin = intMax(intMin(vrtx0.x[1], intMin(vrtx1.x[1], vrtx2.x[1])), 0);
+	box.ymax = intMin(std::fmaxf(vrtx0.x[1], std::fmaxf(vrtx1.x[1], vrtx2.x[1])), height);
+
+	box.zmin = intMax(intMin(vrtx0.x[2], intMin(vrtx1.x[2], vrtx2.x[2])), 0);
+	box.zmax = intMin(intMax(vrtx0.x[2], intMax(vrtx1.x[2], vrtx2.x[2])), 10000);
+}
+
+void rasterizeTriang(tInOutVertex& _vrtx0, tInOutVertex& _vrtx1, tInOutVertex& _vrtx2, int* outColor, int width, int height)
+{
+	tBboxInt box;
+	tIntInOutVertex vrtx0, vrtx1, vrtx2;
+	toIntVert(_vrtx0, vrtx0, width, height);
+	toIntVert(_vrtx1, vrtx1, width, height);
+	toIntVert(_vrtx2, vrtx2, width, height);
+
+
+	setBboxInt(vrtx0, vrtx1, vrtx2, box, width, height);
+
+	tIntInOutVertex currVrtx;
+	currVrtx.x[0] = box.xmin;
+	currVrtx.x[1] = box.ymin;
+	currVrtx.x[2] = box.zmin;
+
+	bool bEscapedTriangle = false;
+
+	while (currVrtx.x[0] <= box.xmax)
+	{
+		currVrtx.x[1] = box.ymin;
+		while (currVrtx.x[1] <= box.ymax)
+		{
+			float ar1 = edgePointDoubleArea(vrtx0, vrtx1, currVrtx);
+			float ar2 = edgePointDoubleArea(vrtx1, vrtx2, currVrtx);
+			float ar3 = edgePointDoubleArea(vrtx2, vrtx0, currVrtx);
+
+			if ((ar1 >= 0) && (ar2 >= 0) && (ar3 >= 0))
+			{
+				dummyPxlShader(currVrtx.x[0], currVrtx.x[1], currVrtx.x[2], outColor, width, height);
+			}
+			currVrtx.x[1] += 1;
+		}
+		currVrtx.x[0] += 1;
 	}
 }
 
