@@ -51,12 +51,14 @@ tInOutVertex geometryShader(tInOutVertex& v, tMatrix* M)
 	return out;
 }
 
-tInOutVertex whitePixShader(tInOutVertex& v)
+typedef tInOutVertex(*pxlShaderFunc)(tInOutVertex& currVrtx, tInOutVertex& _vrtx0, tInOutVertex& _vrtx1, tInOutVertex& _vrtx2);
+
+tInOutVertex whitePixShader(tInOutVertex& currVrtx, tInOutVertex& _vrtx0, tInOutVertex& _vrtx1, tInOutVertex& _vrtx2)
 {
 	tInOutVertex out;
-	out.x[0] = 255;
-	out.x[1] = 255;
-	out.x[2] = 255;
+	out.x[0] = 1.;
+	out.x[1] = 1.;
+	out.x[2] = 1.;
 
 	return out;
 }
@@ -75,18 +77,6 @@ void rasterizePixel(tInOutVertex& vrtx, int* outColor, int width, int height)
 		outColor[idx + 1] = 255;
 		outColor[idx + 2] = 255;
 	}
-}
-
-void dummyPxlShader(int x, int y, int z, int* outColor, int width, int height)
-{
-	if ((0 >= -1) && (x < width) && (y >= 0) && (y < height) && (z >= 0) && (z < 10000))
-	{
-		int idx = (int)(y * width + x) * 3;
-		outColor[idx] = 255;
-		outColor[idx + 1] = 255;
-		outColor[idx + 2] = 255;
-	}
-	
 }
 
 inline int sign(float x)
@@ -155,138 +145,114 @@ struct tBbox
 	float xmin, xmax, ymin, ymax, zmin, zmax;
 };
 
-void setBbox(tInOutVertex& vrtx0, tInOutVertex& vrtx1, tInOutVertex& vrtx2, tBbox& box)
-{
-	box.xmin = std::fmaxf(std::fminf(vrtx0.x[0], std::fminf(vrtx1.x[0], vrtx2.x[0])), -1);
-	box.xmax = std::fminf(std::fmaxf(vrtx0.x[0], std::fmaxf(vrtx1.x[0], vrtx2.x[0])), 1);
-
-	box.ymin = std::fmaxf(std::fminf(vrtx0.x[1], std::fminf(vrtx1.x[1], vrtx2.x[1])), -1);
-	box.ymax = std::fminf(std::fmaxf(vrtx0.x[1], std::fmaxf(vrtx1.x[1], vrtx2.x[1])), 1);
-
-	box.zmin = std::fmaxf(std::fminf(vrtx0.x[2], std::fminf(vrtx1.x[2], vrtx2.x[2])), -1);
-	box.zmax = std::fminf(std::fmaxf(vrtx0.x[2], std::fmaxf(vrtx1.x[2], vrtx2.x[2])), 1);
-}
 
 float edgePointDoubleArea(tInOutVertex& vrtx0, tInOutVertex& vrtx1, tInOutVertex& testVrtx)
 {
 	return (vrtx1.x[0] - vrtx0.x[0]) * (testVrtx.x[1] - vrtx0.x[1]) - (vrtx1.x[1] - vrtx0.x[1]) * (testVrtx.x[0] - vrtx0.x[0]);
 }
 
-float edgePointDoubleArea(tIntInOutVertex& vrtx0, tIntInOutVertex& vrtx1, tIntInOutVertex& testVrtx)
+int edgePointDoubleArea(tIntInOutVertex& vrtx0, tIntInOutVertex& vrtx1, tIntInOutVertex& testVrtx)
 {
 	return (vrtx1.x[0] - vrtx0.x[0]) * (testVrtx.x[1] - vrtx0.x[1]) - (vrtx1.x[1] - vrtx0.x[1]) * (testVrtx.x[0] - vrtx0.x[0]);
 }
 
-void vrtx2int(tInOutVertex& vrtx, int width, int height)
+void setBbox(tInOutVertex& vrtx0, tInOutVertex& vrtx1, tInOutVertex& vrtx2, tBbox& box, float minX, float minY, float minZ, float maxX, float maxY, float maxZ)
 {
-	vrtx.x[0] = (int)((vrtx.x[0]+1.f)/2 * width);
-	vrtx.x[0] = (((float)vrtx.x[0]) / width - 0.5f)*2.f;
+	box.xmin = std::fmaxf(std::fminf(vrtx0.x[0], std::fminf(vrtx1.x[0], vrtx2.x[0])), minX);
+	box.xmax = std::fminf(std::fmaxf(vrtx0.x[0], std::fmaxf(vrtx1.x[0], vrtx2.x[0])), maxX);
 
-	vrtx.x[1] = (int)((vrtx.x[1] + 1.f) / 2 * height);
-	vrtx.x[1] = (((float)vrtx.x[1]) / height - 0.5f)*2.f;
+	box.ymin = std::fmaxf(std::fminf(vrtx0.x[1], std::fminf(vrtx1.x[1], vrtx2.x[1])), minY);
+	box.ymax = std::fminf(std::fmaxf(vrtx0.x[1], std::fmaxf(vrtx1.x[1], vrtx2.x[1])), maxY);
+
+	box.zmin = std::fmaxf(std::fminf(vrtx0.x[2], std::fminf(vrtx1.x[2], vrtx2.x[2])), minZ);
+	box.zmax = std::fminf(std::fmaxf(vrtx0.x[2], std::fmaxf(vrtx1.x[2], vrtx2.x[2])), maxZ);
 }
-/*void rasterizeTriang(tInOutVertex& vrtx0, tInOutVertex& vrtx1, tInOutVertex& vrtx2, int* outColor, int width, int height)
+
+void upscaleVert(tInOutVertex& _vrtx, int width, int height)
+{
+	_vrtx.x[0] = (_vrtx.x[0] + 1.f)*0.5f*width;
+	_vrtx.x[1] = (_vrtx.x[1] + 1.f)*0.5f*height;
+}
+
+void setBuf(int* buf, int val, int ix, int iy, int width, int channelIdx, int totalChan)
+{
+	int idx = (iy * width + ix) * totalChan;
+	buf[idx+ channelIdx] = val;
+}
+
+void setBuf(float* buf, float val, int ix, int iy, int width, int channelIdx, int totalChan)
+{
+	int idx = (iy * width + ix) * totalChan;
+	buf[idx + channelIdx] = val;
+}
+
+int getBuf(int* buf, int ix, int iy, int width, int channelIdx, int totalChan)
+{
+	int idx = (iy * width + ix) * totalChan;
+	return buf[idx + channelIdx];
+}
+
+float getBuf(float* buf, int ix, int iy, int width, int channelIdx, int totalChan)
+{
+	int idx = (iy * width + ix) * totalChan;
+	return buf[idx + channelIdx];
+}
+
+bool zTestAndSet(tInOutVertex& vrtx, float* zBuf, int i, int j, int width, int maxZ)
+{
+	int idx = j * width + i;
+	bool res = (vrtx.x[2] > getBuf(zBuf, i, j, width, 0, 1)) && (vrtx.x[2] <= maxZ);
+	setBuf(zBuf, vrtx.x[2], i, j, width, 0, 1);
+	return res;
+}
+
+
+void rasterizeTriang(pxlShaderFunc pxlShader, tInOutVertex& _vrtx0, tInOutVertex& _vrtx1, tInOutVertex& _vrtx2, 
+					int* outColor, float* zBuf, int width, int height)
 {
 	tBbox box;
+	tInOutVertex vrtx0, vrtx1, vrtx2;
+	std::memcpy(vrtx0.x, _vrtx0.x, 3 * sizeof(float));
+	std::memcpy(vrtx1.x, _vrtx1.x, 3 * sizeof(float));
+	std::memcpy(vrtx2.x, _vrtx2.x, 3 * sizeof(float));
 
-	setBbox(vrtx0, vrtx1, vrtx2, box);
+	upscaleVert(vrtx0, width, height);
+	upscaleVert(vrtx1, width, height);
+	upscaleVert(vrtx2, width, height);
+
+
+	setBbox(vrtx0, vrtx1, vrtx2, box, 0, 0, -1, (float)width, (float)height, 1);
 
 	tInOutVertex currVrtx;
-	currVrtx.x[0] = box.xmin;
-	currVrtx.x[1] = box.ymin;
-	currVrtx.x[2] = box.zmin;
-
 	bool bEscapedTriangle = false;
-	float xstep = 2.f / (float)width;
-	float ystep = 2.f / (float)height;
 
-	while (currVrtx.x[0] <= box.xmax)
+	int bboxMinX = (int)box.xmin;
+	int bboxMaxX = (int)box.xmax;
+	int bboxMinY = (int)box.ymin;
+	int bboxMaxY = (int)box.ymax;
+	for (int i = bboxMinX; i <= bboxMaxX; i++)
 	{
-		currVrtx.x[1] = box.ymin;
-		while (currVrtx.x[1] <= box.ymax)
+		currVrtx.x[0] = i + 0.5f;
+		for (int j = bboxMinY; j <= bboxMaxY; j++)
 		{
+			currVrtx.x[1] = j + 0.5f;
+
 			float ar1 = edgePointDoubleArea(vrtx0, vrtx1, currVrtx);
 			float ar2 = edgePointDoubleArea(vrtx1, vrtx2, currVrtx);
 			float ar3 = edgePointDoubleArea(vrtx2, vrtx0, currVrtx);
-
-			if ((ar1 >= 0) && (ar2 >= 0) && (ar3 >= 0))
+			if ((ar1 > 0) && (ar2 > 0) && (ar3 > 0))
 			{
-				rasterizePixel(currVrtx, outColor, width, height);
+				float sumAr = ar1 + ar2 + ar3;
+				currVrtx.x[2] = vrtx2.x[2] * ar1 / sumAr + vrtx0.x[2] * ar2 / sumAr + vrtx1.x[2] * ar3 / sumAr;
+				if (zTestAndSet(currVrtx, zBuf, i, j, width, 1))
+				{
+					tInOutVertex col = pxlShader(currVrtx, vrtx0, vrtx1, vrtx2);
+					setBuf(outColor, (int)col.x[0] * 255, i, j, width, 0, 3);
+					setBuf(outColor, (int)col.x[1] * 255, i, j, width, 1, 3);
+					setBuf(outColor, (int)col.x[2] * 255, i, j, width, 2, 3);
+				}
 			}
-			currVrtx.x[1] += ystep;
 		}
-		currVrtx.x[0] += xstep;
-	}
-}*/
-
-void toIntVert(tInOutVertex& vrtx, tIntInOutVertex& vrtxOut, int width, int height)
-{
-	vrtxOut.x[0] = (int)((vrtx.x[0] + 1.f)*0.5 * width);
-	vrtxOut.x[1] = (int)((vrtx.x[1] + 1.f)*0.5 * height);
-	vrtxOut.x[2] = (int)((vrtx.x[2] + 1.f)*0.5 * 10000);
-}
-struct tBboxInt
-{
-	int xmin, xmax, ymin, ymax, zmin, zmax;
-};
-
-inline int intMin(int a, int b)
-{
-	if (a < b) return a;
-	return b;
-}
-
-inline int intMax(int a, int b)
-{
-	if (a > b) return a;
-	return b;
-}
-void setBboxInt(tIntInOutVertex& vrtx0, tIntInOutVertex& vrtx1, tIntInOutVertex& vrtx2, tBboxInt& box, int width, int height)
-{
-	box.xmin = intMax(intMin(vrtx0.x[0], intMin(vrtx1.x[0], vrtx2.x[0])), 0);
-	box.xmax = intMin(intMax(vrtx0.x[0], intMax(vrtx1.x[0], vrtx2.x[0])), width);
-
-	box.ymin = intMax(intMin(vrtx0.x[1], intMin(vrtx1.x[1], vrtx2.x[1])), 0);
-	box.ymax = intMin(std::fmaxf(vrtx0.x[1], std::fmaxf(vrtx1.x[1], vrtx2.x[1])), height);
-
-	box.zmin = intMax(intMin(vrtx0.x[2], intMin(vrtx1.x[2], vrtx2.x[2])), 0);
-	box.zmax = intMin(intMax(vrtx0.x[2], intMax(vrtx1.x[2], vrtx2.x[2])), 10000);
-}
-
-void rasterizeTriang(tInOutVertex& _vrtx0, tInOutVertex& _vrtx1, tInOutVertex& _vrtx2, int* outColor, int width, int height)
-{
-	tBboxInt box;
-	tIntInOutVertex vrtx0, vrtx1, vrtx2;
-	toIntVert(_vrtx0, vrtx0, width, height);
-	toIntVert(_vrtx1, vrtx1, width, height);
-	toIntVert(_vrtx2, vrtx2, width, height);
-
-
-	setBboxInt(vrtx0, vrtx1, vrtx2, box, width, height);
-
-	tIntInOutVertex currVrtx;
-	currVrtx.x[0] = box.xmin;
-	currVrtx.x[1] = box.ymin;
-	currVrtx.x[2] = box.zmin;
-
-	bool bEscapedTriangle = false;
-
-	while (currVrtx.x[0] <= box.xmax)
-	{
-		currVrtx.x[1] = box.ymin;
-		while (currVrtx.x[1] <= box.ymax)
-		{
-			float ar1 = edgePointDoubleArea(vrtx0, vrtx1, currVrtx);
-			float ar2 = edgePointDoubleArea(vrtx1, vrtx2, currVrtx);
-			float ar3 = edgePointDoubleArea(vrtx2, vrtx0, currVrtx);
-
-			if ((ar1 >= 0) && (ar2 >= 0) && (ar3 >= 0))
-			{
-				dummyPxlShader(currVrtx.x[0], currVrtx.x[1], currVrtx.x[2], outColor, width, height);
-			}
-			currVrtx.x[1] += 1;
-		}
-		currVrtx.x[0] += 1;
 	}
 }
 
@@ -297,16 +263,16 @@ void pixelRasterizer(tInOutVertex& vrtx0, tInOutVertex& vrtx1, tInOutVertex& vrt
 	rasterizePixel(vrtx2, outColor, width, height);
 }
 
-void edgeRasterizer(tInOutVertex& vrtx0, tInOutVertex& vrtx1, tInOutVertex& vrtx2, int* outColor, int width, int height)
+void edgeRasterizer(pxlShaderFunc pxlShader, tInOutVertex& vrtx0, tInOutVertex& vrtx1, tInOutVertex& vrtx2, int* outColor, float* zBuf, int width, int height)
 {
 	rasterizeEdge(vrtx0, vrtx1, outColor, width, height);
 	rasterizeEdge(vrtx1, vrtx2, outColor, width, height);
 	rasterizeEdge(vrtx2, vrtx0, outColor, width, height);
 }
 
-void triangleRasterizer(tInOutVertex& vrtx0, tInOutVertex& vrtx1, tInOutVertex& vrtx2, int* outColor, int width, int height)
+void triangleRasterizer(pxlShaderFunc pxlShader, tInOutVertex& vrtx0, tInOutVertex& vrtx1, tInOutVertex& vrtx2, int* outColor, float* zBuf, int width, int height)
 {
-	rasterizeTriang(vrtx0, vrtx1, vrtx2, outColor, width, height);
+	rasterizeTriang(pxlShader, vrtx0, vrtx1, vrtx2, outColor, zBuf, width, height);
 }
 
 class tSoftwareRasterizer
@@ -321,7 +287,17 @@ public:
 		VertexData = new float[maxVerts];
 		VertexBuffer = new int[maxVerts];
 		outVertexBuffer = new float[maxVerts];
+		
 		outColor = new int[width*height * 3];
+		cleanOutColor = new int[width*height * 3];
+		
+		zBuffer = new float[width*height];
+		cleanZbuffer = new float[width*height];
+		for (int i = 0; i < width*height; i++)
+		{
+			zBuffer[i] = -1;
+			cleanZbuffer[i] = -1;
+		}
 		transform = new tMatrix(4, 4, Model2View);
 
 		tmpIntermed = new tMatrix(4, 1, tmpIntermedData);
@@ -373,10 +349,10 @@ public:
 		return shadedVrtx;
 	}
 
-	void rasterizeTriangle(void(*rasterizer)(tInOutVertex&, tInOutVertex&, tInOutVertex&, int*, int, int), 
+	void rasterizeTriangle(void(*rasterizer)(pxlShaderFunc, tInOutVertex&, tInOutVertex&, tInOutVertex&, int*, float*, int, int),
 				   tInOutVertex& vrtx0, tInOutVertex& vrtx1, tInOutVertex& vrtx2)
 	{
-		rasterizer(vrtx0, vrtx1, vrtx2, outColor, width, height);
+		rasterizer(whitePixShader, vrtx0, vrtx1, vrtx2, outColor, zBuffer, width, height);
 	}
 
 	void sGLDrawTriangle(int vertexIdx0, int vertexIdx1, int vertexIdx2)
@@ -391,10 +367,10 @@ public:
 	}
 
 
-	void sGLFreeOutput()
+	void sGLCleanBuffers()
 	{
-		for (int i = 0; i < width*height * 3; i++)
-			outColor[i] = 0;
+		std::memcpy(outColor, cleanOutColor, width*height * 3 * sizeof(int));
+		std::memcpy(zBuffer, cleanZbuffer, width*height * sizeof(float));
 	}
 	
 	int* bufColor() { return outColor; }
@@ -413,7 +389,12 @@ private:
 
 	int width;
 	int height;
+
 	int* outColor;
+	float* zBuffer;
+
+	int* cleanOutColor;
+	float* cleanZbuffer;
 
 
 	float xmin = -1;

@@ -78,7 +78,7 @@ private:
 	engineConfig* conf;
 	ISoftwareRenderer* renderer;
 
-	float meanFPS = 0;
-	float alpha = 0.99;
+	float meanFPS = 0.f;
+	float alpha = 0.99f;
 };
 #endif

@@ -47,7 +47,7 @@ public:
 
 	void render()
 	{
-		rasterizer->sGLFreeOutput();
+		rasterizer->sGLCleanBuffers();
 		tTransformMatrix* w2proj = cam->getW2Projection();
 
 		
