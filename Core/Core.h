@@ -47,21 +47,7 @@ private:
 	friend class IConsoleScreen;
 };
 
-class CORE_API IVertexData
-{
-public:
-	IVertexData();
-	IVertexData(vec3<float> c);
-	IVertexData(float x, float y, float z);
-	~IVertexData();
 
-	void translate(float dx, float dy, float dz);
-	
-private:
-	tVertexData* getVrtxDataPtr();
-	tVertexData* vrtx;
-	friend class ISoftwareRasterizer;
-};
 
 class CORE_API ISoftwareRasterizer
 {

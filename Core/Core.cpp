@@ -30,12 +30,7 @@ void ISoftwareRasterizer::sGLFreeOutput() { rst->sGLFreeOutput(); };
 void ISoftwareRasterizer::sGLBufferData(int size, IVertexData* ivrtx) { rst->sGLBufferData(size, ivrtx->getVrtxDataPtr()); };
 void ISoftwareRasterizer::sGLDrawElements(int numElem) { rst->sGLDrawElements(numElem); };*/
 
-IVertexData::IVertexData() {};
-IVertexData::IVertexData(vec3<float> c) { vrtx = new tVertexData(c); };
-IVertexData::IVertexData(float x, float y, float z) { vrtx = new tVertexData(x, y, z); };;
-IVertexData::~IVertexData(void) {};
-void IVertexData::translate(float dx, float dy, float dz) { vrtx->translate(dx, dy, dz); };
-tVertexData* IVertexData::getVrtxDataPtr() { return vrtx; };
+
 
 ISoftwareRenderer::ISoftwareRenderer(int _width, int _height, int _pxl) { rndr = new tSoftwareRenderer(_width, _height, _pxl); };
 ISoftwareRenderer::~ISoftwareRenderer(void) { delete rndr; };
