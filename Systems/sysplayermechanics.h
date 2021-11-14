@@ -73,9 +73,10 @@ public:
 				}
 			}
 		}
+		
 		player->commitUpdates();
 
-
+		
 		player->getLocation(fBuf);
 		std::stringstream ss;
 		ss << "cameraposition " << fBuf[0] << " " << fBuf[1] << " " << fBuf[2]<< '\n';
@@ -84,6 +85,7 @@ public:
 		std::getline(ss, cmd);
 		message msg(sName, cmd, 1);
 		qOut->push(msg);
+		
 
 
 		

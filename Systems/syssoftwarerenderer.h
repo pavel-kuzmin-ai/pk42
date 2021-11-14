@@ -34,19 +34,8 @@ public:
 
 	int executeCommands(messageQueue* qIn, messageQueue* qOut)
 	{
-		//renderer->updateWorld();
-
-		
-	    renderer->render();
+		renderer->render();
 		renderer->displayResult();
-		
-
-		//string output;
-		//std::stringstream ss;
-		//ss << "render done, fps = " << 1./curDt;
-		//std::getline(ss, output);
-		//message msg(sName, output);
-		//qOut->push(msg);	
 		
 		updateMeanFPS(1.f / curDt);
 		wchar_t s[256];

@@ -42,7 +42,7 @@ void CreateChildProcess(int window_flag = 0x00000010)
 int main(int argc, char* argv[])
 {
 	
-	bool show_console = false;
+	bool show_console = true;
 	int type = 0;
 
 	for (int i = 0; i < argc; i++)

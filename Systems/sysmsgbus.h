@@ -258,13 +258,12 @@ public:
 	int callSystemThreadsave()
 	{
 		collectResults();
-		messageQueue qInp;
+		messageQueue qInp, qOut;
 		copyInpQueueAndClean(&qInp);
-		messageQueue qOut;
 		int out = executeCommands(&qInp, &qOut);
 		updateOutputQueue(qOut);
-		qInp.erase();
-		qOut.erase();
+		//qInp.erase();
+		//qOut.erase();
 
 		return out;
 	}

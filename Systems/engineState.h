@@ -12,7 +12,7 @@ struct engineState
 	int screenWidth;
 	int screenHeight;
 
-	int outputLvl = 0;
+	int outputLvl = 1;
 };
 
 #endif
