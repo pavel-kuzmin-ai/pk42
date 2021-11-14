@@ -199,6 +199,7 @@ public:
 			SetEvent(ghReadFromChildEventDone);
 
 		}
+		qIn->erase();
 		
 		
 		return 0;
@@ -239,9 +240,20 @@ public:
 			
 			if (dwWaitResult == WAIT_OBJECT_0)
 			{
-				putToShared(szName, *qIn, pBuf, hMapFile);
-				ResetEvent(ghReadFromMainEventDone);
-				SetEvent(ghWriteFromMainEventDone);
+				messageQueue qFiltered;
+
+				while (!qIn->empty())
+				{
+					message msg = qIn->getMsgAndPop();
+					if (msg.msgType() <= sEngineState->outputLvl) qFiltered.push(msg);						
+				}
+
+				if (!qFiltered.empty())
+				{
+					putToShared(szName, qFiltered, pBuf, hMapFile);
+					ResetEvent(ghReadFromMainEventDone);
+					SetEvent(ghWriteFromMainEventDone);
+				}
 			}
 		}
 
@@ -290,6 +302,7 @@ public:
 			ResetEvent(ghWriteFromMainEventDone);
 			SetEvent(ghReadFromMainEventDone);
 		}
+		qIn->erase();
 
 		return 0;
 	}

@@ -19,12 +19,16 @@ void coreSystem::continuousRun(){bus->continuousRun();}
 
 pk42Core::pk42Core() {}
 pk42Core::~pk42Core(void) {}
-void pk42Core::startUp()
+void pk42Core::startUp(bool bWithConsole)
 {
 	coreSystem::startUp();
 	//sysB = new sysCout("system out");
-	sysC = new sysMmapSaverFromMain("system mmap save from main");
-	sysD = new sysMmapLoaderFromChild("system mmap load from child");
+	if (bWithConsole) 
+	{
+		sysC = new sysMmapSaverFromMain("system mmap save from main");
+		sysD = new sysMmapLoaderFromChild("system mmap load from child");
+	}
+	
 	sysProgLogic = new sysCoreLogic("core logic");
 	sysLogic = new sysGameLogic("game logic");
 	sysDisplay = new sysSoftwareRenderer("renderer", &cEngineConfig);
@@ -32,8 +36,12 @@ void pk42Core::startUp()
 	sysInp = new sysInput("input", &cEngineConfig);
 
 	//bus.subscribeClient(*sysB);
-	bus->subscribeClient(*sysC);
-	bus->subscribeClient(*sysD);
+	if (bWithConsole)
+	{
+		bus->subscribeClient(*sysC);
+		bus->subscribeClient(*sysD);
+	}
+	
 	bus->subscribeClient(*sysProgLogic);
 	bus->subscribeClient(*sysLogic);
 	bus->subscribeClient(*sysDisplay);
@@ -44,8 +52,12 @@ void pk42Core::startUp()
 
 
 	//sysB->startUp();
-	sysC->startUp();
-	sysD->startUp();
+	if (bWithConsole)
+	{
+		sysC->startUp();
+		sysD->startUp();
+	}
+	
 	sysProgLogic->startUp();
 	sysLogic->startUp();
 	sysDisplay->startUp();
@@ -64,8 +76,12 @@ void pk42Core::startUp()
 	std::cout << "engine initialized" << '\n';
 
 	//sysB->runDetached();
-	sysC->runDetached();
-	sysD->runDetached();
+	if (bWithConsole)
+	{
+		sysC->runDetached();
+		sysD->runDetached();
+	}
+	
 	sysProgLogic->runDetached();
 	//sysDisplay->runDetached();
 

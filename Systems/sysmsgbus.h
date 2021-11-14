@@ -33,7 +33,7 @@ class message
 {
 public:
 	message() {};
-	message(string _sProducerName, string _sValue) : sProducerName(_sProducerName), sValue(_sValue) 
+	message(string _sProducerName, string _sValue, int _iMsgType = 2) : sProducerName(_sProducerName), sValue(_sValue), iMsgType(_iMsgType)
 	{ set_empty(); };
 	message(string sDumpedMsg) 
 	{
@@ -53,6 +53,7 @@ public:
 	string producer() { return sProducerName; }
 	string value() { return sValue; }
 	string delimiter() { return sDelimiter; }
+	int msgType() { return iMsgType; }
 	
 	string str(){ return producer() + delimiter() + value(); }
 	
@@ -60,6 +61,7 @@ private:
 	string sProducerName;
 	string sValue;
 	string sDelimiter = " -> ";
+	int iMsgType;
 	bool bEmpty = true;
 };
 

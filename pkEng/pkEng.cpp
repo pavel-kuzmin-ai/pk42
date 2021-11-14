@@ -42,7 +42,7 @@ void CreateChildProcess(int window_flag = 0x00000010)
 int main(int argc, char* argv[])
 {
 	
-	bool show_console = true;
+	bool show_console = false;
 	int type = 0;
 
 	for (int i = 0; i < argc; i++)
@@ -75,8 +75,8 @@ int main(int argc, char* argv[])
 	{
 		std::cout << "THIS IS MAIN PROCESS" << '\n';
 		pk42Core* sys = new pk42Core;
-		sys->startUp();
-		CreateChildProcess(WindowFlag);
+		sys->startUp(show_console);
+		if (show_console) CreateChildProcess(WindowFlag);
 		sys->runGameLoop();
 		sys->shutDown();
 	}
@@ -89,34 +89,7 @@ int main(int argc, char* argv[])
 		sys->shutDown();
 	}	
 	
-	/*
-	while (true)
-	{
-		int a;
-		std::cin >> a;
-		CONSOLE_SCREEN_BUFFER_INFO csbi;
-		HWND wnd = GetConsoleWindow();
-		WINDOWINFO wndInfo;
-
-		GetWindowInfo(wnd, &wndInfo);
-
-		GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-		short columns = csbi.dwSize.X;
-		short rows = csbi.dwSize.Y;
-
-		GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-
-		
-		int left = csbi.srWindow.Left;// ((int)csbi.srWindow.Left + (int)csbi.srWindow.Right) / 2;
-		int right = csbi.srWindow.Top; //((int)csbi.srWindow.Top + (int)csbi.srWindow.Bottom) / 2;
-		int centerx = (csbi.srWindow.Left + csbi.srWindow.Right) / 2;
-		int centery = (csbi.srWindow.Top + csbi.srWindow.Bottom) / 2;
-		std::cout << wndInfo.rcClient.left << " " << wndInfo.rcClient.top << " "
-			<< wndInfo.rcClient.right << " " << wndInfo.rcClient.bottom << " "
-			<< centerx << " " << centery << " " << columns << " " << rows << '\n';
-
-	}
-	*/
+	
 
 
 	return 1;

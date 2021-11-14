@@ -44,7 +44,7 @@ public:
 	~pk42Core();
 	void step(float dt);
 	void runGameLoop();
-	void startUp();
+	void startUp(bool bWithConsole);
 private:
 	vector<Node*> vGameSystems;
 	sysCout* sysB;
@@ -56,6 +56,7 @@ private:
 	sysPlayerMechanics* sysPlayer;
 	sysInput* sysInp;
 	int position = 0;
+	
 };
 
 

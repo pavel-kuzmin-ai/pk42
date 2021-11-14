@@ -98,7 +98,7 @@ public:
 		std::string cmd;
 
 		std::getline(ss, cmd);
-		message msg(sName, cmd);
+		message msg(sName, cmd, 1);
 		qOut->push(msg);
 		
 		return 0;

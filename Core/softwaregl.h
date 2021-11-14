@@ -59,7 +59,7 @@ void whitePixShader(tPixelData& currVrtx, tPixelData& _vrtx0, tPixelData& _vrtx1
 	out.rgba[3] = 1.f;
 }
 
-void rasterizePixel(tPixelData& vrtx, int* outColor, int width, int height)
+void rasterizePixel(tPixelData& vrtx, float* outColor, int width, int height)
 {
 	float x = vrtx.xyz[0];
 	float y = vrtx.xyz[1];
@@ -69,9 +69,9 @@ void rasterizePixel(tPixelData& vrtx, int* outColor, int width, int height)
 		int ix = (int)((x + 1) * width / 2);
 		int iy = (int)(height - (y + 1) * height / 2);
 		int idx = (int)(iy * width + ix) * 3;
-		outColor[idx] = 255;
-		outColor[idx + 1] = 255;
-		outColor[idx + 2] = 255;
+		outColor[idx] = 1.f;
+		outColor[idx + 1] = 1.f;
+		outColor[idx + 2] = 1.f;
 	}
 }
 
@@ -82,7 +82,7 @@ inline int sign(float x)
 	
 }
 
-void rasterizeEdge(tPixelData& vrtx0, tPixelData& vrtx1, int* outColor, int width, int height)
+void rasterizeEdge(tPixelData& vrtx0, tPixelData& vrtx1, float* outColor, int width, int height)
 {
 	//Naive implementation. Better use Bresenham's algorithm here
 	float xstep = 2.f / (float)width;
@@ -215,9 +215,16 @@ void interpolatePixelData(tPixelData& res, tPixelData& pxl0, tPixelData& pxl1, t
 	}
 }
 
+void blendColor(tColorData& c, float* colorBuf, int i, int j, int width)
+{
+	float alpha = c.rgba[3];
+	setBuf(colorBuf, (1.f - alpha) * getBuf(colorBuf, i, j, width, 0, 3) + alpha * c.rgba[0], i, j, width, 0, 3);
+	setBuf(colorBuf, (1.f - alpha) * getBuf(colorBuf, i, j, width, 1, 3) + alpha * c.rgba[1], i, j, width, 1, 3);
+	setBuf(colorBuf, (1.f - alpha) * getBuf(colorBuf, i, j, width, 2, 3) + alpha * c.rgba[2], i, j, width, 2, 3);
+}
 
 void rasterizeTriang(pxlShaderFunc pxlShader, tPixelData& _vrtx0, tPixelData& _vrtx1, tPixelData& _vrtx2,
-					int* outColor, float* zBuf, int width, int height)
+	float* outColor, float* zBuf, int width, int height)
 {
 	tBbox box;
 	tPixelData vrtx0, vrtx1, vrtx2;
@@ -261,30 +268,28 @@ void rasterizeTriang(pxlShaderFunc pxlShader, tPixelData& _vrtx0, tPixelData& _v
 				{
 					tColorData col;
 					pxlShader(currVrtx, vrtx0, vrtx1, vrtx2, col);
-					setBuf(outColor, (int)(col.rgba[0] * 255), i, j, width, 0, 3);
-					setBuf(outColor, (int)(col.rgba[1] * 255), i, j, width, 1, 3);
-					setBuf(outColor, (int)(col.rgba[2] * 255), i, j, width, 2, 3);
+					blendColor(col, outColor, i, j, width);
 				}
 			}
 		}
 	}
 }
 
-void pixelRasterizer(tPixelData& vrtx0, tPixelData& vrtx1, tPixelData& vrtx2, int* outColor, int width, int height)
+void pixelRasterizer(tPixelData& vrtx0, tPixelData& vrtx1, tPixelData& vrtx2, float* outColor, int width, int height)
 {
 	rasterizePixel(vrtx0, outColor, width, height);
 	rasterizePixel(vrtx1, outColor, width, height);
 	rasterizePixel(vrtx2, outColor, width, height);
 }
 
-void edgeRasterizer(pxlShaderFunc pxlShader, tPixelData& vrtx0, tPixelData& vrtx1, tPixelData& vrtx2, int* outColor, float* zBuf, int width, int height)
+void edgeRasterizer(pxlShaderFunc pxlShader, tPixelData& vrtx0, tPixelData& vrtx1, tPixelData& vrtx2, float* outColor, float* zBuf, int width, int height)
 {
 	rasterizeEdge(vrtx0, vrtx1, outColor, width, height);
 	rasterizeEdge(vrtx1, vrtx2, outColor, width, height);
 	rasterizeEdge(vrtx2, vrtx0, outColor, width, height);
 }
 
-void triangleRasterizer(pxlShaderFunc pxlShader, tPixelData& vrtx0, tPixelData& vrtx1, tPixelData& vrtx2, int* outColor, float* zBuf, int width, int height)
+void triangleRasterizer(pxlShaderFunc pxlShader, tPixelData& vrtx0, tPixelData& vrtx1, tPixelData& vrtx2, float* outColor, float* zBuf, int width, int height)
 {
 	rasterizeTriang(pxlShader, vrtx0, vrtx1, vrtx2, outColor, zBuf, width, height);
 }
@@ -302,8 +307,11 @@ public:
 		VertexBuffer = new int[maxVerts];
 		outVertexBuffer = new float[maxVerts];
 		
-		outColor = new int[width*height * 3];
-		cleanOutColor = new int[width*height * 3];
+		iOutColor = new int[width*height * 3];
+		iOutColorInit = new int[width*height * 3];
+
+		fOutColor = new float[width*height * 3];
+		fOutColorInit = new float[width*height * 3];
 		
 		zBuffer = new float[width*height];
 		cleanZbuffer = new float[width*height];
@@ -319,7 +327,7 @@ public:
 	}
 	void setOutBuffer(int * _buf)
 	{
-		outColor = _buf;
+		iOutColor = _buf;
 	}
 
 	void setModel2ViewMatrix(float* inMatrix)
@@ -350,6 +358,20 @@ public:
 			if (i >= maxcount) break;
 			sGLDrawTriangle(VertexBuffer[i * 3], VertexBuffer[i * 3 + 1], VertexBuffer[i * 3 + 2]);
 		}
+		for (int i = 0; i < width; i++)
+		{
+			for (int j = 0; j < height; j++)
+			{
+				for (int c = 0; c < 3; c++)
+				{
+					int col = (int)(getBuf(fOutColor, i, j, width, c, 3) * 255);
+					setBuf(iOutColor, col, i, j, width, c, 3);
+				}
+
+			}
+		}
+			
+
 	}
 
 	tInOutVertex applyVertexShader(tInOutVertex(*vertexShader)(tInOutVertex&, tMatrix*), int bufferedIdx)
@@ -363,10 +385,10 @@ public:
 		return shadedVrtx;
 	}
 
-	void rasterizeTriangle(void(*rasterizer)(pxlShaderFunc, tPixelData&, tPixelData&, tPixelData&, int*, float*, int, int),
+	void rasterizeTriangle(void(*rasterizer)(pxlShaderFunc, tPixelData&, tPixelData&, tPixelData&, float*, float*, int, int),
 		tPixelData& vrtx0, tPixelData& vrtx1, tPixelData& vrtx2)
 	{
-		rasterizer(whitePixShader, vrtx0, vrtx1, vrtx2, outColor, zBuffer, width, height);
+		rasterizer(whitePixShader, vrtx0, vrtx1, vrtx2, fOutColor, zBuffer, width, height);
 	}
 
 	void sGLDrawTriangle(int vertexIdx0, int vertexIdx1, int vertexIdx2)
@@ -388,11 +410,12 @@ public:
 
 	void sGLCleanBuffers()
 	{
-		std::memcpy(outColor, cleanOutColor, width*height * 3 * sizeof(int));
+		//std::memcpy(iOutColor, iOutColorInit, width*height * 3 * sizeof(int)); 
+		std::memcpy(fOutColor, fOutColorInit, width*height * 3 * sizeof(float));
 		std::memcpy(zBuffer, cleanZbuffer, width*height * sizeof(float));
 	}
 	
-	int* bufColor() { return outColor; }
+	int* bufColor() { return iOutColor; }
 
 private:
 	int maxTris = 1000;
@@ -409,10 +432,12 @@ private:
 	int width;
 	int height;
 
-	int* outColor;
+	float* fOutColor; 
+	int* iOutColor;
 	float* zBuffer;
 
-	int* cleanOutColor;
+	int* iOutColorInit;
+	float* fOutColorInit;
 	float* cleanZbuffer;
 
 
