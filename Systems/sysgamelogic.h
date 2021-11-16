@@ -31,6 +31,7 @@ public:
 
 	int executeCommands(messageQueue* qIn, messageQueue* qOut)
 	{
+		qIn->erase();
 		return 0;
 	}
 private:

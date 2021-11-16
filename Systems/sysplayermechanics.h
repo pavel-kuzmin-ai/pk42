@@ -69,7 +69,7 @@ public:
 				{
 					std::string params;
 					std::getline(sscmd, params);
-					(this->*iter->second)(params);
+					(this->*(iter->second))(params);
 				}
 			}
 		}
@@ -84,11 +84,7 @@ public:
 
 		std::getline(ss, cmd);
 		message msg(sName, cmd, 1);
-		qOut->push(msg);
-		
-
-
-		
+		qOut->push(msg);		
 		return 0;
 	}
 

@@ -110,9 +110,11 @@ void pk42Core::step(float dt)
 	sysInp->callSystemThreadsave();
 	sysPlayer->setDt(dt);
 	sysPlayer->callSystemThreadsave();
+	sysLogic->callSystemThreadsave();
 	sysDisplay->setDt(dt);
 	sysDisplay->callSystemThreadsave();
 	bus->callSystemThreadsave();
+
 }
 
 pk42Console::pk42Console(){};

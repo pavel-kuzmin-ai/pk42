@@ -72,24 +72,6 @@ public:
 	messageQueue(string& sDumpedQueue)
 	{
 		load(sDumpedQueue);
-		/*
-		string input;
-		stringstream ss;
-		ss << sDumpedQueue;
-
-		int num_cmd = 0;
-		std::getline(ss, input);
-		stringstream tmp;
-		tmp << input;
-		tmp >> num_cmd;
-
-		messageQueue out;
-		for (int i = 0; i < num_cmd; i++)
-		{
-			std::getline(ss, input);
-			message cmd(input);
-			q.push(cmd);
-		}*/
 	};
 	virtual ~messageQueue() {};
 
@@ -118,7 +100,7 @@ public:
 	message front(){ return q.front(); }
 	void pop() { q.pop(); }
 	void push(message mVal) { q.push(mVal); }
-	void erase() { while (!q.empty()) q.pop(); }
+	void erase() { queue<message>().swap(q);}
 	bool empty(){return q.empty();}
 
 	//message front() { return q.front(); }
@@ -158,25 +140,6 @@ public:
 		
 	}
 
-	static messageQueue fromString(string& s)
-	{
-		string input;
-		stringstream ss;
-		ss << s;
-		int num_cmd = 0;
-		std::getline(ss, input);
-		stringstream tmp;
-		tmp << input;
-		tmp >> num_cmd;
-		messageQueue out;
-		for (int i = 0; i < num_cmd; i++)
-		{			
-			std::getline(ss, input);
-			message cmd(input);
-			out.push(cmd);
-		}
-		return out;
-	}
 
 	void join(messageQueue& qAdd)
 	{
@@ -190,10 +153,10 @@ public:
 	}
 	
 	//std::list<message>* getContainerPtr()
-	queue<message>* getContainerPtr()
-	{
-		return &q;
-	}
+	//queue<message>* getContainerPtr()
+	//{
+	//	return &q;
+	//}
 
 private:
 	queue<message> q;
@@ -261,10 +224,7 @@ public:
 		messageQueue qInp, qOut;
 		copyInpQueueAndClean(&qInp);
 		int out = executeCommands(&qInp, &qOut);
-		updateOutputQueue(qOut);
-		//qInp.erase();
-		//qOut.erase();
-
+		updateOutputQueue(&qOut);
 		return out;
 	}
 
@@ -284,27 +244,24 @@ public:
 		for (auto c : vClients)
 		{
 			c->callSystemThreadsave();
-			//std::cout << c->getName() << '\n';
 		}
 	}
 
 	void copyInpQueueAndClean(messageQueue* q)
 	{
 		lock_guard<mutex> lck(mtx);
-		//*q = qInputMsgQueue;
 		while (!bInputEmpty())
 		{
 			q->push(qInputMsgQueue.getMsgAndPop());
-			//qInputMsgQueue.pop();
 		}
 	}
 
-	void updateOutputQueue(messageQueue& q)
+	void updateOutputQueue(messageQueue* q)
 	{
 		lock_guard<mutex> lck(mtx);		
-		while (!q.empty())
+		while (!q->empty())
 		{
-			qOutputMsgQueue.push(q.getMsgAndPop());
+			qOutputMsgQueue.push(q->getMsgAndPop());
 		}
 	}
 
