@@ -6,6 +6,7 @@
 #include <string>
 #include "mesh.h"
 
+
 struct tRegRecord
 {
 	std::shared_ptr<tMesh> meshPtr;

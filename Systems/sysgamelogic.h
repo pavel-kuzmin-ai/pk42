@@ -15,7 +15,8 @@ public:
 	void startUp() 
 	{
 		world = new tScene();
-		world->addBox(0.f, 0.f, 0.f, 0.1f, 0.2f, 0.3f, 0.0f, 0.0f, 0.0f);
+		int ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\box.obj");
+		world->spawnObject(ind, 0, 2, -5);
 	}
 
 	void shutDown()

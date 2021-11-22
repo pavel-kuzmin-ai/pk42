@@ -58,7 +58,7 @@ public:
 			std::stringstream().swap(sscmd);
 			message msg = qIn->getMsgAndPop();
 			sscmd << msg.value();
-			std::string cmd;
+			std::string().swap(cmd);
 			sscmd >> cmd;
 			
 
@@ -92,6 +92,11 @@ public:
 	{
 		world = _wrld;
 		player->setCamera(_wrld->getCameraPtr());
+	}
+
+	void getLastCmd(std::string& x)
+	{
+		x = cmd;
 	}
 
 
@@ -165,6 +170,7 @@ private:
 	engineConfig* conf;
 	std::unordered_map<std::string, func> cmdFuncDict;
 	std::stringstream sscmd;
+	std::string cmd;
 
 	float angGain = 0.001;
 

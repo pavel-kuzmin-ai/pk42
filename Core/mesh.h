@@ -3,6 +3,9 @@
 
 #include "vec3.h"
 #include <vector>
+#include <string>
+#include <sstream>
+#include <fstream>
 
 class tTriangle
 {
@@ -95,9 +98,49 @@ public:
 		return (int)(tris.size());
 	}
 
+	void parseVertex(std::stringstream& ss)
+	{
+		float x, y, z;
+		ss >> x;
+		ss >> y;
+		ss >> z;
+		addVertex(x, y, z);
+	}
+
+	void parseFace(std::stringstream& ss)
+	{
+		int x, y, z;
+		ss >> x;
+		ss >> y;
+		ss >> z;
+		addTriangle(x - 1, y - 1, z - 1);
+	}
+
+	void loadObj(const std::string& path)
+	{
+		std::ifstream fs(path);
+
+		std::string line, flag;
+		while (std::getline(fs, line))
+		{
+			std::stringstream ss(line);
+			ss >> flag;
+			if (flag == "v") parseVertex(ss);
+			if (flag == "f") parseFace(ss);
+		}	
+		setName(path);
+	}
+
+	void setName(const std::string& name)
+	{
+		sName = name;
+	}
+		
+
 protected:
 	std::vector<float> vertices;
 	std::vector<int> tris;
+	std::string sName;
 private:
 	
 };

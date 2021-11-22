@@ -55,6 +55,7 @@ public:
 		for (auto keyVal : *(world->getObjectsPtr()))
 		{
 			tMeshObject* obj = keyVal.second;
+			if (!obj->bIsVisible()) continue;
 			tTransformMatrix* transform = obj->getM2Wmatrix();
 			std::shared_ptr<tMesh> mesh = obj->getMeshPtr();
 

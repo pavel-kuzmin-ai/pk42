@@ -1,11 +1,12 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#include "modelregistry.h"
+//#include "modelregistry.h"
 #include "mesh.h"
 #include "transformchain.h"
 #include "camera.h"
 #include "matrixmath.h"
+#include "assetloader.h"
 
 #include <unordered_map>
 #include <string>
@@ -103,7 +104,8 @@ class tMeshObject: public tTransformable
 {
 public:
 	tMeshObject() : tTransformable() {};
-	tMeshObject(std::string _sName, std::string _sMeshName, std::shared_ptr<tMesh> _geometry): tTransformable(_sName)
+	tMeshObject(std::string _sName, std::string _sMeshName, std::shared_ptr<tMesh> _geometry): 
+		tTransformable(_sName), sMeshName(_sMeshName)
 	{
 		bindMesh(_geometry);
 		setName(_sName);
@@ -131,10 +133,14 @@ public:
 		return sMeshName;
 	}
 
+	bool bIsVisible() { return bVisible; }
+	void setVisible(bool visibilityStatus) { bVisible = visibilityStatus; }
+
 
 protected:
 	std::string  sMeshName;
 	std::shared_ptr<tMesh> geometry;
+	bool bVisible = false;
 };
 
 class tCameraObject : public tTransformable
@@ -191,12 +197,13 @@ public:
 	tScene() { cam = new tCameraObject(); };
 	~tScene() { delete cam; };
 
-	int addObject(std::string meshName, std::string modelName, std::shared_ptr<tMesh> geometry)
+	
+	
+	int addMeshObject(std::string MeshPath)
 	{
-		registry.registerMesh(meshName, geometry);
-		tMeshObject* obj = new tMeshObject(modelName, meshName, geometry);
-		sceneObjects[nextIdx] = obj;
+		tMeshObject* obj = new tMeshObject(MeshPath, MeshPath, assetLoader.GetOrLoadMesh(MeshPath));
 		int myidx = nextIdx;
+		sceneObjects[myidx] = obj;
 		nextIdx++;
 		return myidx;
 	}
@@ -206,35 +213,13 @@ public:
 
 		tMeshObject* ptr = sceneObjects[idx];
 		std::string meshName = ptr->getMeshName();
-		sceneObjects.erase(idx); 
+		sceneObjects.erase(idx);
 		delete ptr;
-		
-		registry.unregisterMesh(meshName);
+
+		assetLoader.unregisterAsset(meshName);
+		assetLoader.vacuum();
 	}
 
-	void addBox(float _x = 0, float _y = 0, float _z = 0, float _xLen = 1, float _yLen = 1, float _zLen = 1,
-				float xang=0, float yang=0, float zang=0 )
-	{
-		std::shared_ptr<tMesh> geometry;
-		if (registry.keyRegistered("box"))
-		{
-			geometry = registry.getMesh("box");
-		}			
-		else
-		{
-			geometry = std::make_shared<tMesh>();
-			geometry->setVerices(8, fTmp);
-			geometry->setTris(12, iTmp);
-		}
-		 
-		int newidx = addObject("box", "boxModel", geometry);
-		tMeshObject* objPtr = sceneObjects[newidx];
-		objPtr->setLocation(_x, _y, _z);
-		objPtr->setScale(_xLen, _yLen, _zLen);
-		objPtr->setAngles(xang, yang, zang);
-
-		objPtr->UpdateTransforms();
-	}
 
 	void setCamera(float _ratio)
 	{
@@ -251,24 +236,40 @@ public:
 		return &sceneObjects;
 	}
 
+	void setVisibilityStatus(int idx, bool status)
+	{
+		if (sceneObjects.find(idx) != sceneObjects.end())
+		{
+			sceneObjects[idx]->setVisible(status);
+		}			
+	}
+
+	void spawnObject(int idx,
+		float x = 0.f, float y = 0.f, float z = 0.f,
+		float rotx = 0.f, float roty = 0.f, float rotz = 0.f,
+		float scx = 1.f, float scy = 1.f, float scz = 1.f)
+	{
+		if (sceneObjects.find(idx) != sceneObjects.end())
+		{
+			tMeshObject* obj = sceneObjects[idx];
+			obj->setLocation(x, y, z);
+			obj->setAngles(rotx, roty, rotz);
+			obj->setScale(scx, scy, scz);
+			obj->UpdateTransforms();
+			obj->setVisible(true);
+		}
+	}
+
 	
 	
 
 private:
-
-	tModelRegistry registry;
+	tAssetLoader assetLoader;
 	std::unordered_map<int, tMeshObject*> sceneObjects ;
 	tCameraObject* cam;
 
 	int nextIdx = 0;
 	
-	float fTmp[24] = { 0,0,0, 1,0,0, 1,1,0, 0,1,0, 0,0,1, 1,0,1, 1,1,1, 0,1,1 };
-	int iTmp[36] = { 0,1,2 , 0,2,3,
-							   0,4,5 , 0,5,1,
-							   0,7,4 , 0,3,7,
-							   1,5,6 , 1,6,2,
-							   2,6,3 , 3,6,7,
-							   4,7,6 , 4,6,5 };
 
 };
 
