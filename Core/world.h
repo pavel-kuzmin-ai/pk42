@@ -201,7 +201,7 @@ public:
 	
 	int addMeshObject(std::string MeshPath)
 	{
-		tMeshObject* obj = new tMeshObject(MeshPath, MeshPath, assetLoader.GetOrLoadMesh(MeshPath));
+		tMeshObject* obj = new tMeshObject(MeshPath, MeshPath, assetLoader.GetOrLoadMesh(MeshPath, MeshPath));
 		int myidx = nextIdx;
 		sceneObjects[myidx] = obj;
 		nextIdx++;

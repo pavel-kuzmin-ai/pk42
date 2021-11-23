@@ -365,7 +365,7 @@ public:
 				for (int c = 0; c < 3; c++)
 				{
 					int col = (int)(getBuf(fOutColor, i, j, width, c, 3) * 255);
-					setBuf(iOutColor, col, i, j, width, c, 3);
+					setBuf(iOutColor, col, i, height - j, width, c, 3);
 				}
 
 			}

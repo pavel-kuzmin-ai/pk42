@@ -26,22 +26,22 @@ public:
 	tAssetLoader() {}
 	~tAssetLoader() {}
 
-	bool assetRegistered(const std::string& sName)
+	bool assetRegistered(const std::string& name)
 	{
-		if (assetUsageCounter.find(sName) == assetUsageCounter.end())
+		if (assetUsageCounter.find(name) == assetUsageCounter.end())
 			return false;
 		return true;
 	}
 
-	void registerAsset(const std::string& path) 
+	void registerAsset(const std::string& name)
 	{
-		if (!assetRegistered(path)) assetUsageCounter[path] = 0;
-		assetUsageCounter[path]++;
+		if (!assetRegistered(name)) assetUsageCounter[name] = 0;
+		assetUsageCounter[name]++;
 	}
 
-	void unregisterAsset(const std::string& path) 
+	void unregisterAsset(const std::string& name)
 	{
-		if (assetRegistered(path)) assetUsageCounter[path]--;
+		if (assetRegistered(name)) assetUsageCounter[name]--;
 	}
 
 	void vacuum() 
@@ -56,19 +56,19 @@ public:
 		}
 	}
 	
-	std::shared_ptr<tMesh> GetOrLoadMesh(const std::string& path)
+	std::shared_ptr<tMesh> GetOrLoadMesh(const std::string& name, const std::string& path)
 	{
 		std::shared_ptr<tMesh> ptr;
-		if (!assetRegistered(path))
+		if (!assetRegistered(name))
 		{
 			ptr = std::make_shared<tMesh>();
 			ptr->loadObj(path);
 		}
 		else
 		{
-			ptr = meshRegistry[path];
+			ptr = meshRegistry[name];
 		}
-		registerAsset(path);
+		registerAsset(name);
 		return ptr;
 	}
 
