@@ -4,6 +4,7 @@
 #include "vec3.h"
 #include "matrixmath.h"
 #include <cmath>
+#include <unordered_map>
 
 
 
@@ -49,9 +50,18 @@ tInOutVertex geometryShader(tInOutVertex& v, tMatrix* M)
 	return out;
 }
 
-typedef void(*pxlShaderFunc)(tPixelData& currVrtx, tPixelData& _vrtx0, tPixelData& _vrtx1, tPixelData& _vrtx2, tColorData& out);
+struct fBuffer
+{
+	float* fBuf;
+	int width, height, channels;
+};
 
-void whitePixShader(tPixelData& currVrtx, tPixelData& _vrtx0, tPixelData& _vrtx1, tPixelData& _vrtx2, tColorData& out)
+
+typedef std::unordered_map<std::string, fBuffer*> tNamedBuffers;
+typedef void(*pxlShaderFunc)(tPixelData& currVrtx, tPixelData& _vrtx0, tPixelData& _vrtx1, tPixelData& _vrtx2,
+							 tNamedBuffers* textureCollection, tColorData& out);
+
+void whitePixShader(tPixelData& currVrtx, tPixelData& _vrtx0, tPixelData& _vrtx1, tPixelData& _vrtx2, tNamedBuffers* textureCollection, tColorData& out)
 {
 	out.rgba[0] = 1.f;
 	out.rgba[1] = 1.f;
@@ -267,7 +277,8 @@ void rasterizeTriang(pxlShaderFunc pxlShader, tPixelData& _vrtx0, tPixelData& _v
 				if (zTestAndSet(currVrtx, zBuf, i, j, width, 1))
 				{
 					tColorData col;
-					pxlShader(currVrtx, vrtx0, vrtx1, vrtx2, col);
+					tNamedBuffers tmpText;
+					pxlShader(currVrtx, vrtx0, vrtx1, vrtx2, &tmpText, col);
 					blendColor(col, outColor, i, j, width);
 				}
 			}
@@ -301,6 +312,14 @@ public:
 	tSoftwareRasterizer(int _width = 120, int _height = 90) :width(_width), height( _height ) {};
 	~tSoftwareRasterizer() {};
 
+	void buildBuf(int width, int height, int channels, fBuffer* fOutBuf)
+	{
+		fOutBuf->fBuf = new float[width * height * channels];
+		fOutBuf->width = width;
+		fOutBuf->height = height;
+		fOutBuf->channels = channels;
+	}
+
 	void initBuffers()
 	{
 		VertexData = new float[maxVerts];
@@ -310,16 +329,27 @@ public:
 		iOutColor = new int[width*height * 3];
 		iOutColorInit = new int[width*height * 3];
 
-		fOutColor = new float[width*height * 3];
-		fOutColorInit = new float[width*height * 3];
 		
-		zBuffer = new float[width*height];
-		cleanZbuffer = new float[width*height];
+		fOutColor = new fBuffer;
+		fOutColorInit = new fBuffer;
+		buildBuf(width, height, 3, fOutColor);
+		//screenBuffers["fOutColor"] = fOutColor;
+		buildBuf(width, height, 3, fOutColorInit);
+		//screenBuffers["fOutColorInit"] = fOutColorInit;
+
+
+		zBuffer = new fBuffer;
+		cleanZbuffer = new fBuffer;
+		buildBuf(width, height, 1, zBuffer);
+		//screenBuffers["zBuffer"] = zBuffer;
+		buildBuf(width, height, 1, cleanZbuffer);
+		//screenBuffers["cleanZbuffer"] = cleanZbuffer;
 		for (int i = 0; i < width*height; i++)
 		{
-			zBuffer[i] = -1;
-			cleanZbuffer[i] = -1;
+			zBuffer->fBuf[i] = -1.f;
+			cleanZbuffer->fBuf[i] = -1.f;
 		}
+
 		transform = new tMatrix(4, 4, Model2View);
 
 		tmpIntermed = new tMatrix(4, 1, tmpIntermedData);
@@ -351,6 +381,7 @@ public:
 		bufTris = size / 3;
 	}
 
+
 	void sGLDrawElements(int maxcount)
 	{
 		for (int i = 0; i < bufTris; i++)
@@ -364,7 +395,8 @@ public:
 			{
 				for (int c = 0; c < 3; c++)
 				{
-					int col = (int)(getBuf(fOutColor, i, j, width, c, 3) * 255);
+					//int col = (int)(getBuf(screenBuffers["fOutColor"]->fBuf, i, j, width, c, 3) * 255);
+					int col = (int)(getBuf(fOutColor->fBuf, i, j, width, c, 3) * 255);
 					setBuf(iOutColor, col, i, height - j, width, c, 3);
 				}
 
@@ -388,7 +420,8 @@ public:
 	void rasterizeTriangle(void(*rasterizer)(pxlShaderFunc, tPixelData&, tPixelData&, tPixelData&, float*, float*, int, int),
 		tPixelData& vrtx0, tPixelData& vrtx1, tPixelData& vrtx2)
 	{
-		rasterizer(whitePixShader, vrtx0, vrtx1, vrtx2, fOutColor, zBuffer, width, height);
+		//rasterizer(whitePixShader, vrtx0, vrtx1, vrtx2, screenBuffers["fOutColor"]->fBuf, screenBuffers["zBuffer"]->fBuf, width, height);
+		rasterizer(whitePixShader, vrtx0, vrtx1, vrtx2, fOutColor->fBuf, zBuffer->fBuf, width, height);
 	}
 
 	void sGLDrawTriangle(int vertexIdx0, int vertexIdx1, int vertexIdx2)
@@ -405,14 +438,16 @@ public:
 		//rasterizeTriangle(pixelRasterizer, out0, out1, out2);
 		//rasterizeTriangle(edgeRasterizer, out0, out1, out2);
 		rasterizeTriangle(triangleRasterizer, pxl0, pxl1, pxl2);
+
 	}
 
 
 	void sGLCleanBuffers()
 	{
-		//std::memcpy(iOutColor, iOutColorInit, width*height * 3 * sizeof(int)); 
-		std::memcpy(fOutColor, fOutColorInit, width*height * 3 * sizeof(float));
-		std::memcpy(zBuffer, cleanZbuffer, width*height * sizeof(float));
+		//std::memcpy(screenBuffers["fOutColor"]->fBuf , screenBuffers["fOutColorInit"]->fBuf, width*height * 3 * sizeof(float));
+		//std::memcpy(screenBuffers["zBuffer"]->fBuf, screenBuffers["cleanZbuffer"]->fBuf, width*height * sizeof(float));
+		std::memcpy(fOutColor->fBuf, fOutColorInit->fBuf, width*height * 3 * sizeof(float));
+		std::memcpy(zBuffer->fBuf, cleanZbuffer->fBuf, width*height * sizeof(float));
 	}
 	
 	int* bufColor() { return iOutColor; }
@@ -432,13 +467,15 @@ private:
 	int width;
 	int height;
 
-	float* fOutColor; 
+	//tNamedBuffers screenBuffers;
+
+	fBuffer* fOutColor; 
 	int* iOutColor;
-	float* zBuffer;
+	fBuffer* zBuffer;
 
 	int* iOutColorInit;
-	float* fOutColorInit;
-	float* cleanZbuffer;
+	fBuffer* fOutColorInit;
+	fBuffer* cleanZbuffer;
 
 
 	float xmin = -1;
