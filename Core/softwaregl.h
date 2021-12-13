@@ -5,69 +5,10 @@
 #include "matrixmath.h"
 #include <cmath>
 #include <unordered_map>
+#include "glcommons.h"
+#include "shaders.h"
+#include "materials.h"
 
-
-
-struct tInOutVertex
-{
-	float x[3];
-};
-
-struct tIntInOutVertex
-{
-	int x[3];
-};
-
-struct tPixelData
-{
-	float xyz[3];
-	float uv[2];
-	float normal[3];
-};
-
-struct tColorData
-{
-	float rgba[4];
-};
-
-
-float tmpIntermediateData[4] = {1., 1., 1., 1.};
-tMatrix* tmpIntermediate = new tMatrix(4, 1, tmpIntermediateData);
-
-float tmpOutputData[4] = { 1., 1., 1., 1. };
-tMatrix* tmpOutput = new tMatrix(4, 1, tmpOutputData);
-
-tInOutVertex geometryShader(tInOutVertex& v, tMatrix* M)
-{
-	tInOutVertex out;
-	arr2Matrix(v.x, *tmpIntermediate, 3, 0);
-	Multiply(*M, *tmpIntermediate, tmpOutput);
-
-	out.x[0] = tmpOutput->getValue(0, 0);
-	out.x[1] = tmpOutput->getValue(1, 0);
-	out.x[2] = tmpOutput->getValue(2, 0);
-
-	return out;
-}
-
-struct fBuffer
-{
-	float* fBuf;
-	int width, height, channels;
-};
-
-
-typedef std::unordered_map<std::string, fBuffer*> tNamedBuffers;
-typedef void(*pxlShaderFunc)(tPixelData& currVrtx, tPixelData& _vrtx0, tPixelData& _vrtx1, tPixelData& _vrtx2,
-							 tNamedBuffers* textureCollection, tColorData& out);
-
-void whitePixShader(tPixelData& currVrtx, tPixelData& _vrtx0, tPixelData& _vrtx1, tPixelData& _vrtx2, tNamedBuffers* textureCollection, tColorData& out)
-{
-	out.rgba[0] = 1.f;
-	out.rgba[1] = 1.f;
-	out.rgba[2] = 1.f;
-	out.rgba[3] = 1.f;
-}
 
 void rasterizePixel(tPixelData& vrtx, float* outColor, int width, int height)
 {
@@ -89,7 +30,6 @@ inline int sign(float x)
 {
 	if (x >= 0) return 1;
 	return -1;
-	
 }
 
 void rasterizeEdge(tPixelData& vrtx0, tPixelData& vrtx1, float* outColor, int width, int height)
@@ -146,58 +86,6 @@ void rasterizeEdge(tPixelData& vrtx0, tPixelData& vrtx1, float* outColor, int wi
 	}
 }
 
-struct tBbox
-{
-	float xmin, xmax, ymin, ymax, zmin, zmax;
-};
-
-
-float edgePointDoubleArea(tPixelData& vrtx0, tPixelData& vrtx1, tPixelData& testVrtx)
-{
-	return (vrtx1.xyz[0] - vrtx0.xyz[0]) * (testVrtx.xyz[1] - vrtx0.xyz[1]) - (vrtx1.xyz[1] - vrtx0.xyz[1]) * (testVrtx.xyz[0] - vrtx0.xyz[0]);
-}
-
-void setBbox(tPixelData& vrtx0, tPixelData& vrtx1, tPixelData& vrtx2, tBbox& box, float minX, float minY, float minZ, float maxX, float maxY, float maxZ)
-{
-	box.xmin = std::fmaxf(std::fminf(vrtx0.xyz[0], std::fminf(vrtx1.xyz[0], vrtx2.xyz[0])), minX);
-	box.xmax = std::fminf(std::fmaxf(vrtx0.xyz[0], std::fmaxf(vrtx1.xyz[0], vrtx2.xyz[0])), maxX);
-
-	box.ymin = std::fmaxf(std::fminf(vrtx0.xyz[1], std::fminf(vrtx1.xyz[1], vrtx2.xyz[1])), minY);
-	box.ymax = std::fminf(std::fmaxf(vrtx0.xyz[1], std::fmaxf(vrtx1.xyz[1], vrtx2.xyz[1])), maxY);
-
-	box.zmin = std::fmaxf(std::fminf(vrtx0.xyz[2], std::fminf(vrtx1.xyz[2], vrtx2.xyz[2])), minZ);
-	box.zmax = std::fminf(std::fmaxf(vrtx0.xyz[2], std::fmaxf(vrtx1.xyz[2], vrtx2.xyz[2])), maxZ);
-}
-
-void upscaleCoords(tPixelData& _vrtx, int width, int height)
-{
-	_vrtx.xyz[0] = (_vrtx.xyz[0] + 1.f)*0.5f*width;
-	_vrtx.xyz[1] = (_vrtx.xyz[1] + 1.f)*0.5f*height;
-}
-
-void setBuf(int* buf, int val, int ix, int iy, int width, int channelIdx, int totalChan)
-{
-	int idx = (iy * width + ix) * totalChan;
-	buf[idx+ channelIdx] = val;
-}
-
-void setBuf(float* buf, float val, int ix, int iy, int width, int channelIdx, int totalChan)
-{
-	int idx = (iy * width + ix) * totalChan;
-	buf[idx + channelIdx] = val;
-}
-
-int getBuf(int* buf, int ix, int iy, int width, int channelIdx, int totalChan)
-{
-	int idx = (iy * width + ix) * totalChan;
-	return buf[idx + channelIdx];
-}
-
-float getBuf(float* buf, int ix, int iy, int width, int channelIdx, int totalChan)
-{
-	int idx = (iy * width + ix) * totalChan;
-	return buf[idx + channelIdx];
-}
 
 bool zTestAndSet(tPixelData& vrtx, float* zBuf, int i, int j, int width, int maxZ)
 {
@@ -206,85 +94,161 @@ bool zTestAndSet(tPixelData& vrtx, float* zBuf, int i, int j, int width, int max
 	setBuf(zBuf, vrtx.xyz[2], i, j, width, 0, 1);
 	return res;
 }
-inline float weightedTriSum(float x, float y, float z, float wx, float wy, float wz)
-{
-	return x * wx + y * wy + z * wz;
-}
-void interpolatePixelData(tPixelData& res, tPixelData& pxl0, tPixelData& pxl1, tPixelData& pxl2, float &lambda0, float &lambda1, float &lambda2)
-{
-	res.xyz[2] = weightedTriSum(pxl0.xyz[2], pxl1.xyz[2], pxl2.xyz[2], lambda0, lambda1, lambda2);
-	
-	for (int i = 0; i < 2; i++)
-	{
-		res.uv[i] = weightedTriSum(pxl0.uv[i], pxl1.uv[i], pxl2.uv[i], lambda0, lambda1, lambda2);
-	}
 
-	for (int i = 0; i < 3; i++)
-	{
-		res.normal[i] = weightedTriSum(pxl0.normal[i], pxl1.normal[i], pxl2.normal[i], lambda0, lambda1, lambda2);
-	}
-}
+
 
 void blendColor(tColorData& c, float* colorBuf, int i, int j, int width)
 {
 	float alpha = c.rgba[3];
+	if (alpha > 0.999)
+	{
+		setBuf(colorBuf, c.rgba[0], i, j, width, 0, 3);
+		setBuf(colorBuf, c.rgba[1], i, j, width, 1, 3);
+		setBuf(colorBuf, c.rgba[2], i, j, width, 2, 3);
+		return;
+	}
 	setBuf(colorBuf, (1.f - alpha) * getBuf(colorBuf, i, j, width, 0, 3) + alpha * c.rgba[0], i, j, width, 0, 3);
 	setBuf(colorBuf, (1.f - alpha) * getBuf(colorBuf, i, j, width, 1, 3) + alpha * c.rgba[1], i, j, width, 1, 3);
 	setBuf(colorBuf, (1.f - alpha) * getBuf(colorBuf, i, j, width, 2, 3) + alpha * c.rgba[2], i, j, width, 2, 3);
 }
 
-void rasterizeTriang(pxlShaderFunc pxlShader, tPixelData& _vrtx0, tPixelData& _vrtx1, tPixelData& _vrtx2,
+struct tTmpCalcData
+{
+	tColorData col;
+	tMaterialParam tmpMatPar;
+	tPixelData currVrtx;
+	tBbox box;
+} tmpVars;
+
+void rasterizeTriang(pxlShaderFunc pxlShader, tPixelData& vrtx0, tPixelData& vrtx1, tPixelData& vrtx2,
 	float* outColor, float* zBuf, int width, int height)
 {
-	tBbox box;
-	tPixelData vrtx0, vrtx1, vrtx2;
-	std::memcpy(vrtx0.xyz, _vrtx0.xyz, 3 * sizeof(float));
-	std::memcpy(vrtx1.xyz, _vrtx1.xyz, 3 * sizeof(float));
-	std::memcpy(vrtx2.xyz, _vrtx2.xyz, 3 * sizeof(float));
-
+	
 	upscaleCoords(vrtx0, width, height);
 	upscaleCoords(vrtx1, width, height);
 	upscaleCoords(vrtx2, width, height);
 	
-	setBbox(vrtx0, vrtx1, vrtx2, box, 0, 0, -1, (float)width, (float)height, 1);
+	setBbox(vrtx0, vrtx1, vrtx2, tmpVars.box, 0, 0, -1, (float)width, (float)height, 1);
 
-	tPixelData currVrtx;
-	bool bEscapedTriangle = false;
 
-	int bboxMinX = (int)box.xmin;
-	int bboxMaxX = (int)box.xmax;
-	int bboxMinY = (int)box.ymin;
-	int bboxMaxY = (int)box.ymax;
+	int bboxMinX = (int)tmpVars.box.xmin;
+	int bboxMaxX = (int)tmpVars.box.xmax;
+	int bboxMinY = (int)tmpVars.box.ymin;
+	int bboxMaxY = (int)tmpVars.box.ymax;
+	
+	float triangDoubleArea = edgePointDoubleArea(vrtx0, vrtx2, vrtx1);
 	float invTriangDoubleArea = -1.f;
+	if (triangDoubleArea != 0.f) invTriangDoubleArea = 1.f / triangDoubleArea;
+
+	
+	
 	for (int i = bboxMinX; i <= bboxMaxX; i++)
 	{
-		currVrtx.xyz[0] = i + 0.5f;
+
+		tmpVars.currVrtx.xyz[0] = i + 0.5f;
+		float l1[4], l0[4];
+		l0[0] = tmpVars.currVrtx.xyz[0];
+		l0[1] = tmpVars.box.ymin; //(float)bboxMinY;
+		l0[2] = tmpVars.currVrtx.xyz[0];
+		l0[3] = tmpVars.box.ymax; //(float)bboxMaxY;
+
+		int intersections_found = 0;
+		float ts[2], startEnd[2] = {-1.f,-1.f};
+		bool oneFound = false;
+		bool bHasInters = false;
+
+		l1[0] = vrtx0.xyz[0];
+		l1[1] = vrtx0.xyz[1];
+		l1[2] = vrtx1.xyz[0];
+		l1[3] = vrtx1.xyz[1];
+
+		
+		bHasInters = intersectionParams(l0, l1, ts);
+		if ((bHasInters) && (ts[1] >= 0.f) && (ts[1] <= 1.f))
+		{
+			float pTemp = l0[1] + (l0[3] - l0[1]) * ts[0];
+			pTemp = clamp(pTemp, tmpVars.box.ymin, tmpVars.box.ymax);
+			startEnd[0] = pTemp;
+			oneFound = true;
+			intersections_found++;
+		}
+
+		l1[0] = vrtx1.xyz[0];
+		l1[1] = vrtx1.xyz[1];
+		l1[2] = vrtx2.xyz[0];
+		l1[3] = vrtx2.xyz[1];
+
+		bHasInters = intersectionParams(l0, l1, ts);
+		if ((bHasInters) && (ts[1] >= 0.f) && (ts[1] <= 1.f))
+		{
+			float pTemp = l0[1] + (l0[3] - l0[1]) * ts[0];
+			pTemp = clamp(pTemp, tmpVars.box.ymin, tmpVars.box.ymax);
+			if (oneFound) 
+			{
+				if (pTemp < startEnd[0])
+				{
+					startEnd[1] = startEnd[0];
+					startEnd[0] = pTemp;
+				}
+				else startEnd[1] = pTemp;
+			}
+			else startEnd[0] = pTemp;
+			oneFound = true;
+			intersections_found++;
+		}
+
+		l1[0] = vrtx2.xyz[0];
+		l1[1] = vrtx2.xyz[1];
+		l1[2] = vrtx0.xyz[0];
+		l1[3] = vrtx0.xyz[1];
+
+		bHasInters = intersectionParams(l0, l1, ts);
+		if ((bHasInters) && (ts[1] >= 0.f) && (ts[1] <= 1.f))
+		{
+			float pTemp = l0[1] + (l0[3] - l0[1]) * ts[0];
+			pTemp = clamp(pTemp, tmpVars.box.ymin, tmpVars.box.ymax);
+			if (oneFound)
+			{
+				if (pTemp < startEnd[0])
+				{
+					startEnd[1] = startEnd[0];
+					startEnd[0] = pTemp;
+				}
+				else startEnd[1] = pTemp;
+			}
+			else startEnd[0] = pTemp;
+			oneFound = true;
+			intersections_found++;
+		}
+		
 		for (int j = bboxMinY; j <= bboxMaxY; j++)
 		{
-			currVrtx.xyz[1] = j + 0.5f;
+			tmpVars.currVrtx.xyz[1] = j + 0.5f;
 
-			float mult2 = edgePointDoubleArea(vrtx0, vrtx1, currVrtx);
-			float mult0 = edgePointDoubleArea(vrtx1, vrtx2, currVrtx);
-			float mult1 = edgePointDoubleArea(vrtx2, vrtx0, currVrtx);
-			if ((mult0 > 0) && (mult1 > 0) && (mult2 > 0))
+			
+			bool inside = ((intersections_found==2)&&(tmpVars.currVrtx.xyz[1]> startEnd[0]) && (tmpVars.currVrtx.xyz[1] < startEnd[1]));
+
+
+			if (inside)
 			{
-				if (invTriangDoubleArea<0.f) invTriangDoubleArea = 1.f/(mult0 + mult1 + mult2);
-				mult0 *= invTriangDoubleArea;
-				mult1 *= invTriangDoubleArea;
-				mult2 *= invTriangDoubleArea;
-				currVrtx.xyz[2] = vrtx2.xyz[2] * mult2 + vrtx0.xyz[2] * mult0 + vrtx1.xyz[2] * mult1;
-				interpolatePixelData(currVrtx, vrtx0, vrtx1, vrtx2, mult0, mult1, mult2);
-				if (zTestAndSet(currVrtx, zBuf, i, j, width, 1))
+				float mult2 = edgePointDoubleArea(vrtx0, vrtx1, tmpVars.currVrtx) * invTriangDoubleArea;
+				float mult0 = edgePointDoubleArea(vrtx1, vrtx2, tmpVars.currVrtx) * invTriangDoubleArea;
+				float mult1 = 1.0f - mult2 - mult0;
+
+				
+				tmpVars.currVrtx.xyz[2] = weightedTriSum(vrtx0.xyz[2], vrtx1.xyz[2], vrtx2.xyz[2], mult0, mult1, mult2);
+				
+				if (zTestAndSet(tmpVars.currVrtx, zBuf, i, j, width, 1))
 				{
-					tColorData col;
-					tNamedBuffers tmpText;
-					pxlShader(currVrtx, vrtx0, vrtx1, vrtx2, &tmpText, col);
-					blendColor(col, outColor, i, j, width);
+					interpolatePixelData(tmpVars.currVrtx, vrtx0, vrtx1, vrtx2, mult0, mult1, mult2);
+					pxlShader(tmpVars.currVrtx, &tmpVars.tmpMatPar, tmpVars.col);
+					blendColor(tmpVars.col, outColor, i, j, width);
 				}
 			}
 		}
 	}
 }
+
 
 void pixelRasterizer(tPixelData& vrtx0, tPixelData& vrtx1, tPixelData& vrtx2, float* outColor, int width, int height)
 {
@@ -350,7 +314,8 @@ public:
 			cleanZbuffer->fBuf[i] = -1.f;
 		}
 
-		transform = new tMatrix(4, 4, Model2View);
+		Model2CamMatrix = new tMatrix(4, 4, Model2Cam);
+		Cam2ViewMatrix = new tMatrix(4, 4, Cam2View);
 
 		tmpIntermed = new tMatrix(4, 1, tmpIntermedData);
 		tmpOut = new tMatrix(4, 1, tmpOutData);
@@ -360,17 +325,23 @@ public:
 		iOutColor = _buf;
 	}
 
-	void setModel2ViewMatrix(float* inMatrix)
+	void setModel2CamMatrix(float* inMatrix)
 	{
-		std::memcpy(Model2View, inMatrix, 16 * sizeof(float));
+		std::memcpy(Model2Cam, inMatrix, 16 * sizeof(float));
+	}
+	
+	void setCam2ViewMatrix(float* inMatrix)
+	{
+		std::memcpy(Cam2View, inMatrix, 16 * sizeof(float));
 	}
 
 	void setVertexData(float* inVerts, int size)
 	{
 		if (size > maxVerts) size = maxVerts;
 		std::memcpy(VertexData, inVerts, size * sizeof(float));
-		
 	}
+
+	void setMaterial(materialBase* newMaterial) { currentMaterial = newMaterial; }
 
 
 	void sGLBufferData(int size, int* vertexIds)
@@ -402,41 +373,64 @@ public:
 
 			}
 		}
-			
-
 	}
 
-	tInOutVertex applyVertexShader(tInOutVertex(*vertexShader)(tInOutVertex&, tMatrix*), int bufferedIdx)
+	void verts2tPixelData(int bufferedIdx, tPixelData* out)
 	{
-		tInOutVertex shadedVrtx;
-		shadedVrtx.x[0] = VertexData[bufferedIdx * 3];
-		shadedVrtx.x[1] = VertexData[bufferedIdx * 3 + 1];
-		shadedVrtx.x[2] = VertexData[bufferedIdx * 3 + 2];
-
-		shadedVrtx = vertexShader(shadedVrtx, transform);
-		return shadedVrtx;
+		out->xyz[0] = VertexData[bufferedIdx * 3];
+		out->xyz[1] = VertexData[bufferedIdx * 3 + 1];
+		out->xyz[2] = VertexData[bufferedIdx * 3 + 2];
+	}
+	void applyVertexShader(void(*vertexShader)(tPixelData&, tPixelData&, tMatrix*, tMatrix*), tPixelData* inpVrtx, tPixelData* outVrtx)
+	{
+		vertexShader(*inpVrtx, *outVrtx, Model2CamMatrix, Cam2ViewMatrix);
 	}
 
 	void rasterizeTriangle(void(*rasterizer)(pxlShaderFunc, tPixelData&, tPixelData&, tPixelData&, float*, float*, int, int),
 		tPixelData& vrtx0, tPixelData& vrtx1, tPixelData& vrtx2)
 	{
 		//rasterizer(whitePixShader, vrtx0, vrtx1, vrtx2, screenBuffers["fOutColor"]->fBuf, screenBuffers["zBuffer"]->fBuf, width, height);
-		rasterizer(whitePixShader, vrtx0, vrtx1, vrtx2, fOutColor->fBuf, zBuffer->fBuf, width, height);
+		//rasterizer(whitePixShader, vrtx0, vrtx1, vrtx2, fOutColor->fBuf, zBuffer->fBuf, width, height);
+		rasterizer(currentMaterial->getShader(), vrtx0, vrtx1, vrtx2, fOutColor->fBuf, zBuffer->fBuf, width, height);
 	}
+
+	tPixelData pxl0, pxl1, pxl2;
+	float dir0[3], dir1[3], dir2[3];
+	float faceNormal[3];
 
 	void sGLDrawTriangle(int vertexIdx0, int vertexIdx1, int vertexIdx2)
 	{
-		tInOutVertex out0 = applyVertexShader(geometryShader, vertexIdx0);
-		tInOutVertex out1 = applyVertexShader(geometryShader, vertexIdx1);
-		tInOutVertex out2 = applyVertexShader(geometryShader, vertexIdx2);
+		//tPixelData pxl0, pxl1, pxl2;
+		verts2tPixelData(vertexIdx0, &pxl0);
+		pxl0.faceLeader = true;
+		verts2tPixelData(vertexIdx1, &pxl1);
+		verts2tPixelData(vertexIdx2, &pxl2);
 
-		tPixelData pxl0, pxl1, pxl2;
-		std::memcpy(pxl0.xyz, out0.x, 3 * sizeof(float));
-		std::memcpy(pxl1.xyz, out1.x, 3 * sizeof(float));
-		std::memcpy(pxl2.xyz, out2.x, 3 * sizeof(float));
+		pxl0.viewDirection = dir0;
+		pxl1.viewDirection = dir1;
+		pxl2.viewDirection = dir2;
 
-		//rasterizeTriangle(pixelRasterizer, out0, out1, out2);
-		//rasterizeTriangle(edgeRasterizer, out0, out1, out2);
+
+		calcFaceNormals(pxl0, pxl1, pxl2, faceNormal);
+		pxl0.faceNormal = faceNormal;
+		applyVertexShader(geometryShader, &pxl0, &pxl0);
+
+		bool backFace = dot(pxl0.viewDirection, pxl0.faceNormal) > 0;
+		if (backFace) return;
+	
+		applyVertexShader(geometryShaderCut, &pxl1, &pxl1);
+		applyVertexShader(geometryShaderCut, &pxl2, &pxl2);
+		pxl1.viewDirection = dir0;
+		pxl2.viewDirection = dir0;
+		
+		
+		//std::memcpy(pxl0.normal, pxl0.faceNormal, 3 * sizeof(float));
+
+		//std::memcpy(pxl1.normal, pxl0.normal, 3 * sizeof(float));
+		//std::memcpy(pxl2.normal, pxl0.normal, 3 * sizeof(float));
+		//std::memcpy(pxl1.viewDirection, pxl0.viewDirection, 3 * sizeof(float));
+		//std::memcpy(pxl2.viewDirection, pxl0.viewDirection, 3 * sizeof(float));
+
 		rasterizeTriangle(triangleRasterizer, pxl0, pxl1, pxl2);
 
 	}
@@ -453,7 +447,7 @@ public:
 	int* bufColor() { return iOutColor; }
 
 private:
-	int maxTris = 1000;
+	int maxTris = 2048;
 	int maxVerts = maxTris * 3;
 	float* VertexData;
 	
@@ -485,8 +479,11 @@ private:
 	float ymax = 1;
 	float yspan = fabs(ymax - ymin);
 
-	float Model2View[16];
-	tMatrix* transform;
+	float Model2Cam[16];
+	tMatrix* Model2CamMatrix;
+
+	float Cam2View[16];
+	tMatrix* Cam2ViewMatrix;
 
 	float tmpIntermedData[4] = { 1.f, 1.f, 1.f, 1.f };
 	tMatrix* tmpIntermed;
@@ -494,10 +491,16 @@ private:
 	float tmpOutData[4] = { 1.f, 1.f, 1.f, 1.f };;
 	tMatrix* tmpOut;
 
+	// pxlShaderFunc currentShader = normalsPixShader;
+	//tMaterialParam* currentMaterialParamList;
+	materialBase* currentMaterial;
+
 
 
 
 };
+
+
 
 
 

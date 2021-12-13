@@ -28,7 +28,7 @@ public:
 	void rotateBy(float x, float y, float z) 
 	{ 
 		camera->getAngles(fBuf);
-		float maxAng = M_PI / 2 - 0.01;
+		float maxAng = M_PI / 2 - 0.01f;
 		float xang = fBuf[0];
 		if (xang > M_PI) xang -= M_2PI;
 		xang = clamp(xang, - maxAng, maxAng);

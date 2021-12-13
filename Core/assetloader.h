@@ -57,12 +57,16 @@ public:
 	}
 	
 	std::shared_ptr<tMesh> GetOrLoadMesh(const std::string& name, const std::string& path)
+	//tMesh* GetOrLoadMesh(const std::string& name, const std::string& path)
 	{
 		std::shared_ptr<tMesh> ptr;
+		//tMesh* ptr;
 		if (!assetRegistered(name))
 		{
 			ptr = std::make_shared<tMesh>();
+			//ptr = new tMesh;
 			ptr->loadObj(path);
+			meshRegistry[name] = ptr;
 		}
 		else
 		{
@@ -77,6 +81,7 @@ public:
 private:
 	std::unordered_map<std::string, int> assetUsageCounter;
 	std::unordered_map<std::string, std::shared_ptr<tMesh>> meshRegistry;
+	//std::unordered_map<std::string, tMesh*> meshRegistry;
 
 };
 

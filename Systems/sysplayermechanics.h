@@ -172,7 +172,7 @@ private:
 	std::stringstream sscmd;
 	std::string cmd;
 
-	float angGain = 0.001;
+	float angGain = 0.001f;
 
 
 	float fBuf[3];

@@ -15,8 +15,21 @@ public:
 	void startUp() 
 	{
 		world = new tScene();
-		int ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\box.obj");
-		world->spawnObject(ind, 0, 2, -5);
+		//int ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\box.obj");
+		int ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
+		world->spawnObject(ind, 0, 0, -5);
+
+		ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
+		world->spawnObject(ind, 6, 0, -5);
+
+		//ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
+		//world->spawnObject(ind, -10, 0, -5);
+
+		//ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
+		//world->spawnObject(ind, 3, 5, 0);
+
+		//ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
+		//world->spawnObject(ind, 3, 5, -5);
 	}
 
 	void shutDown()

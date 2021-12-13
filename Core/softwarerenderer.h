@@ -35,6 +35,7 @@ public:
 		sGLColor = rasterizer->bufColor();
 
 		m2proj = new tTransformMatrix(m2projData);
+		m2c = new tTransformMatrix(m2cData);
 	}
 
 	void shutDown()
@@ -48,22 +49,29 @@ public:
 	void render()
 	{
 		rasterizer->sGLCleanBuffers();
-		tTransformMatrix* w2proj = cam->getW2Projection();
-
+		//tTransformMatrix* w2proj = cam->getW2Projection();
+		tTransformMatrix* cam2proj = cam->getM2Projection();
+		tTransformMatrix* world2cam = cam->getW2Mmatrix();
 		
-		
+		std::shared_ptr<tMesh> mesh;
+		//tMesh* mesh;
 		for (auto keyVal : *(world->getObjectsPtr()))
 		{
 			tMeshObject* obj = keyVal.second;
 			if (!obj->bIsVisible()) continue;
-			tTransformMatrix* transform = obj->getM2Wmatrix();
-			std::shared_ptr<tMesh> mesh = obj->getMeshPtr();
+			//tTransformMatrix* transform = obj->getM2Wmatrix();
+			tTransformMatrix* model2world = obj->getM2Wmatrix();
+			mesh = obj->getMeshPtr();
 
-			Multiply(*w2proj, *transform, m2proj);
-			rasterizer->setModel2ViewMatrix(m2proj->getDataPtr());
+			//Multiply(*w2proj, *transform, m2proj);
+			Multiply(*world2cam, *model2world, m2c);
+			//rasterizer->setModel2ViewMatrix(m2proj->getDataPtr());
+			rasterizer->setModel2CamMatrix(m2c->getDataPtr());
+			rasterizer->setCam2ViewMatrix(cam2proj->getDataPtr());
 			int size = mesh->vertsToBuffer(floatBuf);
 
 			rasterizer->setVertexData(floatBuf, size);
+			rasterizer->setMaterial(obj->getMaterialPtr());
 			size = mesh->trisToBuffer(intBuf);
 			rasterizer->sGLBufferData(size, intBuf);
 			rasterizer->sGLDrawElements(size);
@@ -92,11 +100,15 @@ private:
 	int pxlSize;
 	int* sGLColor;
 
-	int intBuf[1000];
-	float floatBuf[1000];
+	int intBuf[10000];
+	float floatBuf[10000];
 
 	float m2projData[16];
 	tTransformMatrix* m2proj;
+
+	float m2cData[16];
+	tTransformMatrix* m2c;
+
 
 	float curDt;
 

@@ -7,6 +7,7 @@
 #include "camera.h"
 #include "matrixmath.h"
 #include "assetloader.h"
+#include "materials.h"
 
 #include <unordered_map>
 #include <string>
@@ -105,19 +106,22 @@ class tMeshObject: public tTransformable
 public:
 	tMeshObject() : tTransformable() {};
 	tMeshObject(std::string _sName, std::string _sMeshName, std::shared_ptr<tMesh> _geometry): 
-		tTransformable(_sName), sMeshName(_sMeshName)
+	//tMeshObject(std::string _sName, std::string _sMeshName, tMesh* _geometry) :
+		tTransformable(_sName), sMeshName(_sMeshName), geometry(_geometry)
 	{
-		bindMesh(_geometry);
-		setName(_sName);
+		//bindMesh(_geometry);
+		//setName(_sName);
 	};
 	virtual ~tMeshObject() {};
 
 	void bindMesh(std::shared_ptr<tMesh> meshPtr) 
+	//void bindMesh(tMesh* meshPtr)
 	{
 		geometry = meshPtr;
 	}
 
 	std::shared_ptr<tMesh> getMeshPtr()
+	//tMesh* getMeshPtr()
 	{
 		return geometry;
 	}
@@ -135,11 +139,16 @@ public:
 
 	bool bIsVisible() { return bVisible; }
 	void setVisible(bool visibilityStatus) { bVisible = visibilityStatus; }
-
+	void setMaterialPtr(materialBase* _material) { material = _material; }
+	materialBase* getMaterialPtr() { return material; }
 
 protected:
 	std::string  sMeshName;
 	std::shared_ptr<tMesh> geometry;
+	//tMesh* geometry;
+	materialBase* material;
+
+
 	bool bVisible = false;
 };
 
@@ -169,6 +178,11 @@ public:
 	std::string getCameraName()
 	{
 		return sCameraName;
+	}
+
+	tTransformMatrix* getM2Projection()
+	{
+		return camera->getProjectionmatrix();
 	}
 
 	tTransformMatrix* getW2Projection()
@@ -202,6 +216,8 @@ public:
 	int addMeshObject(std::string MeshPath)
 	{
 		tMeshObject* obj = new tMeshObject(MeshPath, MeshPath, assetLoader.GetOrLoadMesh(MeshPath, MeshPath));
+		materialBase* mat = new normalWhiteLight;
+		obj->setMaterialPtr(mat);
 		int myidx = nextIdx;
 		sceneObjects[myidx] = obj;
 		nextIdx++;

@@ -1,8 +1,4 @@
 ﻿  Systems.cpp
-e:\git\pk42\systems\syssoftwarerenderer.h(57): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-e:\git\pk42\systems\syssoftwarerenderer.h(63): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-e:\git\pk42\systems\player.h(31): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-e:\git\pk42\systems\sysplayermechanics.h(169): warning C4305: 'initializing': truncation from 'double' to 'float'
 e:\git\pk42\systems\systems.h(36): warning C4251: 'coreSystem::vSystems': class 'std::vector<Node *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'coreSystem'
           with
           [
@@ -23,4 +19,5 @@ e:\git\pk42\systems\systems.h(49): warning C4251: 'pk42Core::vGameSystems': clas
           [
               _Ty=Node *
           ]
+     Creating library E:\git\pk42\bin\Systems.lib and object E:\git\pk42\bin\Systems.exp
   Systems.vcxproj -> E:\git\pk42\bin\Systems.dll

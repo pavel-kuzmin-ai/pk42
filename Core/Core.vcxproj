@@ -24,11 +24,14 @@
     <ClInclude Include="clock.h" />
     <ClInclude Include="consoledisplay.h" />
     <ClInclude Include="core.h" />
+    <ClInclude Include="glcommons.h" />
     <ClInclude Include="highrestimer.h" />
+    <ClInclude Include="materials.h" />
     <ClInclude Include="mathutils.h" />
     <ClInclude Include="matrixmath.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="modelregistry.h" />
+    <ClInclude Include="shaders.h" />
     <ClInclude Include="transformchain.h" />
     <ClInclude Include="quadtree.h" />
     <ClInclude Include="softwaregl.h" />

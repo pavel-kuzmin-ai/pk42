@@ -54,13 +54,13 @@ public:
 
 	void setCamera(tCameraObject* _cam)
 	{
-		_cam->setCamera(conf->screenWidth / conf->screenHeight);
+		_cam->setCamera((float)conf->screenWidth / conf->screenHeight);
 		renderer->setCamPtr(_cam);
 	}
 
 	void updateMeanFPS(float currFPS)
 	{
-		meanFPS = alpha * meanFPS + (1. - alpha) * currFPS;
+		meanFPS = alpha * meanFPS + (1.f - alpha) * currFPS;
 	}
 
 private:

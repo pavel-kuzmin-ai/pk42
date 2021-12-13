@@ -109,24 +109,75 @@ public:
 
 	void parseFace(std::stringstream& ss)
 	{
-		int x, y, z;
-		ss >> x;
-		ss >> y;
-		ss >> z;
-		addTriangle(x - 1, y - 1, z - 1);
+		//int x, y, z;
+
+		int vrtx[3];
+		int tex[3];
+		int norm[3];
+
+		int *trgarr[3];
+		trgarr[0] = vrtx;
+		trgarr[1] = tex;
+		trgarr[2] = norm;
+
+		
+		const char delim = '/';
+
+		std::string buf;
+
+		for (int i = 0; i < 3; i++)
+		{
+			ss >> buf;
+
+
+			size_t pos = buf.find(delim);
+			int arridx = 0;
+
+			while (pos != std::string::npos)
+			{
+				if (pos > 0)
+				{
+					std::stringstream tmpss;
+					for (size_t j = 0; j < pos; j++) tmpss << buf[j];
+					int val;
+					tmpss >> val;
+					trgarr[arridx][i] = val;
+				}
+
+				arridx++;
+				buf.erase(0, pos + 1);
+				pos = buf.find(delim);				
+			}
+			std::stringstream tmpss;
+			tmpss << buf;
+			int val;
+			tmpss >> val;
+			trgarr[arridx][i] = val;
+		}
+		
+			
+
+		addTriangle(vrtx[0] - 1, vrtx[1] - 1, vrtx[2] - 1);
 	}
 
 	void loadObj(const std::string& path)
 	{
 		std::ifstream fs(path);
 
-		std::string line, flag;
+		std::string line;
+		char flag;
 		while (std::getline(fs, line))
 		{
 			std::stringstream ss(line);
 			ss >> flag;
-			if (flag == "v") parseVertex(ss);
-			if (flag == "f") parseFace(ss);
+			
+			if (flag == 'v')
+			{
+				if (line[1] == ' ') parseVertex(ss);
+				if (line[1] == 'n') { ss >> flag; };
+				if (line[2] == 't') { ss >> flag; };
+			}
+			if (flag == 'f') parseFace(ss);
 		}	
 		setName(path);
 	}

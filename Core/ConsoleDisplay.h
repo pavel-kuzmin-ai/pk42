@@ -256,24 +256,6 @@ public:
 			consolePixel closestPix;
 			int minDist = 255 * 255 * 3;
 			
-			//for (auto pallet : uRgb2ConsoleCode)
-			/*for (int j=0; j < uRgb2ConsoleCode.size(); j++)
-			{
-				//consolePixel Pix = pallet.second;
-				consolePixel Pix = mappedPixels[j];
-
-				int idx = i * 3;
-				int dx = (_bufRGB[idx]     - Pix.cColorRGB.x());
-				int dy = (_bufRGB[idx + 1] - Pix.cColorRGB.y());
-				int dz = (_bufRGB[idx + 2] - Pix.cColorRGB.z());
-				int curDist = dx * dx + dy * dy + dz * dz;
-
-				if (curDist < minDist)
-				{
-					closestPix = Pix;
-					minDist = curDist;					
-				}
-			}*/
 			int iColorCode = color2RGBcode(colorRGB(_bufRGB[i * 3] / coarseStep * coarseStep,
 													_bufRGB[i * 3 + 1] / coarseStep * coarseStep,
 													_bufRGB[i * 3 + 2] / coarseStep * coarseStep));
