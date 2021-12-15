@@ -300,6 +300,11 @@ public:
 		//screenBuffers["fOutColor"] = fOutColor;
 		buildBuf(width, height, 3, fOutColorInit);
 		//screenBuffers["fOutColorInit"] = fOutColorInit;
+		for (int i = 0; i < width*height*3; i++)
+		{
+			fOutColor->fBuf[i] = 0.f;
+			fOutColorInit->fBuf[i] = 0.f;
+		}
 
 
 		zBuffer = new fBuffer;
@@ -368,7 +373,7 @@ public:
 				{
 					//int col = (int)(getBuf(screenBuffers["fOutColor"]->fBuf, i, j, width, c, 3) * 255);
 					int col = (int)(getBuf(fOutColor->fBuf, i, j, width, c, 3) * 255);
-					setBuf(iOutColor, col, i, height - j, width, c, 3);
+					setBuf(iOutColor, col, i, height - j - 1, width, c, 3);
 				}
 
 			}

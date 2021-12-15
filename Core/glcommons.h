@@ -179,7 +179,7 @@ int getBuf(int* buf, int ix, int iy, int width, int channelIdx, int totalChan)
 	return buf[idx + channelIdx];
 }
 
-float getBuf(float* buf, int ix, int iy, int width, int channelIdx, int totalChan)
+inline float getBuf(float* buf, int ix, int iy, int width, int channelIdx, int totalChan)
 {
 	int idx = (iy * width + ix) * totalChan;
 	return buf[idx + channelIdx];

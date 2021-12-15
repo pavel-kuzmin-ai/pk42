@@ -19,5 +19,4 @@ e:\git\pk42\systems\systems.h(49): warning C4251: 'pk42Core::vGameSystems': clas
           [
               _Ty=Node *
           ]
-     Creating library E:\git\pk42\bin\Systems.lib and object E:\git\pk42\bin\Systems.exp
   Systems.vcxproj -> E:\git\pk42\bin\Systems.dll

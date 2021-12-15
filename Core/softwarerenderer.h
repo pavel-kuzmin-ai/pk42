@@ -55,17 +55,15 @@ public:
 		
 		std::shared_ptr<tMesh> mesh;
 		//tMesh* mesh;
+		
 		for (auto keyVal : *(world->getObjectsPtr()))
 		{
 			tMeshObject* obj = keyVal.second;
-			if (!obj->bIsVisible()) continue;
-			//tTransformMatrix* transform = obj->getM2Wmatrix();
+			//if (!(obj->bIsVisible())) continue;
 			tTransformMatrix* model2world = obj->getM2Wmatrix();
 			mesh = obj->getMeshPtr();
 
-			//Multiply(*w2proj, *transform, m2proj);
 			Multiply(*world2cam, *model2world, m2c);
-			//rasterizer->setModel2ViewMatrix(m2proj->getDataPtr());
 			rasterizer->setModel2CamMatrix(m2c->getDataPtr());
 			rasterizer->setCam2ViewMatrix(cam2proj->getDataPtr());
 			int size = mesh->vertsToBuffer(floatBuf);
