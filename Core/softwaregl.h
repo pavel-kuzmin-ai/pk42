@@ -136,103 +136,52 @@ void rasterizeTriang(pxlShaderFunc pxlShader, tPixelData& vrtx0, tPixelData& vrt
 	int bboxMinY = (int)tmpVars.box.ymin;
 	int bboxMaxY = (int)tmpVars.box.ymax;
 	
-	float triangDoubleArea = edgePointDoubleArea(vrtx0, vrtx2, vrtx1);
+	float triangDoubleArea = edgePointDoubleArea(vrtx0, vrtx1, vrtx2);
+	//if (triangDoubleArea <= 1e-3) return;
 	float invTriangDoubleArea = -1.f;
 	if (triangDoubleArea != 0.f) invTriangDoubleArea = 1.f / triangDoubleArea;
 
 	
 	
+	// using cross to calculate areas of triangles created by edges and test point. All areas + mean point inside triangle
+	// key feature - one time cross calculation. after that areas can be changed by addition:
+	//(x1 - x0)*(y2 - y0) - (y1 - y0)*(x2 - x0) = y2 * rx1 - y0 * rx1 - x2 * ry1 + x0 * ry1 = (y2prev - y0)*rx1 + rx1 * dy - (x2prev + dx - x0)*ry1 =
+	//= (y2prev - y0)*rx1 - (x2prev - x0)*ry1 + rx1 * dy - ry1 * dx = prev_area + rx1 * dy - ry1 * dx
+	tmpVars.currVrtx.xyz[0] = bboxMinX + 0.5f;
+	tmpVars.currVrtx.xyz[1] = bboxMinY + 0.5f;
+
+	float darea2 = edgePointDoubleArea(vrtx0, vrtx1, tmpVars.currVrtx);
+	
+	float ry2 = vrtx1.xyz[1] - vrtx0.xyz[1];
+	float rx2 = vrtx1.xyz[0] - vrtx0.xyz[0];
+	float darea0 = edgePointDoubleArea(vrtx1, vrtx2, tmpVars.currVrtx);
+	float ry0 = vrtx2.xyz[1] - vrtx1.xyz[1];
+	float rx0 = vrtx2.xyz[0] - vrtx1.xyz[0];
+
+	float darea1 = edgePointDoubleArea(vrtx2, vrtx0, tmpVars.currVrtx);
+	float ry1 = vrtx0.xyz[1] - vrtx2.xyz[1];
+	float rx1 = vrtx0.xyz[0] - vrtx2.xyz[0];
+
 	for (int i = bboxMinX; i <= bboxMaxX; i++)
 	{
 
 		tmpVars.currVrtx.xyz[0] = i + 0.5f;
-		float l1[4], l0[4];
-		l0[0] = tmpVars.currVrtx.xyz[0];
-		l0[1] = tmpVars.box.ymin; //(float)bboxMinY;
-		l0[2] = tmpVars.currVrtx.xyz[0];
-		l0[3] = tmpVars.box.ymax; //(float)bboxMaxY;
 
-		int intersections_found = 0;
-		float ts[2], startEnd[2] = {-1.f,-1.f};
-		bool oneFound = false;
-		bool bHasInters = false;
-
-		l1[0] = vrtx0.xyz[0];
-		l1[1] = vrtx0.xyz[1];
-		l1[2] = vrtx1.xyz[0];
-		l1[3] = vrtx1.xyz[1];
-
+		float darea1Init = darea1;
+		float darea2Init = darea2;
+		float darea0Init = darea0;
 		
-		bHasInters = intersectionParams(l0, l1, ts);
-		if ((bHasInters) && (ts[1] >= 0.f) && (ts[1] <= 1.f))
-		{
-			float pTemp = l0[1] + (l0[3] - l0[1]) * ts[0];
-			pTemp = clamp(pTemp, tmpVars.box.ymin, tmpVars.box.ymax);
-			startEnd[0] = pTemp;
-			oneFound = true;
-			intersections_found++;
-		}
-
-		l1[0] = vrtx1.xyz[0];
-		l1[1] = vrtx1.xyz[1];
-		l1[2] = vrtx2.xyz[0];
-		l1[3] = vrtx2.xyz[1];
-
-		bHasInters = intersectionParams(l0, l1, ts);
-		if ((bHasInters) && (ts[1] >= 0.f) && (ts[1] <= 1.f))
-		{
-			float pTemp = l0[1] + (l0[3] - l0[1]) * ts[0];
-			pTemp = clamp(pTemp, tmpVars.box.ymin, tmpVars.box.ymax);
-			if (oneFound) 
-			{
-				if (pTemp < startEnd[0])
-				{
-					startEnd[1] = startEnd[0];
-					startEnd[0] = pTemp;
-				}
-				else startEnd[1] = pTemp;
-			}
-			else startEnd[0] = pTemp;
-			oneFound = true;
-			intersections_found++;
-		}
-
-		l1[0] = vrtx2.xyz[0];
-		l1[1] = vrtx2.xyz[1];
-		l1[2] = vrtx0.xyz[0];
-		l1[3] = vrtx0.xyz[1];
-
-		bHasInters = intersectionParams(l0, l1, ts);
-		if ((bHasInters) && (ts[1] >= 0.f) && (ts[1] <= 1.f))
-		{
-			float pTemp = l0[1] + (l0[3] - l0[1]) * ts[0];
-			pTemp = clamp(pTemp, tmpVars.box.ymin, tmpVars.box.ymax);
-			if (oneFound)
-			{
-				if (pTemp < startEnd[0])
-				{
-					startEnd[1] = startEnd[0];
-					startEnd[0] = pTemp;
-				}
-				else startEnd[1] = pTemp;
-			}
-			else startEnd[0] = pTemp;
-			oneFound = true;
-			intersections_found++;
-		}
 		
 		for (int j = bboxMinY; j <= bboxMaxY; j++)
 		{
 			tmpVars.currVrtx.xyz[1] = j + 0.5f;
 
-			
-			bool inside = ((intersections_found==2)&&(tmpVars.currVrtx.xyz[1]> startEnd[0]) && (tmpVars.currVrtx.xyz[1] < startEnd[1]));
-
+			bool inside =( (darea2>0)&& (darea1 > 0)&& (darea0 > 0));
 
 			if (inside)
 			{
-				float mult2 = edgePointDoubleArea(vrtx0, vrtx1, tmpVars.currVrtx) * invTriangDoubleArea;
-				float mult0 = edgePointDoubleArea(vrtx1, vrtx2, tmpVars.currVrtx) * invTriangDoubleArea;
+				float mult2 = darea2 * invTriangDoubleArea;
+				float mult0 = darea0 * invTriangDoubleArea;
 				float mult1 = 1.0f - mult2 - mult0;
 
 				
@@ -245,7 +194,18 @@ void rasterizeTriang(pxlShaderFunc pxlShader, tPixelData& vrtx0, tPixelData& vrt
 					blendColor(tmpVars.col, outColor, i, j, width);
 				}
 			}
+			darea2 += rx2;
+			darea0 += rx0;
+			darea1 += rx1;
 		}
+
+		darea2 = darea2Init;
+		darea0 = darea0Init;
+		darea1 = darea1Init;
+
+		darea2 -= ry2;
+		darea0 -= ry0;
+		darea1 -= ry1;
 	}
 }
 
