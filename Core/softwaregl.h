@@ -118,6 +118,7 @@ struct tTmpCalcData
 	tMaterialParam tmpMatPar;
 	tPixelData currVrtx;
 	tBbox box;
+	tBboxInt boxInt;
 } tmpVars;
 
 void rasterizeTriang(pxlShaderFunc pxlShader, tPixelData& vrtx0, tPixelData& vrtx1, tPixelData& vrtx2,
@@ -128,13 +129,18 @@ void rasterizeTriang(pxlShaderFunc pxlShader, tPixelData& vrtx0, tPixelData& vrt
 	upscaleCoords(vrtx1, width, height);
 	upscaleCoords(vrtx2, width, height);
 	
-	setBbox(vrtx0, vrtx1, vrtx2, tmpVars.box, 0, 0, -1, (float)width, (float)height, 1);
+	//setBbox(vrtx0, vrtx1, vrtx2, tmpVars.box, 0, 0, -1, (float)width, (float)height, 1);
+	setBbox(vrtx0, vrtx1, vrtx2, tmpVars.boxInt, 0, 0, -1.f, width - 1, height - 1, 1.f);
 
 
-	int bboxMinX = (int)tmpVars.box.xmin;
-	int bboxMaxX = (int)tmpVars.box.xmax;
-	int bboxMinY = (int)tmpVars.box.ymin;
-	int bboxMaxY = (int)tmpVars.box.ymax;
+	//int bboxMinX = (int)tmpVars.box.xmin;
+	//int bboxMaxX = (int)tmpVars.box.xmax;
+	//int bboxMinY = (int)tmpVars.box.ymin;
+	//int bboxMaxY = (int)tmpVars.box.ymax;
+	int bboxMinX = tmpVars.boxInt.xmin;
+	int bboxMaxX = tmpVars.boxInt.xmax;
+	int bboxMinY = tmpVars.boxInt.ymin;
+	int bboxMaxY = tmpVars.boxInt.ymax;
 	
 	float triangDoubleArea = edgePointDoubleArea(vrtx0, vrtx1, vrtx2);
 	//if (triangDoubleArea <= 1e-3) return;
@@ -143,7 +149,7 @@ void rasterizeTriang(pxlShaderFunc pxlShader, tPixelData& vrtx0, tPixelData& vrt
 
 	
 	
-	// using cross to calculate areas of triangles created by edges and test point. All areas + mean point inside triangle
+	// using cross to calculate areas of triangles created by edges and test point. All areas positive => point inside triangle
 	// key feature - one time cross calculation. after that areas can be changed by addition:
 	//(x1 - x0)*(y2 - y0) - (y1 - y0)*(x2 - x0) = y2 * rx1 - y0 * rx1 - x2 * ry1 + x0 * ry1 = (y2prev - y0)*rx1 + rx1 * dy - (x2prev + dx - x0)*ry1 =
 	//= (y2prev - y0)*rx1 - (x2prev - x0)*ry1 + rx1 * dy - ry1 * dx = prev_area + rx1 * dy - ry1 * dx
@@ -327,13 +333,13 @@ public:
 		}
 		for (int i = 0; i < width; i++)
 		{
-			for (int j = 0; j < height; j++)
+			for (int j = height-1; j >= 0; j--)
 			{
 				for (int c = 0; c < 3; c++)
 				{
 					//int col = (int)(getBuf(screenBuffers["fOutColor"]->fBuf, i, j, width, c, 3) * 255);
 					int col = (int)(getBuf(fOutColor->fBuf, i, j, width, c, 3) * 255);
-					setBuf(iOutColor, col, i, height - j - 1, width, c, 3);
+					setBuf(iOutColor, col, i, j, width, c, 3);
 				}
 
 			}

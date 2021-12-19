@@ -28,8 +28,20 @@ public:
 		UpdateTransforms();
 	}
 	void setParams(float _ratio)
+
 	{
+		ratio = _ratio;
 		height = width / ratio;
+
+		UpdateTransforms();
+	}
+
+	void setParams(int _w, int _h)
+
+	{
+		ratio = (float)_w/_h;
+		height = width / ratio;
+
 		UpdateTransforms();
 	}
 

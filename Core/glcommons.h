@@ -137,6 +137,12 @@ struct tBbox
 	float xmin, xmax, ymin, ymax, zmin, zmax;
 };
 
+struct tBboxInt
+{
+	int xmin, xmax, ymin, ymax;
+	float zmin, zmax;
+};
+
 
 float edgePointDoubleArea(tPixelData& vrtx0, tPixelData& vrtx1, tPixelData& testVrtx)
 {
@@ -145,6 +151,7 @@ float edgePointDoubleArea(tPixelData& vrtx0, tPixelData& vrtx1, tPixelData& test
 
 void setBbox(tPixelData& vrtx0, tPixelData& vrtx1, tPixelData& vrtx2, tBbox& box, float minX, float minY, float minZ, float maxX, float maxY, float maxZ)
 {
+	
 	box.xmin = std::fmaxf(std::fminf(vrtx0.xyz[0], std::fminf(vrtx1.xyz[0], vrtx2.xyz[0])), minX);
 	box.xmax = std::fminf(std::fmaxf(vrtx0.xyz[0], std::fmaxf(vrtx1.xyz[0], vrtx2.xyz[0])), maxX);
 
@@ -153,6 +160,33 @@ void setBbox(tPixelData& vrtx0, tPixelData& vrtx1, tPixelData& vrtx2, tBbox& box
 
 	box.zmin = std::fmaxf(std::fminf(vrtx0.xyz[2], std::fminf(vrtx1.xyz[2], vrtx2.xyz[2])), minZ);
 	box.zmax = std::fminf(std::fmaxf(vrtx0.xyz[2], std::fmaxf(vrtx1.xyz[2], vrtx2.xyz[2])), maxZ);
+	
+}
+
+inline int imax(int x, int y)
+{
+	if (x >= y) return x;
+	return y;
+}
+
+inline int imin(int x, int y)
+{
+	if (x <= y) return x;
+	return y;
+}
+
+void setBbox(tPixelData& vrtx0, tPixelData& vrtx1, tPixelData& vrtx2, tBboxInt& box, int minX, int minY, float minZ, int maxX, int maxY, float maxZ)
+{
+
+	box.xmin = imax(int(std::fminf(vrtx0.xyz[0], std::fminf(vrtx1.xyz[0], vrtx2.xyz[0])) + 0.5f), minX);
+	box.xmax = imin(int(std::fmaxf(vrtx0.xyz[0], std::fmaxf(vrtx1.xyz[0], vrtx2.xyz[0])) + 0.5f), maxX);
+
+	box.ymin = imax(int(std::fminf(vrtx0.xyz[1], std::fminf(vrtx1.xyz[1], vrtx2.xyz[1]))), minY);
+	box.ymax = imin(int(std::fmaxf(vrtx0.xyz[1], std::fmaxf(vrtx1.xyz[1], vrtx2.xyz[1]))), maxY);
+
+	box.zmin = std::fmaxf(std::fminf(vrtx0.xyz[2], std::fminf(vrtx1.xyz[2], vrtx2.xyz[2])), minZ);
+	box.zmax = std::fminf(std::fmaxf(vrtx0.xyz[2], std::fmaxf(vrtx1.xyz[2], vrtx2.xyz[2])), maxZ);
+
 }
 
 void upscaleCoords(tPixelData& _vrtx, int width, int height)
@@ -278,6 +312,14 @@ bool intersectionParams(float* r0, float* r1, float *out)
 inline float clamp(float x, float minimum, float maximum)
 {
 	float out = x;
+	if (out < minimum) out = minimum;
+	if (out > maximum) out = maximum;
+	return out;
+}
+
+inline int clamp(int x, int minimum, int maximum)
+{
+	int out = x;
 	if (out < minimum) out = minimum;
 	if (out > maximum) out = maximum;
 	return out;

@@ -196,6 +196,12 @@ public:
 		camera->setParams(_ratio);
 	}
 
+	void setCamera(int _w, int _h)
+
+	{
+		camera->setParams(_w, _h);
+	}
+
 protected:
 	std::string  sCameraName;
 	std::shared_ptr<tCamera> camera;
