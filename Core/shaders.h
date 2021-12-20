@@ -23,12 +23,6 @@ void moveNormalsToLocations(tPixelData& in, tPixelData& out)
 	out.normal[1] = in.xyz[1] + in.normal[1];
 	out.normal[2] = in.xyz[2] + in.normal[2];
 
-	if (in.faceLeader)
-	{
-		out.faceNormal[0] = in.xyz[0] + in.faceNormal[0];
-		out.faceNormal[1] = in.xyz[1] + in.faceNormal[1];
-		out.faceNormal[2] = in.xyz[2] + in.faceNormal[2];
-	}
 }
 
 void restoreNormals(tPixelData& in, tPixelData& out)
@@ -36,12 +30,7 @@ void restoreNormals(tPixelData& in, tPixelData& out)
 	out.normal[0] = in.normal[0] - in.xyz[0];
 	out.normal[1] = in.normal[1] - in.xyz[1];
 	out.normal[2] = in.normal[2] - in.xyz[2];
-	if (in.faceLeader)
-	{
-		out.faceNormal[0] = in.faceNormal[0] - in.xyz[0];
-		out.faceNormal[1] = in.faceNormal[1] - in.xyz[1];
-		out.faceNormal[2] = in.faceNormal[2] - in.xyz[2];
-	}
+	
 }
 
 void transformVerts(tPixelData& in, tMatrix* M, tPixelData& out)
@@ -63,15 +52,6 @@ void transformNormals(tPixelData& in, tMatrix* M, tPixelData& out)
 	out.normal[1] = tmpOutput->getValue(1, 0);
 	out.normal[2] = tmpOutput->getValue(2, 0);
 
-	if (in.faceLeader)
-	{
-		arr2Matrix(in.faceNormal, *tmpCoords, 3, 0);
-
-		Multiply(*M, *tmpCoords, tmpOutput);
-		out.faceNormal[0] = tmpOutput->getValue(0, 0);
-		out.faceNormal[1] = tmpOutput->getValue(1, 0);
-		out.faceNormal[2] = tmpOutput->getValue(2, 0);
-	}
 }
 
 void calcViewDirection(tPixelData& in, tPixelData& out, bool perspective = true)
@@ -79,9 +59,9 @@ void calcViewDirection(tPixelData& in, tPixelData& out, bool perspective = true)
 	if (perspective)
 	{
 		float overlen = 1.f / euclideanDist(in.xyz);
-		out.viewDirection[0] = in.xyz[0] * overlen;
-		out.viewDirection[1] = in.xyz[1] * overlen;
-		out.viewDirection[2] = in.xyz[2] * overlen;
+		out.viewDirection[0] = in.xyzCam[0] * overlen;
+		out.viewDirection[1] = in.xyzCam[1] * overlen;
+		out.viewDirection[2] = in.xyzCam[2] * overlen;
 	}
 	else
 		out.viewDirection[0] = 0.f;
@@ -94,6 +74,7 @@ void geometryShader(tPixelData& in, tPixelData& out, tMatrix* M2C, tMatrix* C2V)
 {
 	moveNormalsToLocations(in, out);
 	transformVerts(in, M2C, out);
+	std::memcpy(out.xyzCam, out.xyz, 3 * sizeof(float));
 	transformNormals(out, M2C, out);
 	restoreNormals(out, out);
 	calcViewDirection(out, out, false);

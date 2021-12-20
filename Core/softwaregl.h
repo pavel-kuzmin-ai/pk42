@@ -367,32 +367,34 @@ public:
 
 	tPixelData pxl0, pxl1, pxl2;
 	float dir0[3], dir1[3], dir2[3];
-	float faceNormal[3];
+	float faceNormalHardcoded[3], faceNormal[3];;
+	float midpoint[3];
 
 	void sGLDrawTriangle(int vertexIdx0, int vertexIdx1, int vertexIdx2)
 	{
 		//tPixelData pxl0, pxl1, pxl2;
 		verts2tPixelData(vertexIdx0, &pxl0);
-		pxl0.faceLeader = true;
 		verts2tPixelData(vertexIdx1, &pxl1);
 		verts2tPixelData(vertexIdx2, &pxl2);
 
-		pxl0.viewDirection = dir0;
-		pxl1.viewDirection = dir1;
-		pxl2.viewDirection = dir2;
+		calcFaceNormals(pxl0, pxl1, pxl2, faceNormalHardcoded);
+		std::memcpy(pxl0.normal, faceNormalHardcoded, 3 * sizeof(float));
+		std::memcpy(pxl1.normal, faceNormalHardcoded, 3 * sizeof(float));
+		std::memcpy(pxl2.normal, faceNormalHardcoded, 3 * sizeof(float));
 
-
-		calcFaceNormals(pxl0, pxl1, pxl2, faceNormal);
-		pxl0.faceNormal = faceNormal;
 		applyVertexShader(geometryShader, &pxl0, &pxl0);
+		applyVertexShader(geometryShader, &pxl1, &pxl1);
+		applyVertexShader(geometryShader, &pxl2, &pxl2);
+		calcFaceNormalsCam(pxl0, pxl1, pxl2, faceNormal);
 
-		bool backFace = dot(pxl0.viewDirection, pxl0.faceNormal) > 0;
+		float oneThirdOverlen = 1.f / (euclideanDist(midpoint)*3.f);
+
+		midpoint[0] = (pxl0.xyzCam[0] + pxl1.xyzCam[0] + pxl2.xyzCam[0])*oneThirdOverlen;
+		midpoint[1] = (pxl0.xyzCam[0] + pxl1.xyzCam[1] + pxl2.xyzCam[1])*oneThirdOverlen;
+		midpoint[2] = (pxl0.xyzCam[0] + pxl1.xyzCam[2] + pxl2.xyzCam[2])*oneThirdOverlen;
+		bool backFace = dot(midpoint, faceNormal) > 0;
 		if (backFace) return;
 	
-		applyVertexShader(geometryShaderCut, &pxl1, &pxl1);
-		applyVertexShader(geometryShaderCut, &pxl2, &pxl2);
-		pxl1.viewDirection = dir0;
-		pxl2.viewDirection = dir0;
 		
 		
 		//std::memcpy(pxl0.normal, pxl0.faceNormal, 3 * sizeof(float));

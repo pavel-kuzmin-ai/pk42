@@ -18,10 +18,8 @@ struct tPixelData
 	float xyz[3];
 	float uv[2];
 	float normal[3];
-	float* faceNormal;
-	float* viewDirection;
-	bool faceLeader = false;
-	bool normalFromFace = true;
+	float xyzCam[3];
+	float viewDirection[3];
 };
 
 struct tTriangleData
@@ -131,6 +129,21 @@ void calcFaceNormals(tPixelData& p0, tPixelData& p1, tPixelData& p2, float* out)
 	normalize(out);
 };
 
+void calcFaceNormalsCam(tPixelData& p0, tPixelData& p1, tPixelData& p2, float* out)
+{
+	float v1[3], v2[3];
+
+	v1[0] = p1.xyzCam[0] - p0.xyzCam[0];
+	v1[1] = p1.xyzCam[1] - p0.xyzCam[1];
+	v1[2] = p1.xyzCam[2] - p0.xyzCam[2];
+
+	v2[0] = p2.xyzCam[0] - p0.xyzCam[0];
+	v2[1] = p2.xyzCam[1] - p0.xyzCam[1];
+	v2[2] = p2.xyzCam[2] - p0.xyzCam[2];
+	cross(v1, v2, out);
+	normalize(out);
+};
+
 
 struct tBbox
 {
@@ -235,30 +248,17 @@ void interpolatePixelData(tPixelData& res, tPixelData& pxl0, tPixelData& pxl1, t
 	}
 
 	
-	//std::memcpy(res.normal, pxl0.normal, 3 * sizeof(float));
-
-	if (pxl0.normalFromFace && pxl1.normalFromFace && pxl2.normalFromFace) std::memcpy(res.normal, pxl0.faceNormal, 3 * sizeof(float));
-	else
+	
 	for (int i = 0; i < 3; i++)
 	{
-		res.normal[i] = 0.f;
-		if (pxl0.normalFromFace) res.normal[i] += lambda0 * pxl0.faceNormal[i];
-		else res.normal[i] += lambda0 * pxl0.normal[i];
-
-		if (pxl1.normalFromFace) res.normal[i] += lambda1 * pxl0.faceNormal[i];
-		else res.normal[i] += lambda1 * pxl1.normal[i];
-
-		if (pxl2.normalFromFace) res.normal[i] += lambda2 * pxl0.faceNormal[i];
-		else res.normal[i] += lambda2 * pxl2.normal[i];
-		//res.normal[i] = weightedTriSum(pxl0.normal[i], pxl1.normal[i], pxl2.normal[i], lambda0, lambda1, lambda2);
+		res.normal[i] = weightedTriSum(pxl0.normal[i], pxl1.normal[i], pxl2.normal[i], lambda0, lambda1, lambda2);
 	}
 	
-	//std::memcpy(res.viewDirection, pxl0.viewDirection, 3 * sizeof(float));
-	res.viewDirection = pxl0.viewDirection;
-	//for (int i = 0; i < 3; i++)
-	//{
-	//	res.viewDirection[i] = weightedTriSum(pxl0.viewDirection[i], pxl1.viewDirection[i], pxl2.viewDirection[i], lambda0, lambda1, lambda2);
-	//}
+
+	for (int i = 0; i < 3; i++)
+	{
+		res.viewDirection[i] = weightedTriSum(pxl0.viewDirection[i], pxl1.viewDirection[i], pxl2.viewDirection[i], lambda0, lambda1, lambda2);
+	}
 }
 
 bool getLineParams(float x0s, float y0s, float x0e, float y0e, float *params)
