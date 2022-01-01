@@ -84,7 +84,16 @@ public:
 
 		std::getline(ss, cmd);
 		message msg(sName, cmd, 1);
-		qOut->push(msg);		
+		qOut->push(msg);
+
+
+		player->getAngles(fBuf);
+		ss << "cameraAngle " << fBuf[0] << " " << fBuf[1] << " " << fBuf[2] << '\n';
+
+		std::getline(ss, cmd);
+		
+		qOut->push(message(sName, cmd, 1));
+
 		return 0;
 	}
 

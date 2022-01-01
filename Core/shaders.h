@@ -41,6 +41,7 @@ void transformVerts(tPixelData& in, tMatrix* M, tPixelData& out)
 	out.xyz[0] = tmpOutput->getValue(0, 0);
 	out.xyz[1] = tmpOutput->getValue(1, 0);
 	out.xyz[2] = tmpOutput->getValue(2, 0);
+	
 }
 
 void transformNormals(tPixelData& in, tMatrix* M, tPixelData& out)
@@ -74,10 +75,12 @@ void geometryShader(tPixelData& in, tPixelData& out, tMatrix* M2C, tMatrix* C2V)
 {
 	moveNormalsToLocations(in, out);
 	transformVerts(in, M2C, out);
+	out.zDepth = out.xyz[2];
 	std::memcpy(out.xyzCam, out.xyz, 3 * sizeof(float));
 	transformNormals(out, M2C, out);
 	restoreNormals(out, out);
 	calcViewDirection(out, out, false);
+	//std::memcpy(in.xyz, out.xyz, 3 * sizeof(float));
 	transformVerts(out, C2V, out);
 }
 

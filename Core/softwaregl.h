@@ -87,11 +87,12 @@ void rasterizeEdge(tPixelData& vrtx0, tPixelData& vrtx1, float* outColor, int wi
 }
 
 
-bool zTestAndSet(tPixelData& vrtx, float* zBuf, int i, int j, int width, int maxZ)
+bool zTest(tPixelData& vrtx, float* zBuf, int i, int j, int width, int maxZ)
 {
 	int idx = j * width + i;
-	bool res = (vrtx.xyz[2] > getBuf(zBuf, i, j, width, 0, 1)) && (vrtx.xyz[2] <= maxZ);
-	setBuf(zBuf, vrtx.xyz[2], i, j, width, 0, 1);
+	bool res = (vrtx.xyz[2] < getBuf(zBuf, i, j, width, 0, 1)) && (vrtx.xyz[2] < 1.f) && (vrtx.xyz[2] > -1.f);
+	//bool res = (1.f/vrtx.xyzCam[2] > 1.f / getBuf(zBuf, i, j, width, 0, 1));
+	
 	return res;
 }
 
@@ -121,10 +122,31 @@ struct tTmpCalcData
 	tBboxInt boxInt;
 } tmpVars;
 
+inline bool allLess(float a, float b, float c, float thresh)
+{
+	return (a < thresh) && (b < thresh) && (c < thresh);
+}
+
+inline bool allGreater(float a, float b, float c, float thresh)
+{
+	return (a > thresh) && (b > thresh) && (c > thresh);
+}
+
+bool excludeFace(tPixelData& vrtx0, tPixelData& vrtx1, tPixelData& vrtx2)
+{
+	if (allLess(vrtx0.xyz[0], vrtx1.xyz[0], vrtx2.xyz[0], -1)) return true;
+	if (allLess(vrtx0.xyz[1], vrtx1.xyz[1], vrtx2.xyz[1], -1)) return true;
+	if (allLess(vrtx0.xyz[2], vrtx1.xyz[2], vrtx2.xyz[2], -1)) return true;
+	if (allGreater(vrtx0.xyz[0], vrtx1.xyz[0], vrtx2.xyz[0], 1)) return true;
+	if (allGreater(vrtx0.xyz[1], vrtx1.xyz[1], vrtx2.xyz[1], 1)) return true;
+	if (allGreater(vrtx0.xyz[2], vrtx1.xyz[2], vrtx2.xyz[2], 1)) return true;
+	return false;
+}
+
 void rasterizeTriang(pxlShaderFunc pxlShader, tPixelData& vrtx0, tPixelData& vrtx1, tPixelData& vrtx2,
 	float* outColor, float* zBuf, int width, int height)
 {
-	
+	if (excludeFace(vrtx0, vrtx1, vrtx2)) return;
 	upscaleCoords(vrtx0, width, height);
 	upscaleCoords(vrtx1, width, height);
 	upscaleCoords(vrtx2, width, height);
@@ -193,8 +215,9 @@ void rasterizeTriang(pxlShaderFunc pxlShader, tPixelData& vrtx0, tPixelData& vrt
 				
 				tmpVars.currVrtx.xyz[2] = weightedTriSum(vrtx0.xyz[2], vrtx1.xyz[2], vrtx2.xyz[2], mult0, mult1, mult2);
 				
-				if (zTestAndSet(tmpVars.currVrtx, zBuf, i, j, width, 1))
+				if (zTest(tmpVars.currVrtx, zBuf, i, j, width, 1))
 				{
+					setBuf(zBuf, tmpVars.currVrtx.xyz[2], i, j, width, 0, 1);
 					interpolatePixelData(tmpVars.currVrtx, vrtx0, vrtx1, vrtx2, mult0, mult1, mult2);
 					pxlShader(tmpVars.currVrtx, &tmpVars.tmpMatPar, tmpVars.col);
 					blendColor(tmpVars.col, outColor, i, j, width);
@@ -281,8 +304,8 @@ public:
 		//screenBuffers["cleanZbuffer"] = cleanZbuffer;
 		for (int i = 0; i < width*height; i++)
 		{
-			zBuffer->fBuf[i] = -1.f;
-			cleanZbuffer->fBuf[i] = -1.f;
+			zBuffer->fBuf[i] = 1.f;
+			cleanZbuffer->fBuf[i] = 1.f;
 		}
 
 		Model2CamMatrix = new tMatrix(4, 4, Model2Cam);
@@ -385,13 +408,13 @@ public:
 		applyVertexShader(geometryShader, &pxl0, &pxl0);
 		applyVertexShader(geometryShader, &pxl1, &pxl1);
 		applyVertexShader(geometryShader, &pxl2, &pxl2);
-		calcFaceNormalsCam(pxl0, pxl1, pxl2, faceNormal);
+		calcFaceNormals(pxl0, pxl1, pxl2, faceNormal);
 
 		float oneThirdOverlen = 1.f / (euclideanDist(midpoint)*3.f);
 
-		midpoint[0] = (pxl0.xyzCam[0] + pxl1.xyzCam[0] + pxl2.xyzCam[0])*oneThirdOverlen;
-		midpoint[1] = (pxl0.xyzCam[0] + pxl1.xyzCam[1] + pxl2.xyzCam[1])*oneThirdOverlen;
-		midpoint[2] = (pxl0.xyzCam[0] + pxl1.xyzCam[2] + pxl2.xyzCam[2])*oneThirdOverlen;
+		midpoint[0] = (pxl0.xyz[0] + pxl1.xyz[0] + pxl2.xyz[0])*oneThirdOverlen;
+		midpoint[1] = (pxl0.xyz[0] + pxl1.xyz[1] + pxl2.xyz[1])*oneThirdOverlen;
+		midpoint[2] = (pxl0.xyz[0] + pxl1.xyz[2] + pxl2.xyz[2])*oneThirdOverlen;
 		bool backFace = dot(midpoint, faceNormal) > 0;
 		if (backFace) return;
 	

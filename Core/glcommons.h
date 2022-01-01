@@ -19,6 +19,7 @@ struct tPixelData
 	float uv[2];
 	float normal[3];
 	float xyzCam[3];
+	float zDepth = -99999999999.f;
 	float viewDirection[3];
 };
 
@@ -197,8 +198,8 @@ void setBbox(tPixelData& vrtx0, tPixelData& vrtx1, tPixelData& vrtx2, tBboxInt& 
 	box.ymin = imax(int(std::fminf(vrtx0.xyz[1], std::fminf(vrtx1.xyz[1], vrtx2.xyz[1]))), minY);
 	box.ymax = imin(int(std::fmaxf(vrtx0.xyz[1], std::fmaxf(vrtx1.xyz[1], vrtx2.xyz[1]))), maxY);
 
-	box.zmin = std::fmaxf(std::fminf(vrtx0.xyz[2], std::fminf(vrtx1.xyz[2], vrtx2.xyz[2])), minZ);
-	box.zmax = std::fminf(std::fmaxf(vrtx0.xyz[2], std::fmaxf(vrtx1.xyz[2], vrtx2.xyz[2])), maxZ);
+	//box.zmin = std::fmaxf(std::fminf(vrtx0.xyz[2], std::fminf(vrtx1.xyz[2], vrtx2.xyz[2])), minZ);
+	//box.zmax = std::fminf(std::fmaxf(vrtx0.xyz[2], std::fmaxf(vrtx1.xyz[2], vrtx2.xyz[2])), maxZ);
 
 }
 
