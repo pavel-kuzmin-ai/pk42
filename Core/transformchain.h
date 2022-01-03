@@ -120,6 +120,7 @@ public:
 		z = _z;
 		coords2TranslationMatrix(x, y, z, TranslM2W);
 		coords2TranslationMatrix(-x, -y, -z, TranslW2M);
+
 	}
 
 	void translate(float dx, float dy, float dz)
@@ -168,17 +169,8 @@ public:
 	void UpdateTransforms()
 	{
 
-		//Multiply(*TranslM2W, *RotXM2W, tmpTransform);
-		//Multiply(*tmpTransform, *RotZM2W, TransfM2W);
-		//Multiply(*TransfM2W, *RotYM2W, tmpTransform);
-		//Multiply(*tmpTransform, *ScM2W, TransfM2W);
-
-		//Multiply(*ScW2M, *RotXW2M, tmpTransform);
-		//Multiply(*tmpTransform, *RotZW2M, TransfW2M);
-		//Multiply(*TransfW2M, *RotYW2M, tmpTransform);
-		//Multiply(*tmpTransform, *TranslW2M, TransfW2M);
-
-
+		
+		/*
 		Multiply(*RotXM2W, *RotZM2W, tmpTransform);
 		Multiply(*tmpTransform, *RotYM2W, RotM2W);
 		Transpose(*RotM2W, RotW2M);
@@ -189,7 +181,18 @@ public:
 		
 		Multiply(*ScW2M, *RotW2M, tmpTransform);
 		Multiply(*tmpTransform, *TranslW2M, TransfW2M);
+		*/
+		
+		Multiply(*RotXM2W, *RotZM2W, tmpTransform);
+		Multiply(*tmpTransform, *RotYM2W, RotW2M);
+		Transpose(*RotW2M, RotM2W);
+		
+		Multiply(*TranslM2W, *RotM2W, tmpTransform);
+		Multiply(*tmpTransform, *ScM2W, TransfM2W);
 
+		
+		Multiply(*ScW2M, *RotW2M, tmpTransform);
+		Multiply(*tmpTransform, *TranslW2M, TransfW2M);
 		
 	}
 

@@ -19,8 +19,8 @@ public:
 		int ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
 		world->spawnObject(ind, 0, 0, -5);
 
-		//ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
-		//world->spawnObject(ind, 0, 0, -5);
+		ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
+		world->spawnObject(ind, 0, 0, -5);
 
 		//ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\box.obj");
 		//world->spawnObject(ind, -2, 0, -5);
@@ -28,22 +28,22 @@ public:
 		ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
 		world->spawnObject(ind, -2, 2, -5);
 
-		//ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
-		//world->spawnObject(ind, 0, -2, -5);
+		ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
+		world->spawnObject(ind, 0, -2, -5);
 
 
 
-		//ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
-		//world->spawnObject(ind, 0, 2, -5);
+		ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
+		world->spawnObject(ind, 0, 2, -5);
 
-		//ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
-		//world->spawnObject(ind, 2, -2, -5);
+		ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
+		world->spawnObject(ind, 2, -2, -5);
 
-		//ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
-		//world->spawnObject(ind, 2, 0, -5);
+		ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
+		world->spawnObject(ind, 2, 0, -5);
 
-		//ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
-		//world->spawnObject(ind, 2, 2, -5);
+		ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
+		world->spawnObject(ind, 2, 2, -5);
 
 
 	}

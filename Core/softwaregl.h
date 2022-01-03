@@ -228,13 +228,9 @@ void rasterizeTriang(pxlShaderFunc pxlShader, tPixelData& vrtx0, tPixelData& vrt
 			darea1 += rx1;
 		}
 
-		darea2 = darea2Init;
-		darea0 = darea0Init;
-		darea1 = darea1Init;
-
-		darea2 -= ry2;
-		darea0 -= ry0;
-		darea1 -= ry1;
+		darea2 = darea2Init - ry2;
+		darea0 = darea0Init - ry0;
+		darea1 = darea1Init - ry1;
 	}
 }
 
@@ -356,13 +352,14 @@ public:
 		}
 		for (int i = 0; i < width; i++)
 		{
-			for (int j = height-1; j >= 0; j--)
+			//for (int j = height-1; j >= 0; j--)
+			for (int j = 0; j < height; j++)
 			{
 				for (int c = 0; c < 3; c++)
 				{
 					//int col = (int)(getBuf(screenBuffers["fOutColor"]->fBuf, i, j, width, c, 3) * 255);
 					int col = (int)(getBuf(fOutColor->fBuf, i, j, width, c, 3) * 255);
-					setBuf(iOutColor, col, i, j, width, c, 3);
+					setBuf(iOutColor, col, i, height - j - 1, width, c, 3);
 				}
 
 			}
@@ -413,8 +410,8 @@ public:
 		float oneThirdOverlen = 1.f / (euclideanDist(midpoint)*3.f);
 
 		midpoint[0] = (pxl0.xyz[0] + pxl1.xyz[0] + pxl2.xyz[0])*oneThirdOverlen;
-		midpoint[1] = (pxl0.xyz[0] + pxl1.xyz[1] + pxl2.xyz[1])*oneThirdOverlen;
-		midpoint[2] = (pxl0.xyz[0] + pxl1.xyz[2] + pxl2.xyz[2])*oneThirdOverlen;
+		midpoint[1] = (pxl0.xyz[1] + pxl1.xyz[1] + pxl2.xyz[1])*oneThirdOverlen;
+		midpoint[2] = (pxl0.xyz[2] + pxl1.xyz[2] + pxl2.xyz[2])*oneThirdOverlen;
 		bool backFace = dot(midpoint, faceNormal) > 0;
 		if (backFace) return;
 	
