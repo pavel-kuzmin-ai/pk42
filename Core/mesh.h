@@ -40,28 +40,42 @@ public:
 	tMesh() {};
 	~tMesh() {};
 
-	void addVertex(float x, float y, float z)
+
+	void addPoint2Vect(float x, float y, float z, std::vector<float>& trgV)
 	{
-		vertices.push_back(x);
-		vertices.push_back(y);
-		vertices.push_back(z);
+		trgV.push_back(x);
+		trgV.push_back(y);
+		trgV.push_back(z);
 	}
 
 	void setVerices(int vertnum, float* verts)
 	{
 		for (int i = 0; i < vertnum; i++)
 		{
-			addVertex(verts[i * 3],
-				verts[i * 3 + 1],
-				verts[i * 3 + 2]);
+			addPoint2Vect(verts[i * 3], verts[i * 3 + 1], verts[i * 3 + 2], vertices);
 		}
 	}
 
-	void addTriangle(int vertex0, int vertex1, int vertex2) 
+	void setNormals(int normNum, float* norms)
+	{
+		for (int i = 0; i < normNum; i++)
+		{
+			addPoint2Vect(norms[i * 3], norms[i * 3 + 1], norms[i * 3 + 2], normals);
+		}
+	}
+
+	void addTriangleVerts(int vertex0, int vertex1, int vertex2) 
 	{ 
-		tris.push_back(vertex0);
-		tris.push_back(vertex1);
-		tris.push_back(vertex2);
+		trisVerts.push_back(vertex0);
+		trisVerts.push_back(vertex1);
+		trisVerts.push_back(vertex2);
+	}
+
+	void addTriangleNormal(int vertex0, int vertex1, int vertex2)
+	{
+		trisNormals.push_back(vertex0);
+		trisNormals.push_back(vertex1);
+		trisNormals.push_back(vertex2);
 	}
 	//void addTriangle(int* vertIds) { tris.push_back(tTriangle(vertIds)); }
 
@@ -69,9 +83,9 @@ public:
 	{
 		for (int i = 0; i < trisnum; i++)
 		{
-			addTriangle(vertids[i * 3],
-				vertids[i * 3 + 1],
-				vertids[i * 3 + 2]);
+			addTriangleVerts(vertids[i * 3],
+							 vertids[i * 3 + 1],
+							 vertids[i * 3 + 2]);
 		}
 	}
 
@@ -81,22 +95,38 @@ public:
 	}
 
 
-	
+	int vect2buf(std::vector<float>& inVect, float* buf)
+	{
+		for (size_t i = 0; i < inVect.size(); i++)
+			buf[i] = (inVect)[i];
+		return (int)(inVect.size());
+	}
 	int vertsToBuffer(float* buf)
 	{
-		//buf = &vertices[0];
-		for (size_t i = 0; i < vertices.size(); i++)
-			buf[i] = vertices[i];
-		return (int)(vertices.size());
+		return vect2buf(vertices, buf);
+	}
+	int normsToBuffer(float* buf)
+	{
+		return vect2buf(normals, buf);
 	}
 
-	int trisToBuffer(int* buf)
+	int vect2buf(std::vector<int>& inVect, int* buf)
 	{
-		//buf = &tris[0];
-		for (size_t i = 0; i < tris.size(); i++)
-			buf[i] = tris[i];
-		return (int)(tris.size());
+		for (size_t i = 0; i < inVect.size(); i++)
+			buf[i] = (inVect)[i];
+		return (int)(inVect.size());
 	}
+
+	int trisVertsToBuffer(int* buf)
+	{
+		return vect2buf(trisVerts, buf);
+	}
+
+	int trisNormToBuffer(int* buf)
+	{
+		return vect2buf(trisNormals, buf);
+	}
+
 
 	void parseVertex(std::stringstream& ss)
 	{
@@ -104,7 +134,14 @@ public:
 		ss >> x;
 		ss >> y;
 		ss >> z;
-		addVertex(x, y, z);
+		addPoint2Vect(x, y, z, vertices);
+	}
+
+	void parseNormal(std::stringstream& ss)
+	{
+		float x, y, z;
+		ss >> x >> y >> z;
+		addPoint2Vect(x, y, z, normals);
 	}
 
 	void parseFace(std::stringstream& ss)
@@ -157,7 +194,8 @@ public:
 		
 			
 
-		addTriangle(vrtx[0] - 1, vrtx[1] - 1, vrtx[2] - 1);
+		addTriangleVerts(vrtx[0] - 1, vrtx[1] - 1, vrtx[2] - 1);
+		addTriangleNormal(norm[0] - 1, norm[1] - 1, norm[2] - 1);
 	}
 
 	void loadObj(const std::string& path)
@@ -174,8 +212,12 @@ public:
 			if (flag == 'v')
 			{
 				if (line[1] == ' ') parseVertex(ss);
-				if (line[1] == 'n') { ss >> flag; };
-				if (line[2] == 't') { ss >> flag; };
+				if (line[1] == 'n') 
+				{ 
+					ss >> flag; 
+					parseNormal(ss); 
+				}
+				if (line[1] == 't') { ss >> flag; };
 			}
 			if (flag == 'f') parseFace(ss);
 		}	
@@ -190,7 +232,9 @@ public:
 
 protected:
 	std::vector<float> vertices;
-	std::vector<int> tris;
+	std::vector<float> normals;
+	std::vector<int> trisVerts;
+	std::vector<int> trisNormals;
 	std::string sName;
 private:
 	
@@ -214,7 +258,7 @@ public:
 							   6,7,4 , 6,4,5 };
 		
 		for (int i = 0; i < 36; i++)
-			tris.push_back(arr2[i]);		
+			trisVerts.push_back(arr2[i]);
 	};
 	virtual ~tBox() {};
 

@@ -274,6 +274,10 @@ public:
 		VertexData = new float[maxVerts];
 		VertexBuffer = new int[maxVerts];
 		outVertexBuffer = new float[maxVerts];
+
+		NormalsData = new float[maxVerts];
+		NormalBuffer = new int[maxVerts];
+
 		
 		iOutColor = new int[width*height * 3];
 		iOutColorInit = new int[width*height * 3];
@@ -315,6 +319,8 @@ public:
 		iOutColor = _buf;
 	}
 
+	float* getOutBufferFloat() { return fOutColor->fBuf; }
+
 	void setModel2CamMatrix(float* inMatrix)
 	{
 		std::memcpy(Model2Cam, inMatrix, 16 * sizeof(float));
@@ -331,15 +337,30 @@ public:
 		std::memcpy(VertexData, inVerts, size * sizeof(float));
 	}
 
+	void setNormalsData(float* inNormals, int size)
+	{
+		if (size > maxVerts) size = maxVerts;
+		std::memcpy(NormalsData, inNormals, size * sizeof(float));
+	}
+
 	void setMaterial(materialBase* newMaterial) { currentMaterial = newMaterial; }
 
 
-	void sGLBufferData(int size, int* vertexIds)
+	void sGLBufferVerts(int size, int* vertexIds)
 	{
 		if (size > maxVerts) size = maxVerts;
 		std::memcpy(VertexBuffer, vertexIds, size * sizeof(int));
 		bufVerts = size;
 		bufTris = size / 3;
+		bUseNormals = false;
+	}
+
+	void sGLBufferNormals(int size, int* normIds)
+	{
+		if (size > maxVerts) size = maxVerts;
+		std::memcpy(NormalBuffer, normIds, size * sizeof(int));
+		bufNormals = size / 3;
+		bUseNormals = true;
 	}
 
 
@@ -348,7 +369,8 @@ public:
 		for (int i = 0; i < bufTris; i++)
 		{
 			if (i >= maxcount) break;
-			sGLDrawTriangle(VertexBuffer[i * 3], VertexBuffer[i * 3 + 1], VertexBuffer[i * 3 + 2]);
+			sGLDrawTriangle(i);
+			//sGLDrawTriangle(VertexBuffer[i * 3], VertexBuffer[i * 3 + 1], VertexBuffer[i * 3 + 2]);
 		}
 		for (int i = 0; i < width; i++)
 		{
@@ -372,6 +394,14 @@ public:
 		out->xyz[1] = VertexData[bufferedIdx * 3 + 1];
 		out->xyz[2] = VertexData[bufferedIdx * 3 + 2];
 	}
+
+	void normal2tPixelData(int bufferedIdx, tPixelData* out)
+	{
+		out->normal[0] = NormalsData[bufferedIdx * 3];
+		out->normal[1] = NormalsData[bufferedIdx * 3 + 1];
+		out->normal[2] = NormalsData[bufferedIdx * 3 + 2];
+	}
+
 	void applyVertexShader(void(*vertexShader)(tPixelData&, tPixelData&, tMatrix*, tMatrix*), tPixelData* inpVrtx, tPixelData* outVrtx)
 	{
 		vertexShader(*inpVrtx, *outVrtx, Model2CamMatrix, Cam2ViewMatrix);
@@ -390,17 +420,34 @@ public:
 	float faceNormalHardcoded[3], faceNormal[3];;
 	float midpoint[3];
 
-	void sGLDrawTriangle(int vertexIdx0, int vertexIdx1, int vertexIdx2)
+	void setFace(int i)
 	{
-		//tPixelData pxl0, pxl1, pxl2;
-		verts2tPixelData(vertexIdx0, &pxl0);
-		verts2tPixelData(vertexIdx1, &pxl1);
-		verts2tPixelData(vertexIdx2, &pxl2);
+		int j = i * 3;
+		verts2tPixelData(VertexBuffer[j], &pxl0);
+		verts2tPixelData(VertexBuffer[j + 1], &pxl1);
+		verts2tPixelData(VertexBuffer[j + 2], &pxl2);
 
-		calcFaceNormals(pxl0, pxl1, pxl2, faceNormalHardcoded);
-		std::memcpy(pxl0.normal, faceNormalHardcoded, 3 * sizeof(float));
-		std::memcpy(pxl1.normal, faceNormalHardcoded, 3 * sizeof(float));
-		std::memcpy(pxl2.normal, faceNormalHardcoded, 3 * sizeof(float));
+		if (bUseNormals)
+		{
+			
+			normal2tPixelData(NormalBuffer[j], &pxl0);
+			normal2tPixelData(NormalBuffer[j + 1], &pxl1);
+			normal2tPixelData(NormalBuffer[j + 2], &pxl2);
+		}
+		else
+		{
+			calcFaceNormals(pxl0, pxl1, pxl2, faceNormalHardcoded);
+			std::memcpy(pxl0.normal, faceNormalHardcoded, 3 * sizeof(float));
+			std::memcpy(pxl1.normal, faceNormalHardcoded, 3 * sizeof(float));
+			std::memcpy(pxl2.normal, faceNormalHardcoded, 3 * sizeof(float));
+		}
+	}
+
+	//void sGLDrawTriangle(int vertexIdx0, int vertexIdx1, int vertexIdx2)
+	void sGLDrawTriangle(int i)
+	{
+			
+		setFace(i);
 
 		applyVertexShader(geometryShader, &pxl0, &pxl0);
 		applyVertexShader(geometryShader, &pxl1, &pxl1);
@@ -414,15 +461,6 @@ public:
 		midpoint[2] = (pxl0.xyz[2] + pxl1.xyz[2] + pxl2.xyz[2])*oneThirdOverlen;
 		bool backFace = dot(midpoint, faceNormal) > 0;
 		if (backFace) return;
-	
-		
-		
-		//std::memcpy(pxl0.normal, pxl0.faceNormal, 3 * sizeof(float));
-
-		//std::memcpy(pxl1.normal, pxl0.normal, 3 * sizeof(float));
-		//std::memcpy(pxl2.normal, pxl0.normal, 3 * sizeof(float));
-		//std::memcpy(pxl1.viewDirection, pxl0.viewDirection, 3 * sizeof(float));
-		//std::memcpy(pxl2.viewDirection, pxl0.viewDirection, 3 * sizeof(float));
 
 		rasterizeTriangle(triangleRasterizer, pxl0, pxl1, pxl2);
 
@@ -447,8 +485,12 @@ private:
 	int* VertexBuffer;
 	float* outVertexBuffer;
 
+	float* NormalsData;
+	int* NormalBuffer;
+	bool bUseNormals = false;
 
 	int bufTris = 0;
+	int bufNormals = 0;
 	int bufVerts = 0;
 
 	int width;

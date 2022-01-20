@@ -60,8 +60,10 @@ short iBackCodes2[16] = { 0x0000,
 					   0x00E0,
 					   0x00F0};
 
-short iBackCodes[2] = { 0x0000,
-					   0x00F0 };
+short iBackCodes[4] = { 0x0000,
+						0x0070,
+						0x0080,
+					    0x00F0 };
 
 float fPixSize[4] = { 1., 0.75, 0.5, 0.25 };
 short sPixCodes[4] = { 0x2588, 0x2593, 0x2592, 0x2591 };
@@ -115,6 +117,11 @@ enum PIXEL_TYPE
 	PIXEL_HALF = 0x2592,
 	PIXEL_QUARTER = 0x2591,
 };
+
+//class colorInterpolator
+//{
+//public:
+//};
 
 
 class consolePixel
@@ -204,6 +211,8 @@ public:
 		clearRGBbuf();
 	}
 
+	void setFRGB(float* buf) { _fBufRGB = buf; }
+
 	void clearRGBbuf() 
 	{
 		int s = bufSize();
@@ -270,7 +279,7 @@ public:
 
 	void buildColorMap()
 	{
-		colorRGB back_cols[2] = { cRgbCols[0], cRgbCols[15] };
+		colorRGB back_cols[4] = { cRgbCols[0], cRgbCols[7], cRgbCols[8], cRgbCols[15] };
 		for (int i = 0; i< std::size(cRgbCols); i++)
 		//for (int i = 0; i < 16; i++)
 		{
@@ -373,6 +382,7 @@ private:
 
 	//colorRGB* _bufRGB;
 	int* _bufRGB;
+	float* _fBufRGB;
 	int coarseStep = 10;
 
 

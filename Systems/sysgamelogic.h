@@ -15,8 +15,8 @@ public:
 	void startUp() 
 	{
 		world = new tScene();
-		//int ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\box.obj");
-		int ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
+		int ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\box.obj");
+		//int ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
 		world->spawnObject(ind, 0, 0, -5);
 
 		ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
@@ -25,25 +25,25 @@ public:
 		//ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\box.obj");
 		//world->spawnObject(ind, -2, 0, -5);
 
-		ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
-		world->spawnObject(ind, -2, 2, -5);
+		//ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
+		//world->spawnObject(ind, -2, 2, -5);
 
-		ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
-		world->spawnObject(ind, 0, -2, -5);
+		//ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
+		//world->spawnObject(ind, 0, -2, -5);
 
 
 
-		ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
-		world->spawnObject(ind, 0, 2, -5);
+		//ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
+		//world->spawnObject(ind, 0, 2, -5);
 
-		ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
-		world->spawnObject(ind, 2, -2, -5);
+		//ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
+		//world->spawnObject(ind, 2, -2, -5);
 
-		ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
-		world->spawnObject(ind, 2, 0, -5);
+		//ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
+		//world->spawnObject(ind, 2, 0, -5);
 
-		ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
-		world->spawnObject(ind, 2, 2, -5);
+		//ind = world->addMeshObject("E:\\git\\pk42\\TestAssets\\sphere.obj");
+		//world->spawnObject(ind, 2, 2, -5);
 
 
 	}

@@ -32,6 +32,7 @@ public:
 		rasterizer = new tSoftwareRasterizer(screenWidth, screenHeight);
 		rasterizer->initBuffers();
 		rasterizer->setOutBuffer(displayBuffer);
+		display->setFRGB(rasterizer->getOutBufferFloat());
 		sGLColor = rasterizer->bufColor();
 
 		m2proj = new tTransformMatrix(m2projData);
@@ -66,12 +67,21 @@ public:
 			Multiply(*world2cam, *model2world, m2c);
 			rasterizer->setModel2CamMatrix(m2c->getDataPtr());
 			rasterizer->setCam2ViewMatrix(cam2proj->getDataPtr());
-			int size = mesh->vertsToBuffer(floatBuf);
+			int sizeVerts = mesh->vertsToBuffer(floatBuf);
 
-			rasterizer->setVertexData(floatBuf, size);
+			rasterizer->setVertexData(floatBuf, sizeVerts);
 			rasterizer->setMaterial(obj->getMaterialPtr());
-			size = mesh->trisToBuffer(intBuf);
-			rasterizer->sGLBufferData(size, intBuf);
+			int size = mesh->trisVertsToBuffer(intBuf);
+			rasterizer->sGLBufferVerts(size, intBuf);
+
+			int sizeNormals = mesh->normsToBuffer(floatBuf);
+			if (sizeNormals > 0)
+			{
+				rasterizer->setNormalsData(floatBuf, sizeNormals);
+				rasterizer->sGLBufferNormals(size, intBuf);
+			}
+				
+
 			rasterizer->sGLDrawElements(size);
 		}
 		
@@ -93,10 +103,12 @@ private:
 	tConsoleScreen* display;
 	tSoftwareRasterizer* rasterizer;
 	int* displayBuffer;
+	
 	int screenWidth;
 	int screenHeight;
 	int pxlSize;
 	int* sGLColor;
+	
 
 	int intBuf[10000];
 	float floatBuf[10000];

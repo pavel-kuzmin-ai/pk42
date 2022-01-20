@@ -2,6 +2,7 @@
 #define VEC3_H
 
 #include <iostream>
+#include "mathutils.h"
 
 template <typename T>
 class vec3
@@ -129,4 +130,42 @@ inline vec3<T> unit_vector(vec3<T> v) {
 }
 
 
+void rgb2hsv(const vec3<float> &inRGB, vec3<float> &outHSV)
+{
+	int _maxIdx = argMax(inRGB.e, 3);
+	int _minIdx = argMin(inRGB.e, 3);
+
+	float _max = inRGB[_maxIdx];
+	float _min = inRGB[_minIdx];
+
+	float h = 0;
+	float s = _max == 0 ? 0 : 1.f - _min / _max;
+	float v = _max;
+
+	outHSV[0] = h;
+	outHSV[1] = s;
+	outHSV[2] = v;
+
+	float mult = 60.f / (_max - _min);
+
+	if (_min == _max) return;
+
+	if (_maxIdx == 0)
+	{
+		h = (inRGB[1] - inRGB[2])*mult;
+		outHSV[0] = inRGB[1] >= inRGB[2] ? h : h + 360.f;
+		return;
+	}
+
+	if (_maxIdx == 1)
+	{
+		outHSV[0] = (inRGB[2] - inRGB[0])*mult + 120.f;
+		return;
+	}
+
+	if (_maxIdx == 0)
+	{
+		outHSV[0] = (inRGB[0] - inRGB[1])*mult + 240.f;
+	}
+}
 #endif
